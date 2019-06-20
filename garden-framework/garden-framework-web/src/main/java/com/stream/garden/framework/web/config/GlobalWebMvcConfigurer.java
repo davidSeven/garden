@@ -3,6 +3,7 @@ package com.stream.garden.framework.web.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date 2019-06-19 17:33
  */
 @Configuration
+@EnableConfigurationProperties(GlobalConfig.class)
 public class GlobalWebMvcConfigurer implements WebMvcConfigurer {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
