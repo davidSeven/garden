@@ -50,6 +50,7 @@ pagehelper:
 logging:
   file: /logs/${spring.application.name}.log
   level:
-    ROOT: info
+    ROOT: error
+    com.stream.garden.framework.jdbc: error
     com.stream.garden: debug
     org.mybatis: debug

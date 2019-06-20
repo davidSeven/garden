@@ -17,13 +17,25 @@ public class GlobalApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        line();
         runCompleted();
+        printServiceInfo();
+        line();
+    }
+
+    public void line() {
+        logger.info("--------------------------------------------");
     }
 
     public void runCompleted() {
         String name = ApplicationUtil.getApplicationContext().getEnvironment().getProperty("spring.application.name");
-        logger.info("--------------------------------------------");
-        logger.info("---项目(" + name + ")启动完成---");
-        logger.info("--------------------------------------------");
+        logger.info("--- 项目({})启动完成 ---", name);
+    }
+
+    public void printServiceInfo() {
+        String active = ApplicationUtil.getApplicationContext().getEnvironment().getProperty("spring.profiles.active");
+        String contextPath = ApplicationUtil.getApplicationContext().getEnvironment().getProperty("server.servlet.context-path");
+        String port = ApplicationUtil.getApplicationContext().getEnvironment().getProperty("server.port");
+        logger.info("--- active：{}，contextPath：{}，port：{} ---", active, contextPath, port);
     }
 }
