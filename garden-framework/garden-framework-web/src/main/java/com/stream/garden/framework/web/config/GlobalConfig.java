@@ -1,11 +1,13 @@
 package com.stream.garden.framework.web.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author garden
  * @date 2019-06-19 17:32
  */
+@Component
 @ConfigurationProperties(prefix = GlobalConfig.CONFIG_PREFIX)
 public class GlobalConfig {
 
