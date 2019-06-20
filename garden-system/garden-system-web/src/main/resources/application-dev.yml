@@ -1,0 +1,55 @@
+# spring配置
+spring:
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/garden?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+    username: garden
+    password: 123456
+    #druid
+    type: com.zaxxer.hikari.HikariDataSource
+
+  mvc:
+    # 设置静态文件路径，js,css等
+    static-path-pattern: /static/**
+
+  # 配置freemarker
+  freemarker:
+    # 设置模板后缀名
+    suffix: .ftl
+    # 设置文档类型
+    content-type: text/html; charset=utf-8
+    # 设置页面编码格式
+    charset: UTF-8
+    # 设置页面缓存
+    cache: false
+    # 设置ftl文件路径
+    template-loader-path:
+      - classpath:/templates/
+    check-template-location: true
+    expose-request-attributes: true
+
+# mybatis
+mybatis:
+  typeAliasesPackage: com.stream.garden.*.*.dao
+  mapperLocations:
+    - classpath*:com/stream/garden/*/*/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  # id自动生成
+  keyGenMode: SNOW
+
+# pagehelper分页
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# log配置
+logging:
+  file: /logs/${spring.application.name}.log
+  level:
+    ROOT: info
+    com.stream.garden: debug
+    org.mybatis: debug

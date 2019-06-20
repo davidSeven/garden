@@ -1,0 +1,21 @@
+# 端口号
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /
+  port: 8090
+
+# spring配置
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
+  application:
+    name: garden-system
+  profiles:
+    active: dev
