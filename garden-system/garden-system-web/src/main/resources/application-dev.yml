@@ -47,14 +47,19 @@ pagehelper:
   params: count=countSql
 
 # log配置
-logging:
-  file: /logs/${spring.application.name}.log
-  level:
-    ROOT: error
-    com.stream.garden.framework.jdbc: error
-    com.stream.garden: debug
-    org.mybatis: debug
+#logging:
+#  file: /logs/${spring.application.name}.log
+#  level:
+#    ROOT: error
+#    com.stream.garden.framework.jdbc: error
+#    com.stream.garden: debug
+#    org.mybatis: debug
 
 # garden
 garden:
   name: garden
+  jwt:
+    clientId: 6AF45DE098AA4E9FA84034793F8673CD
+    base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=
+    name: garden_api_user
+    expiresSecond: 172800

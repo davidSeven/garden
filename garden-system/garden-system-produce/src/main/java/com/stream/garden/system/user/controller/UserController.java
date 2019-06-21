@@ -1,8 +1,14 @@
 package com.stream.garden.system.user.controller;
 
+import com.stream.garden.framework.api.exception.AppCode;
+import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.system.user.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/system/user")
 public class UserController {
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private IUserService userService;
@@ -23,7 +30,13 @@ public class UserController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> insert(User user) {
-        return new Result<Integer>().setData(userService.insert(user)).ok();
+        try {
+            return new Result<Integer>().setData(userService.insert(user)).ok();
+        } catch (ApplicationException e) {
+            AppCode appCode = SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e);
+            logger.error(">>>" + appCode.getMessage(), e);
+            return new Result<>(appCode);
+        }
     }
 
     @RequestMapping(value = "/toList", method = RequestMethod.GET)

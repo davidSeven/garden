@@ -1,4 +1,4 @@
-package com.stream.garden.framework.api.model;
+package com.stream.garden.framework.api.exception;
 
 /**
  * @author garden

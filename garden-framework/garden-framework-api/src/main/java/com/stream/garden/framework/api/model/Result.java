@@ -1,13 +1,18 @@
 package com.stream.garden.framework.api.model;
 
+import com.stream.garden.framework.api.exception.AppCode;
+import com.stream.garden.framework.api.exception.ExceptionCode;
+
 import java.io.Serializable;
 
 /**
  * 返回结果
  *
+ * @author garden
  * @param <T>
  */
 public class Result<T> implements Serializable {
+    private static final long serialVersionUID = 1311214270787771061L;
 
     private int code;
     private String msg;

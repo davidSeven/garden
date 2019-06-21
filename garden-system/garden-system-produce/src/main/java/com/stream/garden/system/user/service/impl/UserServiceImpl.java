@@ -1,8 +1,10 @@
 package com.stream.garden.system.user.service.impl;
 
+import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.system.user.dao.IUserDao;
+import com.stream.garden.system.user.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,13 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
     }
 
     @Override
-    public int insert(User user) {
+    public int insert(User user) throws ApplicationException {
         // 验证编码不能重复
         User paramUser = new User();
         paramUser.setCode(user.getCode());
         List<User> list = super.list(paramUser);
         if (CollectionUtil.isNotEmpty(list)) {
-            return 0;
+            throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT);
         }
         return super.insert(user);
     }

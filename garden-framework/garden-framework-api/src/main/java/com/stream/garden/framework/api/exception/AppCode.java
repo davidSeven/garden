@@ -1,4 +1,4 @@
-package com.stream.garden.framework.api.model;
+package com.stream.garden.framework.api.exception;
 
 /**
  * @author garden
@@ -35,5 +35,17 @@ public interface AppCode {
      */
     default boolean isSuccess() {
         return this.getCode() == 0;
+    }
+
+    /**
+     * 获取异常编码
+     * @param e 异常
+     * @return 异常编码
+     */
+    default AppCode getAppCode(ApplicationException e) {
+        if (null != e && null != e.getAppCode()) {
+            return e.getAppCode();
+        }
+        return this;
     }
 }

@@ -2,6 +2,7 @@ package com.stream.garden.framework.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.PageSize;
 import com.stream.garden.framework.api.vo.BasePageVO;
@@ -13,7 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+/**
+ * @author garden
+ * @param <T> 实体对象
+ * @param <ID> id类型
+ */
+@Transactional(rollbackFor = Exception.class)
 public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseService.class);
     protected IBaseMapper<T, ID> baseMapper;
@@ -23,19 +29,19 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
     }
 
     @Override
-    public int insert(T t) {
+    public int insert(T t) throws ApplicationException {
         setDefault(t, true);
         return baseMapper.insert(t);
     }
 
     @Override
-    public int insertSelective(T t) {
+    public int insertSelective(T t) throws ApplicationException {
         setDefault(t, true);
         return baseMapper.insertSelective(t);
     }
 
     @Override
-    public int insertBatch(List<T> list) {
+    public int insertBatch(List<T> list) throws ApplicationException {
         if (CollectionUtil.isNotEmpty(list)) {
             for (T t : list) {
                 setDefault(t, true);
@@ -45,44 +51,44 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
     }
 
     @Override
-    public int update(T t) {
+    public int update(T t) throws ApplicationException {
         setDefault(t, false);
         return baseMapper.update(t);
     }
 
     @Override
-    public int updateSelective(T t) {
+    public int updateSelective(T t) throws ApplicationException {
         setDefault(t, false);
         return baseMapper.updateSelective(t);
     }
 
     @Override
-    public int delete(ID... ids) {
+    public int delete(ID... ids) throws ApplicationException {
         return baseMapper.delete(ids);
     }
 
     @Override
-    public int disable(ID... ids) {
+    public int disable(ID... ids) throws ApplicationException {
         return baseMapper.disable(ids);
     }
 
     @Override
-    public int enable(ID... ids) {
+    public int enable(ID... ids) throws ApplicationException {
         return baseMapper.enable(ids);
     }
 
     @Override
-    public T get(ID id) {
+    public T get(ID id) throws ApplicationException {
         return baseMapper.get(id);
     }
 
     @Override
-    public List<T> getByIds(ID... ids) {
+    public List<T> getByIds(ID... ids) throws ApplicationException {
         return baseMapper.getByIds(ids);
     }
 
     @Override
-    public List<T> list(T t) {
+    public List<T> list(T t) throws ApplicationException {
         return baseMapper.list(t);
     }
 
@@ -93,7 +99,7 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
      * @return 返回数据
      */
     @Override
-    public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) {
+    public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException {
         // 设置PageHelper参数信息
         PageSize pageSize = pageVO.getPageSize();
         T t = pageVO.getData();
