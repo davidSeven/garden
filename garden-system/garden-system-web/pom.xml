@@ -23,12 +23,7 @@
 
         <dependency>
             <groupId>org.stream</groupId>
-            <artifactId>garden-system-service</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-framework-web</artifactId>
+            <artifactId>garden-system-produce</artifactId>
         </dependency>
 
     </dependencies>
