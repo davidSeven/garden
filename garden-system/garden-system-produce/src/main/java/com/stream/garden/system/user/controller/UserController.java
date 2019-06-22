@@ -2,9 +2,8 @@ package com.stream.garden.system.user.controller;
 
 import com.stream.garden.framework.api.exception.AppCode;
 import com.stream.garden.framework.api.exception.ApplicationException;
-import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
-import com.stream.garden.system.user.exception.SystemExceptionCode;
+import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
 import org.slf4j.Logger;

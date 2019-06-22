@@ -58,6 +58,10 @@ pagehelper:
 # garden
 garden:
   name: garden
+  password: 123456
+  excludePath:
+    - /favicon.ico
+    - /static/**
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=

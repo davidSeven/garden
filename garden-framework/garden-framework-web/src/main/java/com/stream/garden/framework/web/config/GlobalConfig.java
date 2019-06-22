@@ -3,6 +3,9 @@ package com.stream.garden.framework.web.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author garden
  * @date 2019-06-19 17:32
@@ -14,6 +17,9 @@ public class GlobalConfig {
     public static final String CONFIG_PREFIX = "garden";
 
     private String name;
+    private String password;
+
+    private List<String> excludePath;
 
     private JwtConfig jwt;
 
@@ -31,6 +37,22 @@ public class GlobalConfig {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<String> getExcludePath() {
+        return excludePath;
+    }
+
+    public void setExcludePath(List<String> excludePath) {
+        this.excludePath = excludePath;
     }
 
     public static class JwtConfig {

@@ -1,4 +1,4 @@
-package com.stream.garden.system.user.exception;
+package com.stream.garden.system.exception;
 
 import com.stream.garden.framework.api.exception.AppCode;
 import com.stream.garden.framework.api.exception.ApplicationException;
