@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @date 2019-06-19 17:32
  */
 @Component
-@ConfigurationProperties(prefix = GlobalConfig.CONFIG_PREFIX, ignoreInvalidFields = true, ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = GlobalConfig.CONFIG_PREFIX)
 public class GlobalConfig {
 
     public static final String CONFIG_PREFIX = "garden";
