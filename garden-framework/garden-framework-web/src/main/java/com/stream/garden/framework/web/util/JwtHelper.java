@@ -1,12 +1,15 @@
 package com.stream.garden.framework.web.util;
 
 import com.stream.garden.framework.web.config.GlobalConfig;
+import com.stream.garden.framework.web.constant.GlobalConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
@@ -22,6 +25,26 @@ public class JwtHelper {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static Claims parseJWT(HttpServletRequest request, String base64Security) {
+        try {
+            String authHeader = request.getHeader(GlobalConstant.HEADER_AUTHORIZATION);
+            if (StringUtils.isEmpty(authHeader)) {
+                authHeader = CookieUtil.getUid(request, GlobalConstant.HEADER_AUTHORIZATION);
+            }
+            if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith(GlobalConstant.HEADER_AUTHORIZATION_BEARER)) {
+                return null;
+            }
+            String token = authHeader.substring(7);
+            return JwtHelper.parseJWT(token, base64Security);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean isLogin(HttpServletRequest request, String base64Security) {
+        return null != parseJWT(request, base64Security);
     }
 
     public static String createJWT(String name, String userId, String role, GlobalConfig.JwtConfig jwtConfig) {

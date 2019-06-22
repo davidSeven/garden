@@ -8,6 +8,10 @@ import java.io.Serializable;
  */
 public class Context {
 
+    private String userName;
+    private String userId;
+    private String roleId;
+
     private Serializable user;
 
     public Serializable getUser() {
@@ -16,5 +20,29 @@ public class Context {
 
     public void setUser(Serializable user) {
         this.user = user;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

@@ -21,6 +21,11 @@ public class GlobalConfig {
 
     private List<String> excludePath;
 
+    /**
+     * 登录路径
+     */
+    private String loginPath;
+
     private JwtConfig jwt;
 
     public JwtConfig getJwt() {
@@ -53,6 +58,14 @@ public class GlobalConfig {
 
     public void setExcludePath(List<String> excludePath) {
         this.excludePath = excludePath;
+    }
+
+    public String getLoginPath() {
+        return loginPath;
+    }
+
+    public void setLoginPath(String loginPath) {
+        this.loginPath = loginPath;
     }
 
     public static class JwtConfig {

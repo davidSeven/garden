@@ -62,6 +62,7 @@ garden:
   excludePath:
     - /favicon.ico
     - /static/**
+  login-path: /login
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=

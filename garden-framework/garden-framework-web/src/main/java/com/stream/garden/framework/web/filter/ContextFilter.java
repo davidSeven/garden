@@ -2,21 +2,23 @@ package com.stream.garden.framework.web.filter;
 
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
-import com.stream.garden.framework.web.util.CookieUtil;
+import com.stream.garden.framework.web.constant.GlobalConstant;
+import com.stream.garden.framework.web.model.Context;
+import com.stream.garden.framework.web.util.ContextUtil;
 import com.stream.garden.framework.web.util.JwtHelper;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author garden
@@ -27,8 +29,10 @@ public class ContextFilter implements Filter {
 
     private GlobalConfig globalConfig;
     private PathMatcher pathMatcher = new AntPathMatcher();
+    private List<String> excludePath = new ArrayList<>();
 
-    public ContextFilter() {}
+    public ContextFilter() {
+    }
 
     public ContextFilter(GlobalConfig globalConfig) {
         this.globalConfig = globalConfig;
@@ -36,7 +40,12 @@ public class ContextFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        if (StringUtils.isNotEmpty(globalConfig.getLoginPath())) {
+            excludePath.add(globalConfig.getLoginPath());
+        }
+        if (CollectionUtil.isNotEmpty(globalConfig.getExcludePath())) {
+            excludePath.addAll(globalConfig.getExcludePath());
+        }
     }
 
     @Override
@@ -50,40 +59,30 @@ public class ContextFilter implements Filter {
         logger.debug("request uri: {}", uri);
 
         boolean jump = false;
-        if (CollectionUtil.isNotEmpty(globalConfig.getExcludePath())) {
-            for (String path : globalConfig.getExcludePath()) {
-                if (pathMatcher.match(path, uri)) {
-                    jump = true;
-                    break;
-                }
+        for (String path : excludePath) {
+            if (pathMatcher.match(path, uri)) {
+                jump = true;
+                break;
             }
         }
 
         if (!jump) {
-            if ("OPTIONS".equals(request.getMethod())) {
+            if (GlobalConstant.OPTIONS.equals(request.getMethod())) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
-                String authHeader = request.getHeader("authorization");
-                if (StringUtils.isEmpty(authHeader)) {
-                    authHeader = CookieUtil.getUid(request, "authorization");
-                }
-                if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("bearer.")) {
-                    // String contextPath = request.getContextPath();
-                    // response.sendRedirect(contextPath + "/index/login");
-                    // String token = JwtHelper.createJWT("", "", "", globalConfig.getJwt());
-                    // token = "bearer." + token;
-                    // CookieUtil.addCookie(response, "authorization", token, 24 * 60 * 60);
-                    CookieUtil.addCookie(response, "authorization", "bearer.123", 24 * 60 * 60);
-                    return;
-                }
-                final String token = authHeader.substring(7);
                 try {
-                    final Claims claims = JwtHelper.parseJWT(token, globalConfig.getJwt().getBase64Secret());
+                    final Claims claims = JwtHelper.parseJWT(request, globalConfig.getJwt().getBase64Secret());
                     if (claims == null) {
                         throw new ServletException("登录过期");
                     }
-                } catch (final Exception e) {
-                    throw new ServletException("登录认证失败");
+                    Context context = new Context();
+                    context.setUserName((String) claims.get("unique_name"));
+                    ContextUtil.setContext(context);
+                } catch (Exception e) {
+                    // throw new ServletException("登录认证失败");
+                    String contextPath = request.getContextPath();
+                    response.sendRedirect(contextPath + globalConfig.getLoginPath());
+                    return;
                 }
             }
         }
