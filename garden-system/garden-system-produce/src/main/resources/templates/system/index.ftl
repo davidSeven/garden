@@ -21,7 +21,7 @@
             <li class="layui-nav-item layui-nav-itemed">
                 <a href="javascript:;"><i class="iconfont">&#xe607;</i>菜单管理</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-url="menu1.html" data-id='1' data-text="后台菜单"><span class="l-line"></span>后台菜单</a></dd>
+                    <dd><a href="javascript:;" data-url="system/menu/toList" data-id='1' data-text="后台菜单"><span class="l-line"></span>后台菜单</a></dd>
                     <dd><a href="javascript:;" data-url="menu2.html" data-id='2' data-text="前台菜单"><span class="l-line"></span>前台菜单</a></dd>
                 </dl>
             </li>
