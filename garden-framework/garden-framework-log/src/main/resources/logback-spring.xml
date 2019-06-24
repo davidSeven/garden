@@ -176,7 +176,7 @@
         <logger name="com.stream.garden" level="debug"/>
     </springProfile>
 
-    <root level="error">
+    <root level="debug">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="DEBUG_FILE" />
         <appender-ref ref="INFO_FILE" />

@@ -31,6 +31,11 @@ public class LoginController {
         return "system/index";
     }
 
+    @RequestMapping(value = "/error404", method = RequestMethod.GET)
+    public String error404() {
+        return "error";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(HttpServletRequest request) {
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {

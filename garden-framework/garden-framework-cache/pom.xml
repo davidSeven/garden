@@ -2,39 +2,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>garden-system</artifactId>
+        <artifactId>garden-framework</artifactId>
         <groupId>org.stream</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.stream</groupId>
-    <artifactId>garden-system-produce</artifactId>
+    <artifactId>garden-framework-cache</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-system-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-framework-log</artifactId>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-framework-cache</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-framework-web</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>
