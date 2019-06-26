@@ -20,8 +20,13 @@ public class MenuController {
     @Autowired
     private IMenuService menuService;
 
+    /**
+     * 跳转列表页面
+     * @return 页面路径
+     */
     @RequestMapping(value = "/toList", method = RequestMethod.GET)
     public String toList() {
+        logger.debug(">>>页面跳转：{}", "system/menu/list");
         return "system/menu/list";
     }
 }
