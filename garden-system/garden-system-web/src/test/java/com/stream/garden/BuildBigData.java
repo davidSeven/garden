@@ -1,6 +1,7 @@
 package com.stream.garden;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.jdbc.util.SnowflakeIdWorker;
 import com.stream.garden.system.group.model.Group;
 import com.stream.garden.system.group.service.IGroupService;
 import com.stream.garden.system.group.service.IGroupUserService;
@@ -15,7 +16,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.plaf.metal.MetalIconFactory;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,30 +55,42 @@ public class BuildBigData extends BaseTest {
     @Test
     public void build() throws ApplicationException {
 
+        List<Role> roleList = new ArrayList<>();
         for (int i = 0; i < 30000; i++) {
             Role role = new Role();
+            role.setId(String.valueOf(SnowflakeIdWorker.generateId()));
             role.setName(getRoleName());
             role.setCode(getRoleCode());
             role.setState("1");
-            roleService.insert(role);
+            roleList.add(role);
         }
+        roleService.insertBatch(roleList);
 
+        List<Group> groupList = new ArrayList<>();
         for (int i = 0; i < 30000; i++) {
             Group group = new Group();
+            group.setId(String.valueOf(SnowflakeIdWorker.generateId()));
             group.setName(getGroupName());
             group.setCode(getGroupCode());
             group.setState("1");
-            groupService.insert(group);
+            groupList.add(group);
+        }
+        groupService.insertBatch(groupList);
+
+        for (int i = 0; i < 10; i++) {
+            List<User> userList = new ArrayList<>();
+            for (int j = 0; j < 30000; j++) {
+                User user = new User();
+                user.setId(String.valueOf(SnowflakeIdWorker.generateId()));
+                user.setName(getUserName());
+                user.setCode(getUserCode());
+                user.setState("1");
+                userList.add(user);
+            }
+            userService.insertBatch(userList);
         }
 
-        /*for (int i = 0; i < 300000; i++) {
-            User user = new User();
-            user.setName(getUserName());
-            user.setCode(getUserCode());
-            user.setState("1");
-            userService.insert(user);
-        }
-*/
+
     }
 
     private String getRoleCode() {

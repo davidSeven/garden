@@ -69,7 +69,7 @@ public class JwtHelper {
                 .signWith(signatureAlgorithm, signingKey);
         // 添加Token过期时间
         if (TTLMillis >= 0) {
-            long expMillis = nowMillis + TTLMillis;
+            long expMillis = nowMillis + (TTLMillis * 1000);
             Date exp = new Date(expMillis);
             builder.setExpiration(exp).setNotBefore(now);
         }
