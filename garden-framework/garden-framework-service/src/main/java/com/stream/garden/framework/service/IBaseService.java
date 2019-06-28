@@ -54,4 +54,6 @@ public interface IBaseService<T, ID> {
      * @throws ApplicationException exception
      */
     public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException;
+
+    public boolean exists(T t) throws ApplicationException;
 }

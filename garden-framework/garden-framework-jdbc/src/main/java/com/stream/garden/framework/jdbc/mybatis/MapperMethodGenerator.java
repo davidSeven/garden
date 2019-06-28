@@ -73,6 +73,10 @@ public class MapperMethodGenerator {
             writer.write(addOrdderByClauseSQL());
         }
 
+        if (!existMethodSet.contains("exists")) {
+            writer.write(addExistsByPrimaryKey(table, idProertyClassType));
+        }
+
         if (isTreeMapperClass(table.getNamespace())) {
             writer.write(addTree(existMethodSet));
         }
@@ -105,6 +109,17 @@ public class MapperMethodGenerator {
         sb.append("        </trim>                                                                \n");
         sb.append("    </if>                                                                      \n");
         sb.append("</sql>                                                                         \n");
+        return sb.toString();
+    }
+
+    private static String addExistsByPrimaryKey(CommonTable table, String idProertyClassType) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n<select id=\"exists\" parameterType=\"" + idProertyClassType + "\" >");
+        sb.append("\n select ");
+        sb.append("\n count(0)");
+        sb.append("\n    from " + table.getTable());
+        sb.append("\n    where " + getKeyCondition(table.getIdColumn()));
+        sb.append("\n</select>\n");
         return sb.toString();
     }
 

@@ -117,6 +117,12 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
         return pageInfo;
     }
 
+    @Override
+    public boolean exists(T t) throws ApplicationException {
+        int exists = baseMapper.exists(t);
+        return exists != 0;
+    }
+
     /**
      * 设置默认值
      *

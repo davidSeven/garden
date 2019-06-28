@@ -42,9 +42,12 @@ public interface AppCode {
      * @param e 异常
      * @return 异常编码
      */
-    default AppCode getAppCode(ApplicationException e) {
-        if (null != e && null != e.getAppCode()) {
-            return e.getAppCode();
+    default AppCode getAppCode(Exception e) {
+        if (e instanceof ApplicationException) {
+            ApplicationException ae = (ApplicationException) e;
+            if (null != ae.getAppCode()) {
+                return ae.getAppCode();
+            }
         }
         return this;
     }

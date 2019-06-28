@@ -31,7 +31,7 @@ public class UserController {
     public Result<Integer> insert(User user) {
         try {
             return new Result<Integer>().setData(userService.insert(user)).ok();
-        } catch (ApplicationException e) {
+        } catch (Exception e) {
             AppCode appCode = SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e);
             logger.error(">>>" + appCode.getMessage(), e);
             return new Result<>(appCode);

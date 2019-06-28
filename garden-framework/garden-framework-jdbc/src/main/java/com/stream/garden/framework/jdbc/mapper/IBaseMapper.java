@@ -83,4 +83,12 @@ public interface IBaseMapper<T, ID> {
      * @return 对象集合
      */
     public Page<T> pageList(T t);
+
+    /**
+     * 检查是否存在
+     *
+     * @param t 对象
+     * @return 影响条数
+     */
+    public int exists(T t);
 }

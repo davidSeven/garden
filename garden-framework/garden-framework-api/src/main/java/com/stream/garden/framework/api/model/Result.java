@@ -27,6 +27,10 @@ public class Result<T> implements Serializable {
         setAppCode(appCode);
     }
 
+    public Result(Exception exception) {
+
+    }
+
     public void setAppCode(AppCode appCode) {
         this.code = appCode.getCode();
         this.msg = appCode.getMessage();
