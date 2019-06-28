@@ -1,12 +1,10 @@
 package com.stream.garden.framework.web.config;
 
-import com.alibaba.nacos.api.config.annotation.NacosProperty;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author garden
@@ -18,21 +16,21 @@ public class GlobalConfig {
 
     public static final String CONFIG_PREFIX = "garden";
 
-    @NacosValue(value = "${garden.name}", autoRefreshed = true)
+    // @NacosValue(value = "${garden.name}", autoRefreshed = true)
     private String name;
-    @NacosValue(value = "${garden.password}", autoRefreshed = true)
+    // @NacosValue(value = "${garden.password}", autoRefreshed = true)
     private String password;
 
-    @NacosValue(value = "${garden.excludePath}", autoRefreshed = true)
+    // @NacosValue(value = "${garden.excludePath}", autoRefreshed = true)
     private List<String> excludePath;
 
     /**
      * 登录路径
      */
-    @NacosValue(value = "${garden.login-path}")
+    // @NacosValue(value = "${garden.login-path}")
     private String loginPath;
 
-    @NacosProperty(value = "garden.jwt")
+    // @NacosProperty(value = "garden.jwt")
     private JwtConfig jwt;
 
     public JwtConfig getJwt() {
