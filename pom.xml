@@ -12,7 +12,7 @@
     <modules>
         <module>garden-framework</module>
         <module>garden-generate-code</module>
-        <module>garden-system</module>
+        <module>garden-city</module>
     </modules>
 
     <properties>
