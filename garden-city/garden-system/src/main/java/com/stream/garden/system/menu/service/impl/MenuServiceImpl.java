@@ -8,6 +8,7 @@ import com.stream.garden.system.menu.dao.IMenuDao;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,10 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
 
     @Override
     public int insert(Menu menu) throws ApplicationException {
+        // 设置父级id
+        if (StringUtils.isEmpty(menu.getParentId())) {
+            menu.setParentId("0");
+        }
         // 同一个菜单下两个子菜单的名字不能一样
         Menu paramMenu = new Menu();
         paramMenu.setName(menu.getName());

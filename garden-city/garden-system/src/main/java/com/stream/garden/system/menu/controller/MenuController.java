@@ -35,6 +35,16 @@ public class MenuController {
         return "system/menu/list";
     }
 
+    /**
+     * 跳转编辑页面
+     * @return 页面路径
+     */
+    @RequestMapping(value = "/toEdit", method = RequestMethod.GET)
+    public String toEdit() {
+        logger.debug(">>>页面跳转：{}", "system/menu/edit");
+        return "system/menu/edit";
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> add(Menu menu) {

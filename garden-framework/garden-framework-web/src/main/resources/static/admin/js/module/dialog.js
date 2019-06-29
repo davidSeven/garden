@@ -14,22 +14,18 @@ layui.define(['jquery', 'layer'], function (exports) {
                 });
             },
             page: function (title, url, w, h) {
-                if (title == null || title == '') {
+                if (!title) {
                     title = false;
                 }
-                ;
-                if (url == null || url == '') {
+                if (!url) {
                     url = "404.html";
                 }
-                ;
-                if (w == null || w == '') {
+                if (!w) {
                     w = '700px';
                 }
-                ;
-                if (h == null || h == '') {
+                if (!h) {
                     h = '350px';
                 }
-                ;
                 var index = layer.open({
                     type: 2,
                     title: title,
@@ -40,16 +36,16 @@ layui.define(['jquery', 'layer'], function (exports) {
                 });
             },
             /**
-			 * 提示
-			 * @param title
-			 * @param obj
-			 */
-			tips: function(title, obj) {
-				layer.tips(title, obj, {
-					tips: [1, '#444c63'], //还可配置颜色
-					time: 1000
-				});
-			}
+             * 提示
+             * @param title
+             * @param obj
+             */
+            tips: function (title, obj) {
+                layer.tips(title, obj, {
+                    tips: [1, '#444c63'], //还可配置颜色
+                    time: 1000
+                });
+            }
         };
         //输出test接口
         exports('dialog', dialog);
