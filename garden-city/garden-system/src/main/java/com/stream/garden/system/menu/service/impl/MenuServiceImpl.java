@@ -38,10 +38,11 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
     public int update(Menu menu) throws ApplicationException {
         // 同一个菜单下两个子菜单的名字不能一样
         Menu paramMenu = new Menu();
-        paramMenu.setId(menu.getId());
+        // paramMenu.setId(menu.getId());
         paramMenu.setName(menu.getName());
         paramMenu.setParentId(menu.getParentId());
-        if (super.exists(paramMenu)) {
+        // 根据名字和父级id查询，如果返回的条数大于1，则存在相同的记录
+        if (super.baseMapper.exists(paramMenu) > 1) {
             throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT);
         }
         return super.update(menu);
@@ -55,6 +56,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
         for (String id : strings) {
             Menu paramMenu = new Menu();
             paramMenu.setParentId(id);
+            // 根据parentId查询记录，如果存在，则存在自己，则不能删除
             if (super.exists(paramMenu)) {
                 throw new ApplicationException(SystemExceptionCode.MENU_DELETE_EXCEPTION);
             }
