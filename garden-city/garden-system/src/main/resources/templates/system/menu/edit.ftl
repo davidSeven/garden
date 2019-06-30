@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">名称</label>
+            <label class="layui-form-label lay-required">名称</label>
             <div class="layui-input-block">
                 <input type="text" name="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
             </div>
@@ -29,7 +29,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">地址</label>
             <div class="layui-input-block">
-                <input type="text" name="path" required lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+                <input type="text" name="path" placeholder="请输入地址" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -66,6 +66,7 @@
     </form>
 </div>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script>
     // edit
     layui.use(['form', 'jquery'], function() {
@@ -73,15 +74,29 @@
                 $ = layui.jquery;
         //监听提交
         form.on('submit(editForm)', function(data) {
-            layer.msg(JSON.stringify(data.field));
+            console.log(data.field);
+            // layer.msg(JSON.stringify(data.field));
+
+            $.ajax({
+                type: 'post',
+                url: '/system/menu/add',
+                data: data.field,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data.success) {
+                        layer.msg('操作成功', {icon: 1});
+                    } else {
+                        layer.msg(data.msg, {icon: 2});
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
             return false;
         });
-
-        console.log($);
-        console.log($.ajax);
-        console.log($.fn.find);
-        console.log($.find);
-        console.log($("#editForm").find("[name]"));
 
     });
 </script>

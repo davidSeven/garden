@@ -7,10 +7,12 @@ import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.dao.IMenuDao;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
+import com.stream.garden.system.menu.vo.MenuVO;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,18 +27,23 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
 
     @Override
     public int insert(Menu menu) throws ApplicationException {
-        // 设置父级id
-        if (StringUtils.isEmpty(menu.getParentId())) {
-            menu.setParentId("0");
+        try {
+            // 设置父级id
+            if (StringUtils.isEmpty(menu.getParentId())) {
+                menu.setParentId("0");
+            }
+            // 同一个菜单下两个子菜单的名字不能一样
+            Menu paramMenu = new Menu();
+            paramMenu.setName(menu.getName());
+            paramMenu.setParentId(menu.getParentId());
+            if (super.exists(paramMenu)) {
+                throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT.format(menu.getName()));
+            }
+            return super.insertSelective(menu);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e);
         }
-        // 同一个菜单下两个子菜单的名字不能一样
-        Menu paramMenu = new Menu();
-        paramMenu.setName(menu.getName());
-        paramMenu.setParentId(menu.getParentId());
-        if (super.exists(paramMenu)) {
-            throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT);
-        }
-        return super.insert(menu);
     }
 
     @Override
@@ -50,7 +57,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
         if (super.baseMapper.exists(paramMenu) > 1) {
             throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT);
         }
-        return super.update(menu);
+        return super.updateSelective(menu);
     }
 
     @Override
@@ -63,7 +70,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
             paramMenu.setParentId(id);
             // 根据parentId查询记录，如果存在，则存在自己，则不能删除
             if (super.exists(paramMenu)) {
-                throw new ApplicationException(SystemExceptionCode.MENU_DELETE_EXCEPTION);
+                throw new ApplicationException(SystemExceptionCode.MENU_EXISTS_CHILDREN_DELETE_EXCEPTION);
             }
         }
         return super.delete(strings);

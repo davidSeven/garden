@@ -2142,3 +2142,9 @@
     margin-left: 80px;
   }
 }
+
+/* 必填样式 */
+.lay-required:after {
+  content: '*';
+  color: red;
+}

@@ -2,10 +2,12 @@ package com.stream.garden.system.menu.controller;
 
 import com.stream.garden.framework.api.exception.AppCode;
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
+import com.stream.garden.system.menu.vo.MenuVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * @author garden
@@ -64,6 +68,28 @@ public class MenuController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
+        }
+    }
+
+    @RequestMapping(value = "/get", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Menu> get(Menu menu) {
+        try {
+            return new Result<Menu>().ok().setData(menuService.get(menu.getId()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<List<Menu>> list(Menu menu) {
+        try {
+            return new Result<List<Menu>>().ok().setData(menuService.list(menu));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
 }

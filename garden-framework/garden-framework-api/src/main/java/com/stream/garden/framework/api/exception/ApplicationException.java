@@ -21,6 +21,31 @@ public class ApplicationException extends Exception {
     public ApplicationException(Throwable cause, AppCode appCode) {
         super(appCode.getMessage(), cause);
         this.appCode = appCode;
+        if (cause instanceof ApplicationException) {
+            this.setAppCode(((ApplicationException) cause).getAppCode());
+        }
+    }
+
+    public ApplicationException(String message) {
+        super(message);
+    }
+
+    public ApplicationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ApplicationException(Throwable cause) {
+        super(cause);
+        if (cause instanceof ApplicationException) {
+            this.setAppCode(((ApplicationException) cause).getAppCode());
+        }
+    }
+
+    protected ApplicationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+        if (cause instanceof ApplicationException) {
+            this.setAppCode(((ApplicationException) cause).getAppCode());
+        }
     }
 
     public AppCode getAppCode() {

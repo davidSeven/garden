@@ -22,10 +22,10 @@ public enum SystemExceptionCode implements AppCode {
     /** 用户编码重复 */
     USER_CODE_REPEAT(20001, "insert user code repeat"),
 
-    MENU_ADD_EXCEPTION(20900, "add menu exception"),
-    MENU_NAME_REPEAT(20901, "add menu name repeat"),
-    MENU_EDIT_EXCEPTION(20902, "edit menu exception"),
-    MENU_DELETE_EXCEPTION(20903, "exits children node"),
+    MENU_ADD_EXCEPTION(20900, "新增菜单异常"),
+    MENU_NAME_REPEAT(20901, "菜单[{0}]已存在"),
+    MENU_EDIT_EXCEPTION(20902, "修改菜单异常"),
+    MENU_EXISTS_CHILDREN_DELETE_EXCEPTION(20903, "存在子级菜单，不允许删除"),
     ;
 
     private int code;

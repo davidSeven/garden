@@ -50,32 +50,16 @@
 		</div>
 		<script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-			layui.use(['form', 'layedit', 'laydate'], function() {
-				var form = layui.form(),
-					layer = layui.layer;
-
+			layui.use(['form'], function() {
+				var form = layui.form;
 
 				//自定义验证规则
-				form.verify({
-					title: function(value) {
-						if(value.length < 5) {
-							return '标题至少得5个字符啊';
-						}
-					},
-					password: [/(.+){6,12}$/, '密码必须6到12位'],
-					verity: [/(.+){6}$/, '验证码必须是6位']
-					
-				});
-
+				/*form.verify({
+				});*/
 				
 				//监听提交
 				form.on('submit(login)', function(data) {
-					/*layer.alert(JSON.stringify(data.field), {
-						title: '最终的提交信息'
-					});*/
-					// return false;
 				});
-
 			});
 		</script>
 	</body>

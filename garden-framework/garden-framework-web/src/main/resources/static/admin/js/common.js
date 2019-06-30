@@ -157,50 +157,169 @@ function refresh() {
 }
 
 /**
+ * 设置layui select的值
+ * @param field
+ * @param value
+ */
+function setSelectValue(field, value) {
+    field.value = value;
+    var nextSibling = field.nextSibling;
+    if (nextSibling && nextSibling.className && nextSibling.className.indexOf("layui-form-select") !== -1) {
+        // 根据layui现有结构改造
+        // select的下拉
+        var options = field.options;
+        // select下拉数据
+        var optionsData = {};
+        for (var i = 0; i < options.length; i++) {
+            optionsData[options[i].value] = options[i].text;
+        }
+        var children = nextSibling.children;
+        // 显示的input赋值
+        children[0].children[0].value = optionsData[value];
+        // layui下拉增加选中样式
+        var dd = children[1].children;
+        for (var j = 0; j < dd.length; j++) {
+            if (dd[j].className && dd[j].className.indexOf("layui-this") !== -1) {
+                dd[j].className = "";
+            }
+            if (dd[j].getAttribute("lay-value") === value) {
+                dd[j].className = "layui-this";
+            }
+        }
+    }
+}
+
+/**
  * 序列化表单
  * @param formId
  * @param data
  */
 function jsonData(formId, data) {
     var form = document.getElementById(formId);
-    if (data) {
-        function setValue(name, value) {
+    if (!form) {
+        console.warn("this element id [" + formId + "] is not exits");
+        return;
+    }
 
+    // 递归查找
+    function getChildren(element) {
+        var elements = [];
+        // 判断元素节点类型
+        if (element.nodeType === 1) {
+            // 判断元素是否携带name属性
+            if (element.name) {
+                elements.push(element);
+            }
+            // 获取元素子级节点数量
+            var childElementCount = element.childElementCount;
+            if (childElementCount) {
+                // 获取元素子级节点
+                var children = element.children;
+                for (var i = 0; i < childElementCount; i++) {
+                    elements = elements.concat(getChildren(children[i]));
+                }
+            }
         }
+        return elements;
+    }
+
+    var elements = getChildren(form);
+
+    if (data) {
+        console.log("do set value");
+
+        function getElementsByName(name) {
+            var names = [];
+            for (var i = 0; i < elements.length; i++) {
+                console.log("elements[i].name：" + elements[i].name + "，name：" + name);
+                if (elements[i].name === name) {
+                    names.push(elements[i]);
+                }
+            }
+            return names;
+        }
+
+        function setValue(name, value) {
+            var names = getElementsByName(name);
+            for (var i = 0; i < names.length; i++) {
+                setElementValue(names[i], value);
+            }
+        }
+
+        function setElementValue(field, value) {
+            console.log("field.nodeName：" + field.nodeName);
+            if ('INPUT' === field.nodeName) {
+                if ('text' === field.type) {
+                    field.value = value;
+                } else if ('password' === field.type) {
+                    field.value = value;
+                } else if ('checkbox' === field.type) {
+                    if (field.value === value) {
+                        field.checked = true;
+                    }
+                } else if ('radio' === field.type) {
+                    if (field.value === value) {
+                        field.checked = true;
+                    }
+                }
+            } else if ('TEXTAREA' === field.nodeName) {
+                field.value = value;
+            } else if ('SELECT' === field.nodeName) {
+                // setSelectValue(field, value);
+                field.value = value;
+            }
+        }
+
         for (var name in data) {
             if (data.hasOwnProperty(name)) {
                 setValue(name, data[name]);
             }
         }
     } else {
+        console.log("do get value");
+
         data = {};
-        function setValue(data, field) {
-            var value = getValue(field);
+
+        function getValue(data, field) {
+            var value = getElementValue(field);
             if (value) {
                 data[field.name] = value;
             }
         }
-        function getValue(field) {
+
+        function getElementValue(field) {
+            console.log("field.nodeName：" + field.nodeName);
             var value = null;
-            if ('input' === field.type) {
+            if ('INPUT' === field.nodeName) {
+                if ('text' === field.type) {
+                    value = field.value;
+                } else if ('password' === field.type) {
+                    value = field.value;
+                } else if ('checkbox' === field.type) {
+                    if (field.checked) {
+                        value = field.value;
+                    }
+                } else if ('radio' === field.type) {
+                    if (field.checked) {
+                        value = field.value;
+                    }
+                }
+            } else if ('TEXTAREA' === field.nodeName) {
                 value = field.value;
-            } else if ('checkbox' === field.type) {
-                if (field.checked) {
-                    value = field.value;
-                }
-            } else if ('radio' === field.type) {
-                if (field.checked) {
-                    value = field.value;
-                }
-            } else if ('textarea' === field.type) {
+            } else if ('SELECT' === field.nodeName) {
                 value = field.value;
             }
             return value;
         }
-        for (var i = 0; i < form.elements.length; i++) {
-            var field = form.elements[i];
-            setValue(data, field);
+
+        for (var i = 0; i < elements.length; i++) {
+            var field = elements[i];
+            getValue(data, field);
         }
     }
     return data;
+}
+
+function ajax(url, params, successFn, errorFn) {
+
 }

@@ -171,7 +171,7 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="com.stream.garden.framework.jdbc" level="error"/>
+        <logger name="com.stream.garden.framework.jdbc" level="debug"/>
         <logger name="org.mybatis" level="debug"/>
         <logger name="com.stream.garden" level="debug"/>
     </springProfile>

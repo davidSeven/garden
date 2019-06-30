@@ -114,11 +114,11 @@ public class MapperMethodGenerator {
 
     private static String addExistsByPrimaryKey(CommonTable table, String idProertyClassType) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n<select id=\"exists\" parameterType=\"" + idProertyClassType + "\" >");
+        sb.append("\n<select id=\"exists\" resultType=\"int\" parameterType=\"" + idProertyClassType + "\" >");
         sb.append("\n select ");
         sb.append("\n count(0)");
         sb.append("\n    from " + table.getTable());
-        sb.append("\n    where " + getKeyCondition(table.getIdColumn()));
+        sb.append(getConditions4Query(table.getAllColumnList(), null, null));
         sb.append("\n</select>\n");
         return sb.toString();
     }
