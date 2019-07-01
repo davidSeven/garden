@@ -59,15 +59,4 @@ public interface AppCode {
         }
         return this;
     }
-
-    /**
-     * 替换站位参数
-     *
-     * @param arguments 参数
-     * @return 格式化后的消息
-     */
-    default AppCode format(Object... arguments) {
-        this.setMessage(MessageFormat.format(this.getMessage(), arguments));
-        return this;
-    }
 }

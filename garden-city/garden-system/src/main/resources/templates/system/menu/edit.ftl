@@ -16,6 +16,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">上级</label>
             <div class="layui-input-block">
+                <input type="hidden" name="id">
                 <input type="hidden" name="parentId">
                 <input type="text" name="parentName" autocomplete="off" class="layui-input" disabled="disabled">
             </div>
@@ -39,7 +40,7 @@
                 <input type="radio" name="state" value="0" title="禁用">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div id="item-icon" class="layui-form-item" style="display: none;">
             <label class="layui-form-label">图标</label>
             <div class="layui-input-block">
                 <input type="text" name="icon" placeholder="请输入图标" autocomplete="off" class="layui-input">
@@ -54,7 +55,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -65,33 +66,75 @@
         </div>
     </form>
 </div>
+<script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
-<script>
+<script type="text/javascript">
+    var nodes = null;
+    var isInsert = false;
+    function init(params) {
+        console.log('init');
+        nodes = params.nodes;
+        isInsert = params.isInsert;
+    }
     // edit
     layui.use(['form', 'jquery'], function() {
+        console.log('layui init');
         var form = layui.form,
                 $ = layui.jquery;
+
+        var index = parent.layer.getFrameIndex(window.name);
+        console.log('current page index:' + index);
+
+        var parentId;
+        // 处理初始值
+        if (isInsert) {
+            // 新增
+            if (nodes && nodes.length) {
+                var node = nodes[0];
+                $("input[name='parentId']").val(parentId = node.id);
+                $("input[name='parentName']").val(node.name);
+            }
+        } else {
+            // 修改
+            parentId = nodes[0]["parentId"];
+            jsonData("editForm", nodes[0]);
+            form.render();
+        }
+
+        if (!parentId) {
+            $("#item-icon").show();
+        } else {
+            $("#item-icon").hide();
+        }
+
         //监听提交
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
             // layer.msg(JSON.stringify(data.field));
 
+            var id = data.field.id;
+            var url = '/system/menu/add';
+            if (id) {
+                url = '/system/menu/edit';
+            }
+
             $.ajax({
                 type: 'post',
-                url: '/system/menu/add',
+                url: url,
                 data: data.field,
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
                     if (data.success) {
                         layer.msg('操作成功', {icon: 1});
+                        closePage();
                     } else {
                         layer.msg(data.msg, {icon: 2});
                     }
                 },
                 error: function () {
-
+                    console.log(arguments);
                 }
             });
 

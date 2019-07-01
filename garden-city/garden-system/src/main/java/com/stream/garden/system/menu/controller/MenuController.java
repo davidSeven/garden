@@ -56,7 +56,7 @@ public class MenuController {
             return new Result<Integer>().ok().setData(menuService.insert(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(SystemExceptionCode.MENU_ADD_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.MENU_ADD_EXCEPTION);
         }
     }
 
@@ -86,10 +86,22 @@ public class MenuController {
     @ResponseBody
     public Result<List<Menu>> list(Menu menu) {
         try {
+            Thread.sleep(300);
             return new Result<List<Menu>>().ok().setData(menuService.list(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> delete(Menu menu) {
+        try {
+            return new Result<Integer>().ok().setData(menuService.delete(menu.getId()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
         }
     }
 }
