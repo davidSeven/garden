@@ -116,25 +116,11 @@
                 ,time: 0
             });
 
-            $.ajax({
-                // async: false, // 同步
-                type: 'post',
-                url: '/system/menu/list',
-                data: {},
-                dataType: "json",
-                success: function (data) {
-                    if (data.success) {
-                        callback && callback(data.data);
-                    } else {
-                        layer.msg(data.msg, {icon: 2});
-                    }
-                },
-                error: function () {
-                    console.log(arguments);
-                },
-                complete: function () {
-                    console.log(arguments);
-                    parent.layer.close(loadingIndex);
+            ajaxPost('/system/menu/list', null, function (data) {
+                if (data.success) {
+                    callback && callback(data.data);
+                } else {
+                    layer.msg(data.msg, {icon: 2});
                 }
             });
 
@@ -248,22 +234,12 @@
                 // callback
                 var url = $(this).attr('data-url');
                 function callback() {
-                    $.ajax({
-                        type: 'post',
-                        url: url,
-                        data: {id: nodes[0].id},
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            if (data.success) {
-                                layer.msg('操作成功', {icon: 1});
-                                layui.refresh();
-                            } else {
-                                layer.msg(data.msg, {icon: 2});
-                            }
-                        },
-                        error: function () {
-                            console.log(arguments);
+                    ajaxPost(url, {id: nodes[0].id}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
                         }
                     });
                 }

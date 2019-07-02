@@ -119,25 +119,14 @@
                 url = '/system/menu/edit';
             }
 
-            $.ajax({
-                type: 'post',
-                url: url,
-                data: data.field,
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                    if (data.success) {
-                        layer.msg('操作成功', {icon: 1});
-                        closePage();
-                    } else {
-                        layer.msg(data.msg, {icon: 2});
-                    }
-                },
-                error: function () {
-                    console.log(arguments);
+            ajaxPost(url, data.field, function (data) {
+                if (data.success) {
+                    layer.msg('操作成功', {icon: 1});
+                    closePage();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
                 }
             });
-
             return false;
         });
 

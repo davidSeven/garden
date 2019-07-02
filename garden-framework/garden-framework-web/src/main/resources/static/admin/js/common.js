@@ -389,14 +389,39 @@ function jsonData(formId, data) {
     return data;
 }
 
-function ajax(url, params) {
-
+function ajaxPost(url, params, successFn, errorFn) {
+    // loading
+    var loadingIndex = parent.layer.msg('加载中', {
+        icon: 16
+        ,shade: 0.2
+        ,time: 0
+    });
+    // ajax
+    $.ajax({
+        // async: false, // 同步
+        type: 'post',
+        url: url,
+        data: params,
+        dataType: "json",
+        success: function (data) {
+            successFn && successFn(data);
+        },
+        error: function () {
+            console.log(arguments);
+            errorFn && errorFn();
+        },
+        complete: function () {
+            console.log(arguments);
+            parent.layer.close(loadingIndex);
+        }
+    });
 }
 
 // 权限
 var permissions = {
     "system.menu.add": 0x1,
     "system.menu.update": 0x1,
+    "system.menu.delete": 0x1,
     "system.menu.refresh": 0x1
 };
 function hasPermission(key) {
