@@ -165,11 +165,18 @@
                     },
                     callback: {
                         onClick: function (event, treeId, treeNode) {
+                            console.log(treeNode);
                             if (!treeNode["parentId"]) {
                                 $("#item-icon").show();
                             } else {
                                 $("#item-icon").hide();
                             }
+                            // 获取到父级名称
+                            var parentNode = treeNode.getParentNode();
+                            if (parentNode) {
+                                treeNode.parentName = parentNode.name;
+                            }
+                            // 设置表单数据
                             jsonData("viewForm", treeNode);
                             form.render();
                         }

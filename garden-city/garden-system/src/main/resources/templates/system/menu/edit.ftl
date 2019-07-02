@@ -76,61 +76,65 @@
         console.log('init');
         nodes = params.nodes;
         isInsert = params.isInsert;
+
+        initCallback();
     }
-    // edit
-    layui.use(['form', 'jquery'], function() {
-        console.log('layui init');
-        var form = layui.form,
-                $ = layui.jquery;
+    function initCallback() {
+        // edit
+        layui.use(['form', 'jquery'], function() {
+            console.log('layui init');
+            var form = layui.form,
+                    $ = layui.jquery;
 
-        var index = parent.layer.getFrameIndex(window.name);
-        console.log('current page index:' + index);
+            var index = parent.layer.getFrameIndex(window.name);
+            console.log('current page index:' + index);
 
-        var parentId;
-        // 处理初始值
-        if (isInsert) {
-            // 新增
-            if (nodes && nodes.length) {
-                var node = nodes[0];
-                $("input[name='parentId']").val(parentId = node.id);
-                $("input[name='parentName']").val(node.name);
-            }
-        } else {
-            // 修改
-            parentId = nodes[0]["parentId"];
-            jsonData("editForm", nodes[0]);
-            form.render();
-        }
-
-        if (!parentId) {
-            $("#item-icon").show();
-        } else {
-            $("#item-icon").hide();
-        }
-
-        //监听提交
-        form.on('submit(editForm)', function(data) {
-            console.log(data.field);
-            // layer.msg(JSON.stringify(data.field));
-
-            var id = data.field.id;
-            var url = '/system/menu/add';
-            if (id) {
-                url = '/system/menu/edit';
-            }
-
-            ajaxPost(url, data.field, function (data) {
-                if (data.success) {
-                    layer.msg('操作成功', {icon: 1});
-                    closePage();
-                } else {
-                    layer.msg(data.msg, {icon: 2});
+            var parentId;
+            // 处理初始值
+            if (isInsert) {
+                // 新增
+                if (nodes && nodes.length) {
+                    var node = nodes[0];
+                    $("input[name='parentId']").val(parentId = node.id);
+                    $("input[name='parentName']").val(node.name);
                 }
-            });
-            return false;
-        });
+            } else {
+                // 修改
+                parentId = nodes[0]["parentId"];
+                jsonData("editForm", nodes[0]);
+                form.render();
+            }
 
-    });
+            if (!parentId) {
+                $("#item-icon").show();
+            } else {
+                $("#item-icon").hide();
+            }
+
+            //监听提交
+            form.on('submit(editForm)', function(data) {
+                console.log(data.field);
+                // layer.msg(JSON.stringify(data.field));
+
+                var id = data.field.id;
+                var url = '/system/menu/add';
+                if (id) {
+                    url = '/system/menu/edit';
+                }
+
+                ajaxPost(url, data.field, function (data) {
+                    if (data.success) {
+                        layer.msg('操作成功', {icon: 1});
+                        closePage();
+                    } else {
+                        layer.msg(data.msg, {icon: 2});
+                    }
+                });
+                return false;
+            });
+
+        });
+    }
 </script>
 </body>
 </html>
