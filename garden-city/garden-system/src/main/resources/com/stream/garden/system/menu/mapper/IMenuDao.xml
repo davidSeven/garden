@@ -22,4 +22,60 @@
     <sql id="BaseTable">
         SYS_MENU_T
     </sql>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="com.stream.garden.system.menu.model.Menu" >
+        select ID,NAME,CODE,STATE,PATH,SORTS,TYPE,PARENT_ID,ICON,REMARK,CREATED_BY,CREATION_DATE,UPDATED_BY,UPDATION_DATE,ENABLED_FLAG,TRACE_ID
+        from SYS_MENU_T
+        <trim prefix="WHERE"  prefixOverrides="AND | OR" >
+            <if test="id != null and id!=''" >
+                AND ID = #{id, jdbcType=VARCHAR}
+            </if>
+            <if test="name != null and name!=''" >
+                AND NAME = #{name, jdbcType=VARCHAR}
+            </if>
+            <if test="code != null and code!=''" >
+                AND CODE = #{code, jdbcType=VARCHAR}
+            </if>
+            <if test="state != null and state!=''" >
+                AND STATE = #{state, jdbcType=VARCHAR}
+            </if>
+            <if test="path != null and path!=''" >
+                AND PATH = #{path, jdbcType=VARCHAR}
+            </if>
+            <if test="sorts != null" >
+                AND SORTS = #{sorts, jdbcType=INTEGER}
+            </if>
+            <if test="type != null and type!=''" >
+                AND TYPE = #{type, jdbcType=VARCHAR}
+            </if>
+            <if test="parentId != null and parentId!=''" >
+                AND PARENT_ID = #{parentId, jdbcType=VARCHAR}
+            </if>
+            <if test="icon != null and icon!=''" >
+                AND ICON = #{icon, jdbcType=VARCHAR}
+            </if>
+            <if test="remark != null and remark!=''" >
+                AND REMARK = #{remark, jdbcType=VARCHAR}
+            </if>
+            <if test="createdBy != null and createdBy!=''" >
+                AND CREATED_BY = #{createdBy, jdbcType=VARCHAR}
+            </if>
+            <if test="creationDate != null and creationDate!=''" >
+                AND CREATION_DATE = #{creationDate, jdbcType=VARCHAR}
+            </if>
+            <if test="updatedBy != null and updatedBy!=''" >
+                AND UPDATED_BY = #{updatedBy, jdbcType=VARCHAR}
+            </if>
+            <if test="updationDate != null and updationDate!=''" >
+                AND UPDATION_DATE = #{updationDate, jdbcType=VARCHAR}
+            </if>
+            <if test="enabledFlag != null and enabledFlag!=''" >
+                AND ENABLED_FLAG = #{enabledFlag, jdbcType=VARCHAR}
+            </if>
+            <if test="traceId != null and traceId!=''" >
+                AND TRACE_ID = #{traceId, jdbcType=VARCHAR}
+            </if>
+        </trim>
+        ORDER BY SORTS ASC
+    </select>
 </mapper>

@@ -11,7 +11,7 @@
     <title>菜单列表</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
-    <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/ztree/css/zTreeStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/ztree/zTreeStyle.css"/>
     <style type="text/css">
 
     </style>
@@ -19,81 +19,78 @@
 
 <body>
 <div class="page-content-wrap">
-    <form class="layui-form" action="">
-        <div class="layui-form-item">
-            <div class="layui-inline tool-btn">
-                <button id="editBtn" class="layui-btn layui-btn-small layui-btn-normal hidden-xs"
-                        data-url="/system/menu/toEdit"><i class="layui-icon">&#xe654;</i></button>
-                <button class="layui-btn layui-btn-small layui-btn-warm hidden-xs" data-url="menu-add.html"><i
-                        class="iconfont">&#xe656;</i></button>
-            </div>
-        </div>
-    </form>
     <div class="layui-col-md4">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline tool-btn">
+                    <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
+                            permission="system.menu.add"
+                            data-url="/system/menu/toEdit"><i class="layui-icon">&#xe654;</i></button>
+                    <button id="editBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
+                            permission="system.menu.update"
+                            data-url="/system/menu/toEdit"><i class="layui-icon">&#xe642;</i></button>
+                    <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
+                            permission="system.menu.delete"
+                            data-url="/system/menu/delete"><i class="layui-icon layui-icon-delete"></i></button>
+                    <button id="refreshBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
+                            permission="system.menu.refresh"
+                            ><i class="layui-icon layui-icon-refresh"></i></button>
+                </div>
+            </div>
+        </form>
         <ul id="menuTree" class="ztree"></ul>
     </div>
-    <div class="layui-form layui-col-md8" id="table-list">
+    <div id="viewForm" class="layui-form layui-col-md8">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">输入框</label>
-            <div class="layui-input-inline">
-                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
-                       class="layui-input">
-            </div>
-            <div class="layui-form-mid layui-word-aux">辅助文字</div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">选择框</label>
+            <label class="layui-form-label">上级</label>
             <div class="layui-input-block">
-                <select name="city" lay-verify="required">
-                    <option value=""></option>
-                    <option value="0">北京</option>
-                    <option value="1">上海</option>
-                    <option value="2">广州</option>
-                    <option value="3">深圳</option>
-                    <option value="4">杭州</option>
-                </select>
+                <input type="text" name="parentName" autocomplete="off" class="layui-input" disabled="disabled">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">复选框</label>
+            <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="like[write]" title="写作">
-                <input type="checkbox" name="like[read]" title="阅读" checked>
-                <input type="checkbox" name="like[dai]" title="发呆">
+                <input type="text" name="name" autocomplete="off" class="layui-input" disabled="disabled">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">开关</label>
+            <label class="layui-form-label">地址</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="switch" lay-skin="switch">
+                <input type="text" name="path" autocomplete="off" class="layui-input" disabled="disabled">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">单选框</label>
+            <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="男" title="男">
-                <input type="radio" name="sex" value="女" title="女" checked>
+                <input type="radio" name="state" value="1" title="启用" checked disabled="disabled">
+                <input type="radio" name="state" value="0" title="禁用" disabled="disabled">
+            </div>
+        </div>
+        <div id="item-icon" class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="icon" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">顺序</label>
+            <div class="layui-input-block">
+                <input type="text" name="sorts" autocomplete="off" class="layui-input" disabled="disabled">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">文本域</label>
+            <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <textarea name="remark" class="layui-textarea" disabled="disabled"></textarea>
             </div>
         </div>
     </div>
 </div>
+<script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
-<script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
-<script src="<@spring.url''/>/static/ztree/jquery.ztree.all.min.js" type="text/javascript" charset="utf-8"></script>
-<script>
+<script src="<@spring.url''/>/static/ztree/jquery.ztree.all.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
     layui.use(['jquery', 'tree', 'layer', 'form'], function () {
         var $ = layui.jquery
                 , tree = layui.tree
@@ -101,67 +98,160 @@
                 , dialog = layui.dialog
                 , form = layui.form
                 //获取当前iframe的name值
-                , iframeObj = $(window.frameElement).attr('name')
-                //模拟数据
-                , datas = null;
+                , iframeObj = $(window.frameElement).attr('name');
 
-        $.ajax({
-            async: false, // 同步
-            type: 'post',
-            url: '/system/menu/getTree',
-            data: {},
-            dataType: "json",
-            success: function (data) {
+        var index = parent.layer.getFrameIndex(window.name);
+        console.log('current page index:' + index);
+
+        var config = {
+            showIcon: true,
+            showDisabled: true
+        };
+
+        function getTree() {
+
+            var loadingIndex = parent.layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.2
+                ,time: 0
+            });
+
+            ajaxPost('/system/menu/list', null, function (data) {
                 if (data.success) {
-                    datas = data.data;
+                    callback && callback(data.data);
                 } else {
                     layer.msg(data.msg, {icon: 2});
                 }
-            },
-            error: function () {
+            });
 
-            }
-        });
-
-        var zNodes = [
-            {id: 1, pId: 0, name: "[core] 基本功能 演示", open: true},
-            {id: 101, pId: 1, name: "最简单的树 --  标准 JSON 数据", file: "core/standardData"},
-            {id: 102, pId: 1, name: "最简单的树 --  简单 JSON 数据", file: "core/simpleData"},
-
-            {id: 2, pId: 0, name: "[excheck] 复/单选框功能 演示", open: false},
-            {id: 201, pId: 2, name: "Checkbox 勾选操作", file: "excheck/checkbox"},
-            {id: 206, pId: 2, name: "Checkbox nocheck 演示", file: "excheck/checkbox_nocheck"}
-        ];
-
-        var setting = {
-            view: {
-                dblClickExpand: false,
-                showLine: true,
-                selectedMulti: false
-            },
-            data: {
-                simpleData: {
-                    enable: true,
-                    idKey: "id",
-                    pIdKey: "pId",
-                    rootPId: ""
+            // 成功后的回调
+            function callback(datas) {
+                if (datas && datas.length) {
+                    $.each(datas, function (i, v) {
+                        var ns = [v.name];
+                        if (v.icon && config.showIcon) {
+                            ns.push('<i style="margin-left: 5px;" class="layui-icon ' + v.icon + '"></i>');
+                        }
+                        v['name_ztree'] = ns.join("");
+                    });
                 }
+
+                var setting = {
+                    view: {
+                        dblClickExpand: false,
+                        showLine: true,
+                        selectedMulti: false,
+                        nameIsHTML: true,
+                        fontCss: function (treeId, treeNode) {
+                            if (treeNode.state === '0' && config.showDisabled) {
+                                return {
+                                    "color": "#c9c9c9"
+                                };
+                            }
+                        }
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "parentId",
+                            rootPId: ""
+                        },
+                        key: {
+                            icon: "icon_name_ztree",
+                            name: "name_ztree",
+                            title: "name"
+                        }
+                    },
+                    callback: {
+                        onClick: function (event, treeId, treeNode) {
+                            if (!treeNode["parentId"]) {
+                                $("#item-icon").show();
+                            } else {
+                                $("#item-icon").hide();
+                            }
+                            jsonData("viewForm", treeNode);
+                            form.render();
+                        }
+                    }
+                };
+
+                var treeObj = $.fn.zTree.init($("#menuTree"), setting, datas);
+                treeObj.expandAll(true);
             }
+        }
+        layui.refresh = function() {
+            getTree();
         };
+        layui.refresh();
 
-        $.fn.zTree.init($("#menuTree"), setting, zNodes);
-
-        console.log(menuTree);
-
-        $("#editBtn").click(function () {
-            var url = $(this).attr('data-url');
-            //将iframeObj传递给父级窗口,执行操作完成刷新
-            page("编辑", url, iframeObj, w = "700px", h = "560px");
-
+        $("#addBtn").click(function () {
+            // 获取选中的数据
             var treeObj = $.fn.zTree.getZTreeObj("menuTree");
             var nodes = treeObj.getSelectedNodes();
             console.log(nodes);
 
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("编辑", url, iframeObj, w = "700px", h = "560px", {isInsert: true, nodes: nodes});
+            return false;
+        });
+
+        // 修改
+        $("#editBtn").click(function () {
+            // 获取选中的数据
+            var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+            var nodes = treeObj.getSelectedNodes();
+            console.log(nodes);
+
+            if (nodes.length === 1) {
+                var url = $(this).attr('data-url');
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("编辑", url, iframeObj, w = "700px", h = "560px", {isInsert: false, nodes: nodes});
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        // 删除
+        $("#deleteBtn").click(function () {
+            // 获取选中的数据
+            var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+            var nodes = treeObj.getSelectedNodes();
+            console.log(nodes);
+            if (nodes.length === 1) {
+                //询问框
+                layer.confirm('确定删除选中数据吗', {
+                    // btn: ['1','2'] //按钮
+                    icon: 3
+                }, function(){
+                    // 确定
+                    callback && callback();
+                }, function(){
+                    // 取消
+                });
+                // callback
+                var url = $(this).attr('data-url');
+                function callback() {
+                    ajaxPost(url, {id: nodes[0].id}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    });
+                }
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        // 刷新
+        $("#refreshBtn").click(function () {
+            layui.refresh();
             return false;
         });
     });

@@ -108,7 +108,7 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 var iframeObjName;
 
 //父级弹出页面
-function page(title, url, obj, w, h) {
+function page(title, url, obj, w, h, params) {
     if (!title) {
         title = false;
     }
@@ -121,6 +121,40 @@ function page(title, url, obj, w, h) {
     if (!h) {
         h = '350px';
     }
+
+    // 窗口打开后
+    function success(layero, index) {
+        console.log("--- success function start ---");
+        try {
+            var iframe = window['layui-layer-iframe' + index];
+            if (iframe && iframe.init) {
+                console.log("--- 存在init方法，执行init方法 ---");
+                iframe.init(params);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        console.log("--- success function end ---");
+    }
+    // 窗口关闭
+    function end() {
+        console.log("--- end function start ---");
+        try {
+            if (window.frames[obj]) {
+                var refresh = window.frames[obj].layui.refresh,
+                    _refresh = window.frames[obj].layui._refresh;
+                if (_refresh && refresh) {
+                    console.log("--- 存在refresh方法，执行refresh方法 ---");
+                    refresh();
+                }
+                window.frames[obj].layui._refresh = false;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        console.log("--- end function end ---");
+    }
+
     iframeObjName = obj;
     //如果手机端，全屏显示
     if (window.innerWidth <= 768) {
@@ -129,7 +163,9 @@ function page(title, url, obj, w, h) {
             title: title,
             area: [320, h],
             fixed: false, //不固定
-            content: url
+            content: url,
+            success: success,
+            end: end
         });
         layer.full(index);
     } else {
@@ -138,8 +174,25 @@ function page(title, url, obj, w, h) {
             title: title,
             area: [w, h],
             fixed: false, //不固定
-            content: url
+            content: url,
+            success: success,
+            end: end
         });
+    }
+}
+
+/**
+ * 关闭子页面
+ */
+function closePage() {
+    setRefresh();
+    var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
+    parent.layer.close(index); // 再执行关闭
+}
+
+function setRefresh() {
+    if (parent.window.frames[parent.iframeObjName]) {
+        parent.window.frames[parent.iframeObjName].layui._refresh = true;
     }
 }
 
@@ -201,6 +254,8 @@ function jsonData(formId, data) {
         return;
     }
 
+    var isDebug = false;
+
     // 递归查找
     function getChildren(element) {
         var elements = [];
@@ -226,12 +281,16 @@ function jsonData(formId, data) {
     var elements = getChildren(form);
 
     if (data) {
-        console.log("do set value");
+        if (isDebug) {
+            console.log("do set value");
+        }
 
         function getElementsByName(name) {
             var names = [];
             for (var i = 0; i < elements.length; i++) {
-                console.log("elements[i].name：" + elements[i].name + "，name：" + name);
+                if (isDebug) {
+                    console.log("elements[i].name：" + elements[i].name + "，name：" + name);
+                }
                 if (elements[i].name === name) {
                     names.push(elements[i]);
                 }
@@ -247,9 +306,13 @@ function jsonData(formId, data) {
         }
 
         function setElementValue(field, value) {
-            console.log("field.nodeName：" + field.nodeName);
+            if (isDebug) {
+                console.log("field.nodeName：" + field.nodeName);
+            }
             if ('INPUT' === field.nodeName) {
                 if ('text' === field.type) {
+                    field.value = value;
+                } else if ('hidden' === field.type) {
                     field.value = value;
                 } else if ('password' === field.type) {
                     field.value = value;
@@ -276,7 +339,9 @@ function jsonData(formId, data) {
             }
         }
     } else {
-        console.log("do get value");
+        if (isDebug) {
+            console.log("do get value");
+        }
 
         data = {};
 
@@ -288,10 +353,14 @@ function jsonData(formId, data) {
         }
 
         function getElementValue(field) {
-            console.log("field.nodeName：" + field.nodeName);
+            if (isDebug) {
+                console.log("field.nodeName：" + field.nodeName);
+            }
             var value = null;
             if ('INPUT' === field.nodeName) {
                 if ('text' === field.type) {
+                    value = field.value;
+                } else if ('hidden' === field.type) {
                     value = field.value;
                 } else if ('password' === field.type) {
                     value = field.value;
@@ -320,6 +389,55 @@ function jsonData(formId, data) {
     return data;
 }
 
-function ajax(url, params, successFn, errorFn) {
-
+function ajaxPost(url, params, successFn, errorFn) {
+    // loading
+    var loadingIndex = parent.layer.msg('加载中', {
+        icon: 16
+        ,shade: 0.2
+        ,time: 0
+    });
+    // ajax
+    $.ajax({
+        // async: false, // 同步
+        type: 'post',
+        url: url,
+        data: params,
+        dataType: "json",
+        success: function (data) {
+            successFn && successFn(data);
+        },
+        error: function () {
+            console.log(arguments);
+            errorFn && errorFn();
+        },
+        complete: function () {
+            console.log(arguments);
+            parent.layer.close(loadingIndex);
+        }
+    });
 }
+
+// 权限
+var permissions = {
+    "system.menu.add": 0x1,
+    "system.menu.update": 0x1,
+    "system.menu.delete": 0x1,
+    "system.menu.refresh": 0x1
+};
+function hasPermission(key) {
+    return permissions.hasOwnProperty(key);
+}
+function renderPermission() {
+    var elements = $(".has-permission");
+    $.each(elements, function (i, v) {
+        var $v = $(v);
+        var key = $v.attr("permission");
+        if (key && !hasPermission(key)) {
+            $v.remove();
+        } else {
+            $v.removeAttr("permission");
+            $v.removeClass("has-permission");
+        }
+    });
+}
+renderPermission();

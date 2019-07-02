@@ -37,7 +37,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
             paramMenu.setName(menu.getName());
             paramMenu.setParentId(menu.getParentId());
             if (super.exists(paramMenu)) {
-                throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT.format(menu.getName()));
+                throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT, menu.getName());
             }
             return super.insertSelective(menu);
         } catch (Exception e) {
@@ -52,6 +52,10 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
         Menu paramMenu = new Menu();
         // paramMenu.setId(menu.getId());
         paramMenu.setName(menu.getName());
+        // 设置父级id
+        if (StringUtils.isEmpty(menu.getParentId())) {
+            menu.setParentId("0");
+        }
         paramMenu.setParentId(menu.getParentId());
         // 根据名字和父级id查询，如果返回的条数大于1，则存在相同的记录
         if (super.baseMapper.exists(paramMenu) > 1) {

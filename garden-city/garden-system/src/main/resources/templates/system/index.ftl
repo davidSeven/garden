@@ -102,6 +102,7 @@
         link:'./welcome.html'
     }
 </script>
+<script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/main.js" type="text/javascript" charset="utf-8"></script>
