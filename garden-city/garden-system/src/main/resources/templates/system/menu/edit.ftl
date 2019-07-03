@@ -70,25 +70,19 @@
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-    var nodes = null;
-    var isInsert = false;
-    function init(params) {
-        console.log('init');
-        nodes = params.nodes;
-        isInsert = params.isInsert;
+    // edit
+    layui.use(['form', 'jquery'], function() {
+        console.log('layui init');
+        var form = layui.form,
+                $ = layui.jquery;
 
-        initCallback();
-    }
-    function initCallback() {
-        // edit
-        layui.use(['form', 'jquery'], function() {
-            console.log('layui init');
-            var form = layui.form,
-                    $ = layui.jquery;
+        var index = parent.layer.getFrameIndex(window.name);
+        console.log('current page index:' + index);
 
-            var index = parent.layer.getFrameIndex(window.name);
-            console.log('current page index:' + index);
-
+        // 初始化方法
+        layui.init = function (params) {
+            var nodes = params.nodes;
+            var isInsert = params.isInsert;
             var parentId;
             // 处理初始值
             if (isInsert) {
@@ -105,36 +99,38 @@
                 form.render();
             }
 
+            // 父级有icon
             if (!parentId) {
                 $("#item-icon").show();
             } else {
                 $("#item-icon").hide();
             }
 
-            //监听提交
-            form.on('submit(editForm)', function(data) {
-                console.log(data.field);
-                // layer.msg(JSON.stringify(data.field));
+        };
 
-                var id = data.field.id;
-                var url = '/system/menu/add';
-                if (id) {
-                    url = '/system/menu/edit';
+        //监听提交
+        form.on('submit(editForm)', function(data) {
+            console.log(data.field);
+            // layer.msg(JSON.stringify(data.field));
+
+            var id = data.field.id;
+            var url = '/system/menu/add';
+            if (id) {
+                url = '/system/menu/edit';
+            }
+
+            ajaxPost(url, data.field, function (data) {
+                if (data.success) {
+                    layer.msg('操作成功', {icon: 1});
+                    closePage();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
                 }
-
-                ajaxPost(url, data.field, function (data) {
-                    if (data.success) {
-                        layer.msg('操作成功', {icon: 1});
-                        closePage();
-                    } else {
-                        layer.msg(data.msg, {icon: 2});
-                    }
-                });
-                return false;
             });
-
+            return false;
         });
-    }
+
+    });
 </script>
 </body>
 </html>

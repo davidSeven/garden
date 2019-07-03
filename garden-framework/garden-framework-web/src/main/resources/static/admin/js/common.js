@@ -127,9 +127,10 @@ function page(title, url, obj, w, h, params) {
         console.log("--- success function start ---");
         try {
             var iframe = window['layui-layer-iframe' + index];
-            if (iframe && iframe.init) {
-                console.log("--- 存在init方法，执行init方法 ---");
-                iframe.init(params);
+            // 调用layui.init
+            if (iframe && iframe.layui && iframe.layui.init) {
+                console.log("--- 存在layui.init方法，执行layui.init方法 ---");
+                iframe.layui.init(params);
             }
         } catch (e) {
             console.error(e);
