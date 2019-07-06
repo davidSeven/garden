@@ -49,7 +49,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">顺序</label>
             <div class="layui-input-block">
-                <input type="text" name="sorts" placeholder="请输入顺序" autocomplete="off" class="layui-input">
+                <input type="text" name="sorts" lay-verify="sorts" placeholder="请输入顺序" maxlength="4" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
@@ -107,6 +107,16 @@
             }
 
         };
+
+        // 表单验证
+        form.verify({
+            sorts: function (value, item) {
+                console.log(arguments);
+                if (!/^[0-9]+$/.test(value)) {
+                    return "请输入整数数字";
+                }
+            }
+        });
 
         //监听提交
         form.on('submit(editForm)', function(data) {

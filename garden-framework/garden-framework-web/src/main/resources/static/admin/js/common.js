@@ -127,11 +127,14 @@ function page(title, url, obj, w, h, params) {
         console.log("--- success function start ---");
         try {
             var iframe = window['layui-layer-iframe' + index];
-            // 调用layui.init
-            if (iframe && iframe.layui && iframe.layui.init) {
-                console.log("--- 存在layui.init方法，执行layui.init方法 ---");
-                iframe.layui.init(params);
-            }
+            // 延迟10ms，等待页面加载完成
+            setTimeout(function () {
+                // 调用layui.init
+                if (iframe && iframe.layui && iframe.layui.init) {
+                    console.log("--- 存在layui.init方法，执行layui.init方法 ---");
+                    iframe.layui.init(params);
+                }
+            }, 10);
         } catch (e) {
             console.error(e);
         }
