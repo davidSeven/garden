@@ -45,11 +45,15 @@
 						</div>
 					</form>
 				</div>
-				<p class="copyright">Copyright 2015-2016 by XIAODU</p>
+				<p class="copyright">Copyright 2019-2019 by garden</p>
 			</div>
 		</div>
 		<script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
-		<script>
+		<script type="text/javascript">
+            // 处理子页面里出现登录页面的问题
+            if (window.top !== window) {
+                window.top.location.href = window.location.href;
+            }
 			layui.use(['form'], function() {
 				var form = layui.form;
 

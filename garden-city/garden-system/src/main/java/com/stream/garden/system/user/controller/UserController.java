@@ -2,14 +2,18 @@ package com.stream.garden.system.user.controller;
 
 import com.stream.garden.framework.api.exception.AppCode;
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
+import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
+import com.stream.garden.system.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,9 +30,30 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    /**
+     * 跳转列表页面
+     * @return 页面路径
+     */
+    @RequestMapping(value = "/toList", method = RequestMethod.GET)
+    public String toList() {
+        logger.debug(">>>页面跳转：{}", "system/user/list");
+        return "system/user/list";
+    }
+
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Integer> insert(User user) {
+    public Result<PageInfo<User>> pageList(UserVO vo) {
+        try {
+            return new Result<PageInfo<User>>().setData(userService.pageList(vo)).ok();
+        } catch (Exception e) {
+            logger.error(">>>" + e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> add(User user) {
         try {
             return new Result<Integer>().setData(userService.insert(user)).ok();
         } catch (Exception e) {
@@ -38,8 +63,4 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/toList", method = RequestMethod.GET)
-    public String toList() {
-        return "system/user/list";
-    }
 }

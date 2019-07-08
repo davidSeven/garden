@@ -102,11 +102,11 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
     public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException {
         // 设置PageHelper参数信息
         PageSize pageSize = pageVO.getPageSize();
-        T t = pageVO.getData();
+        // T t = pageVO.getData();
         PageHelper.startPage(pageSize.getPage(), pageSize.getPageSize(), pageSize.isCount());
 
         // 查询分页信息
-        Page<T> page = baseMapper.pageList(t);
+        Page<T> page = baseMapper.pageList(pageVO);
 
         // 封装分页数据
         PageInfo<T> pageInfo = new PageInfo<>(pageSize);

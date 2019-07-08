@@ -7,13 +7,6 @@ public class BasePageVO<T, ID> extends BaseVO<T, ID> {
     private PageSize pageSize = new PageSize();
     private Criteria<T> criteria;
 
-    public BasePageVO() {
-        if (null == criteria) {
-            criteria = new Criteria<>();
-        }
-        criteria.setVo(super.getData());
-    }
-
     public PageSize getPageSize() {
         return pageSize;
     }
@@ -23,6 +16,10 @@ public class BasePageVO<T, ID> extends BaseVO<T, ID> {
     }
 
     public Criteria<T> getCriteria() {
+        if (null == criteria && null != super.getData()) {
+            criteria = new Criteria<>();
+            criteria.setVo(super.getData());
+        }
         return criteria;
     }
 

@@ -91,11 +91,9 @@
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/ztree/jquery.ztree.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-    layui.use(['jquery', 'tree', 'layer', 'form'], function () {
+    layui.use(['jquery', 'layer', 'form'], function () {
         var $ = layui.jquery
-                , tree = layui.tree
                 , layer = layui.layer
-                , dialog = layui.dialog
                 , form = layui.form
                 //获取当前iframe的name值
                 , iframeObj = $(window.frameElement).attr('name');

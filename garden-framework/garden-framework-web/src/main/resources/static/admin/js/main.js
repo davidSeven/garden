@@ -21,6 +21,9 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function() {
 		if(isActive.length > 0) {
 			//切换到选项卡
 			element.tabChange('tab', id);
+            var $layuiShow = $(".layui-tab-item.layui-show");
+            var src = $layuiShow.find("iframe").attr("src");
+            $layuiShow.find("iframe").attr("src", src);
 		} else {
 			element.tabAdd('tab', {
 				title: text,
@@ -28,7 +31,6 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function() {
 				id: id
 			});
 			element.tabChange('tab', id);
-			
 		}
 		mainLayout.removeClass('hide-side');
 	});
@@ -53,7 +55,6 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function() {
 				id: id
 			});
 			element.tabChange('tab', id);
-			
 		}
 		mainLayout.removeClass('hide-side');
 	});

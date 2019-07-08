@@ -1,6 +1,7 @@
 package com.stream.garden.framework.jdbc.mapper;
 
 import com.github.pagehelper.Page;
+import com.stream.garden.framework.api.vo.BasePageVO;
 
 import java.util.List;
 
@@ -79,10 +80,10 @@ public interface IBaseMapper<T, ID> {
     /**
      * 对象查询
      *
-     * @param t 对象
+     * @param vo 对象
      * @return 对象集合
      */
-    public Page<T> pageList(T t);
+    public Page<T> pageList(BasePageVO<T, ID> vo);
 
     /**
      * 检查是否存在

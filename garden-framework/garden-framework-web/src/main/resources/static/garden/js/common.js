@@ -102,31 +102,6 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
     })
 });
 
-
-// 对Date的扩展，将 Date 转化为指定格式的String
-// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
-// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
-// 例子：
-// (new Date()).format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
-// (new Date()).format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
-Date.prototype.format = function(fmt) {
-    var o = {
-        "M+" : this.getMonth()+1,                 //月份
-        "d+" : this.getDate(),                    //日
-        "h+" : this.getHours(),                   //小时
-        "m+" : this.getMinutes(),                 //分
-        "s+" : this.getSeconds(),                 //秒
-        "q+" : Math.floor((this.getMonth()+3)/3), //季度
-        "S"  : this.getMilliseconds()             //毫秒
-    };
-    if(/(y+)/.test(fmt))
-        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-    for(var k in o)
-        if(new RegExp("("+ k +")").test(fmt))
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-    return fmt;
-};
-
 /**
  * 控制iframe窗口的刷新操作
  */
@@ -448,54 +423,11 @@ function ajaxPost(url, params, successFn, errorFn) {
 
 // 权限
 var permissions = {
+    "system.menu.add": 0x1,
+    "system.menu.update": 0x1,
+    "system.menu.delete": 0x1,
+    "system.menu.refresh": 0x1
 };
-function initPermissions() {
-    if (window.top === window) {
-        // 加载权限数据
-        permissions = {
-            "system.menu.add": 0x1,
-            "system.menu.update": 0x1,
-            "system.menu.delete": 0x1,
-            "system.menu.refresh": 0x1
-        };
-    } else {
-        // 获取顶级页面已经获取到的数据
-        permissions = window.top.permissions;
-    }
-}
-function hasPermissions(key) {
-    if (!key) {
-        return false;
-    }
-    key = key.replace(" ", "");
-    var length = key.length;
-    var keys = [];
-    var has = true;
-    if (key.indexOf("&&") !== -1) {
-        keys = key.split("&&");
-        for (var i = 0; i < keys.length; i++) {
-            // 只要有一个不存在，设置为false
-            if (!hasPermission(keys[i])) {
-                has = false;
-                break;
-            }
-        }
-        return has;
-    } else if (key.indexOf("||") !== -1) {
-        keys = key.split("||");
-        has = false;
-        for (var j = 0; j < keys.length; j++) {
-            // 只要有一个存在，设置为true
-            if (hasPermission(keys[j])) {
-                has = true;
-                break;
-            }
-        }
-        return has;
-    } else {
-        return hasPermission(key);
-    }
-}
 function hasPermission(key) {
     return permissions.hasOwnProperty(key);
 }
@@ -504,7 +436,7 @@ function renderPermission() {
     $.each(elements, function (i, v) {
         var $v = $(v);
         var key = $v.attr("permission");
-        if (key && !hasPermissions(key)) {
+        if (key && !hasPermission(key)) {
             $v.remove();
         } else {
             $v.removeAttr("permission");
@@ -513,22 +445,3 @@ function renderPermission() {
     });
 }
 renderPermission();
-
-// 调整表格高度
-$.fn.resetTableHeight = function () {
-    var $this;
-    if (this.length > 1) {
-        $this = $(this[0]);
-    } else {
-        $this = this;
-    }
-
-    var height = $this.height(), tableHeight, toolBtnHeight = 0;
-    var $toolBtn = $this.find(".tool-btn");
-    if ($toolBtn.length) {
-        toolBtnHeight = $toolBtn.height();
-    }
-    tableHeight = height - toolBtnHeight - 20;
-    $this.find(".layui-table-view").height(tableHeight);
-    console.log(tableHeight)
-};

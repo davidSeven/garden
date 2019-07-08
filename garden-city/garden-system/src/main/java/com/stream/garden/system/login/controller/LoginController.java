@@ -28,6 +28,7 @@ public class LoginController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
+
         return "system/index";
     }
 
