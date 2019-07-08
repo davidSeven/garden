@@ -7,7 +7,7 @@ public class Criteria<T> {
     private T vo;
 
     private String generic;
-    private List<String> orderByClauses;
+    private List<OrderByObj> orderByClauses;
 
     public T getVo() {
         return vo;
@@ -25,11 +25,11 @@ public class Criteria<T> {
         this.generic = generic;
     }
 
-    public List<String> getOrderByClauses() {
+    public List<OrderByObj> getOrderByClauses() {
         return orderByClauses;
     }
 
-    public void setOrderByClauses(List<String> orderByClauses) {
+    public void setOrderByClauses(List<OrderByObj> orderByClauses) {
         this.orderByClauses = orderByClauses;
     }
 }

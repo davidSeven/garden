@@ -75,10 +75,22 @@
 
         <div class="layui-card-body">
             <div class="tool-btn">
-                <button id="addBtn" class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
-                <button id="deleteBtn" class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
+                <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="add"
+                        data-url="/system/user/toEdit">添加</button>
+                <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="batchdel"
+                        data-url="/system/user/delete">删除</button>
             </div>
-            <table class="layui-hide" id="tableData"></table>
+            <script type="text/html" id="tableDataToolbar">
+                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
+                   lay-event="edit"
+                   data-url="/system/user/toEdit">编辑</a>
+                <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
+                   lay-event="del"
+                   data-url="/system/user/delete">删除</a>
+            </script>
+            <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
     </div>
 </div>
@@ -87,16 +99,15 @@
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     layui.use(['jquery', 'table', 'layer', 'form'], function () {
-        var table = layui.table;
-
-        var datas = [{"id":10000,"username":"user-0","sex":"女","city":"城市-0","sign":"签名-0","experience":255,"logins":24,"wealth":82830700,"classify":"作家","score":57},{"id":10001,"username":"user-1","sex":"男","city":"城市-1","sign":"签名-1","experience":884,"logins":58,"wealth":64928690,"classify":"词人","score":27},{"id":10002,"username":"user-2","sex":"女","city":"城市-2","sign":"签名-2","experience":650,"logins":77,"wealth":6298078,"classify":"酱油","score":31},{"id":10003,"username":"user-3","sex":"女","city":"城市-3","sign":"签名-3","experience":362,"logins":157,"wealth":37117017,"classify":"诗人","score":68},{"id":10004,"username":"user-4","sex":"男","city":"城市-4","sign":"签名-4","experience":807,"logins":51,"wealth":76263262,"classify":"作家","score":6},{"id":10005,"username":"user-5","sex":"女","city":"城市-5","sign":"签名-5","experience":173,"logins":68,"wealth":60344147,"classify":"作家","score":87},{"id":10006,"username":"user-6","sex":"女","city":"城市-6","sign":"签名-6","experience":982,"logins":37,"wealth":57768166,"classify":"作家","score":34},{"id":10007,"username":"user-7","sex":"男","city":"城市-7","sign":"签名-7","experience":727,"logins":150,"wealth":82030578,"classify":"作家","score":28},{"id":10008,"username":"user-8","sex":"男","city":"城市-8","sign":"签名-8","experience":951,"logins":133,"wealth":16503371,"classify":"词人","score":14},{"id":10009,"username":"user-9","sex":"女","city":"城市-9","sign":"签名-9","experience":484,"logins":25,"wealth":86801934,"classify":"词人","score":75}];
+        var table = layui.table,
+                iframeObj = $(window.frameElement).attr('name');
 
         table.render({
             elem: '#tableData'
             ,url:'/system/user/pageList'
             ,method: 'post'
             ,page: {
-                limit: 10
+                limit: 20
                 ,limits: [10, 20, 50, 200]
             }
             //,height: '350'
@@ -119,8 +130,16 @@
             // ,data: datas
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,cols: [[
-                {field:'code', width:120, title: '用户编号'}
+                {type:'checkbox'}
+                ,{field:'code', width:120, title: '用户编号'}
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
+                ,{field:'state', width:120, title: '状态', align: 'center', templet: function (row) {
+                    if ("1" === row.state) {
+                        return '<span class="layui-badge layui-bg-blue">启用</span>';
+                    } else {
+                        return '<span class="layui-badge layui-bg-gray">禁用</span>';
+                    }
+                }}
                 ,{field:'createdBy', width:120, title: '创建人'}
                 ,{field:'creationDate', width:160, title: '创建时间', templet: function (row) {
                         return formatDate(row.creationDate);
@@ -131,6 +150,7 @@
                         return formatDate(row.updationDate);
                     }
                 }
+                ,{fixed: 'right', title:'操作', toolbar: '#tableDataToolbar', width:150}
             ]]
         });
 
@@ -141,13 +161,71 @@
             return "";
         }
 
-        setTimeout(function () {
+        layui.refresh = function() {
+            table.reload("tableData");
+        };
+
+        // 新增
+        $("#addBtn").click(function () {
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("编辑", url, iframeObj, w = "700px", h = "560px", {isInsert: true});
+            return false;
+        });
+
+        // 修改
+        $("#deleteBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var url = $(this).attr('data-url');
+                layer.confirm('确定删除选中数据吗', function(index){
+                    ajaxPost(url, {id: data[0].id}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    });
+                    // layer.close(index);
+                });
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        //监听行工具事件
+        table.on('tool(tableData)', function(obj){
+            var url = $(this).attr('data-url');
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定删除选中数据吗', function(index){
+                    ajaxPost(url, {id: data.id}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    });
+                    // layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("编辑", url, iframeObj, w = "700px", h = "560px", {isInsert: false, data: data});
+            }
+        });
+
+        /*setTimeout(function () {
             table.reload("tableData", {
                 where: {
                     "data.id": "123"
                 }
             });
-        }, 2000);
+        }, 2000);*/
     });
 </script>
 </body>

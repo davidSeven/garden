@@ -14,23 +14,16 @@
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label">上级</label>
+            <label class="layui-form-label lay-required">用户编码</label>
             <div class="layui-input-block">
                 <input type="hidden" name="id">
-                <input type="hidden" name="parentId">
-                <input type="text" name="parentName" autocomplete="off" class="layui-input" disabled="disabled">
+                <input type="text" name="code" required lay-verify="required" placeholder="请输入用户编码称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">名称</label>
+            <label class="layui-form-label lay-required">用户姓名</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="path" placeholder="请输入地址" autocomplete="off" class="layui-input">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -38,24 +31,6 @@
             <div class="layui-input-block">
                 <input type="radio" name="state" value="1" title="启用" checked>
                 <input type="radio" name="state" value="0" title="禁用">
-            </div>
-        </div>
-        <div id="item-icon" class="layui-form-item" style="display: none;">
-            <label class="layui-form-label">图标</label>
-            <div class="layui-input-block">
-                <input type="text" name="icon" placeholder="请输入图标" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">顺序</label>
-            <div class="layui-input-block">
-                <input type="text" name="sorts" lay-verify="sorts" placeholder="请输入顺序" maxlength="4" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">备注</label>
-            <div class="layui-input-block">
-                <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -81,54 +56,24 @@
 
         // 初始化方法
         layui.init = function (params) {
-            var nodes = params.nodes;
-            var isInsert = params.isInsert;
-            var parentId;
             // 处理初始值
-            if (isInsert) {
+            if (params.isInsert) {
                 // 新增
-                if (nodes && nodes.length) {
-                    var node = nodes[0];
-                    $("input[name='parentId']").val(parentId = node.id);
-                    $("input[name='parentName']").val(node.name);
-                }
             } else {
                 // 修改
-                parentId = nodes[0]["parentId"];
-                jsonData("editForm", nodes[0]);
+                jsonData("editForm", params.data);
                 form.render();
             }
-
-            // 父级有icon
-            if (!parentId) {
-                $("#item-icon").show();
-            } else {
-                $("#item-icon").hide();
-            }
-
         };
-
-        // 表单验证
-        form.verify({
-            sorts: function (value, item) {
-                console.log(arguments);
-                if (!/^[0-9]+$/.test(value)) {
-                    return "请输入整数数字";
-                }
-            }
-        });
 
         //监听提交
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
-            // layer.msg(JSON.stringify(data.field));
-
             var id = data.field.id;
-            var url = '/system/menu/add';
+            var url = '/system/user/add';
             if (id) {
-                url = '/system/menu/edit';
+                url = '/system/user/edit';
             }
-
             ajaxPost(url, data.field, function (data) {
                 if (data.success) {
                     layer.msg('操作成功', {icon: 1});
@@ -139,7 +84,6 @@
             });
             return false;
         });
-
     });
 </script>
 </body>

@@ -11,8 +11,12 @@
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
     <style type="text/css">
-        .layui-nav .layui-nav-item a {
+        .main-layout-header .layui-nav .layui-nav-item {
+            height: 50px;
+        }
+        .main-layout-header .layui-nav .layui-nav-item a {
             color: #c9c9c9;
+            line-height: 50px;
         }
         .main-layout-header .layui-nav .layui-nav-bar {
             display: block;

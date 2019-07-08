@@ -5,6 +5,8 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.api.vo.Criteria;
+import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author garden
@@ -40,10 +45,27 @@ public class UserController {
         return "system/user/list";
     }
 
+    /**
+     * 跳转编辑页面
+     * @return 页面路径
+     */
+    @RequestMapping(value = "/toEdit", method = RequestMethod.GET)
+    public String toEdit() {
+        logger.debug(">>>页面跳转：{}", "system/user/edit");
+        return "system/user/edit";
+    }
+
     @RequestMapping(value = "/pageList", method = RequestMethod.POST)
     @ResponseBody
     public Result<PageInfo<User>> pageList(UserVO vo) {
         try {
+            if (null == vo.getCriteria()) {
+                vo.setCriteria(new Criteria<>());
+            }
+            List<OrderByObj> orders = new ArrayList<>();
+            orders.add(new OrderByObj("UPDATION_DATE", 1));
+            vo.getCriteria().setOrderByClauses(orders);
+
             return new Result<PageInfo<User>>().setData(userService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);
@@ -60,6 +82,28 @@ public class UserController {
             AppCode appCode = SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e);
             logger.error(">>>" + appCode.getMessage(), e);
             return new Result<>(appCode);
+        }
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> edit(User user) {
+        try {
+            return new Result<Integer>().ok().setData(userService.update(user));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
+        }
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> delete(User user) {
+        try {
+            return new Result<Integer>().ok().setData(userService.delete(user.getId()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
         }
     }
 

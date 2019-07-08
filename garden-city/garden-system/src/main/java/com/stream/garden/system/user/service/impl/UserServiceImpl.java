@@ -27,8 +27,7 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
         // 验证编码不能重复
         User paramUser = new User();
         paramUser.setCode(user.getCode());
-        List<User> list = super.list(paramUser);
-        if (CollectionUtil.isNotEmpty(list)) {
+        if (super.exists(paramUser)) {
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT);
         }
         return super.insert(user);
