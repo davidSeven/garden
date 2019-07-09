@@ -463,6 +463,7 @@ function initPermissions() {
         permissions = window.top.permissions;
     }
 }
+initPermissions();
 function hasPermissions(key) {
     if (!key) {
         return false;

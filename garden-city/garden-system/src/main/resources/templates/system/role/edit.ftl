@@ -14,16 +14,16 @@
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">用户编码</label>
+            <label class="layui-form-label lay-required">角色编码</label>
             <div class="layui-input-block">
                 <input type="hidden" name="id">
-                <input type="text" name="code" required lay-verify="required" placeholder="请输入用户编码" autocomplete="off" class="layui-input">
+                <input type="text" name="code" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">用户姓名</label>
+            <label class="layui-form-label lay-required">角色姓名</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -70,9 +70,9 @@
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
             var id = data.field.id;
-            var url = '/system/user/add';
+            var url = '/system/role/add';
             if (id) {
-                url = '/system/user/edit';
+                url = '/system/role/edit';
             }
             ajaxPost(url, data.field, function (data) {
                 if (data.success) {

@@ -65,7 +65,6 @@ public class UserController {
             List<OrderByObj> orders = new ArrayList<>();
             orders.add(new OrderByObj("UPDATION_DATE", 1));
             vo.getCriteria().setOrderByClauses(orders);
-
             return new Result<PageInfo<User>>().setData(userService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);
@@ -79,9 +78,8 @@ public class UserController {
         try {
             return new Result<Integer>().setData(userService.insert(user)).ok();
         } catch (Exception e) {
-            AppCode appCode = SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e);
-            logger.error(">>>" + appCode.getMessage(), e);
-            return new Result<>(appCode);
+            logger.error(e.getMessage(), e);
+            return new Result<>(e, SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e));
         }
     }
 
@@ -92,7 +90,7 @@ public class UserController {
             return new Result<Integer>().ok().setData(userService.update(user));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
         }
     }
 

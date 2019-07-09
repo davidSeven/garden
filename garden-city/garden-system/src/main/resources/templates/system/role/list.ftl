@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-    <title>用户列表</title>
+    <title>角色列表</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/ztree/zTreeStyle.css"/>
@@ -35,13 +35,13 @@
         <div id="layui-form" class="layui-form layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">用户编号</label>
+                    <label class="layui-form-label">角色编号</label>
                     <div class="layui-input-inline">
                         <input type="text" name="data.code" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">用户姓名</label>
+                    <label class="layui-form-label">角色姓名</label>
                     <div class="layui-input-inline">
                         <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
@@ -71,18 +71,18 @@
             <div class="tool-btn">
                 <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="add"
-                        data-url="/system/user/toEdit">添加</button>
+                        data-url="/system/role/toEdit">添加</button>
                 <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
-                        data-url="/system/user/delete">删除</button>
+                        data-url="/system/role/delete">删除</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
                    lay-event="edit"
-                   data-url="/system/user/toEdit">编辑</a>
+                   data-url="/system/role/toEdit">编辑</a>
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
                    lay-event="del"
-                   data-url="/system/user/delete">删除</a>
+                   data-url="/system/role/delete">删除</a>
             </script>
             <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
@@ -99,7 +99,7 @@
 
         table.render({
             elem: '#tableData'
-            ,url:'/system/user/pageList'
+            ,url:'/system/role/pageList'
             ,method: 'post'
             ,page: {
                 limit: 20
@@ -127,8 +127,8 @@
             ,cols: [[
                 {type:'numbers'}
                 ,{type:'checkbox'}
-                ,{field:'code', width:120, title: '用户编号'}
-                ,{field:'name', width:120, title: '用户姓名', sort: true}
+                ,{field:'code', width:120, title: '角色编号'}
+                ,{field:'name', width:200, title: '角色名称', sort: false}
                 ,{field:'state', width:120, title: '状态', align: 'center', templet: function (row) {
                     if ("1" === row.state) {
                         return '<span class="layui-badge layui-bg-blue">启用</span>';

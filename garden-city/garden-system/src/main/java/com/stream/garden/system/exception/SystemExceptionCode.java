@@ -20,7 +20,11 @@ public enum SystemExceptionCode implements AppCode {
     /** 用户新增失败 */
     USER_INSERT_EXCEPTION(20000, "insert user exception"),
     /** 用户编码重复 */
-    USER_CODE_REPEAT(20001, "insert user code repeat"),
+    USER_CODE_REPEAT(20001, "user code [{0}] repeat"),
+
+    /** 角色编码重复 */
+    ROLE_CODE_REPEAT(20301, "user code [{0}] repeat"),
+
 
     MENU_ADD_EXCEPTION(20900, "新增菜单异常"),
     MENU_NAME_REPEAT(20901, "菜单[{0}]已存在"),
