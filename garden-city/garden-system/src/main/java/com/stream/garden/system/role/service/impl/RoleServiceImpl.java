@@ -34,8 +34,9 @@ public class RoleServiceImpl extends AbstractBaseService<Role, String> implement
     public int update(Role role) throws ApplicationException {
         // 验证编码不能重复
         Role paramRole = new Role();
+        paramRole.setId(role.getId());
         paramRole.setCode(role.getCode());
-        if (super.baseMapper.exists(paramRole) > 1) {
+        if (super.exists(paramRole)) {
             throw new ApplicationException(SystemExceptionCode.ROLE_CODE_REPEAT, role.getCode());
         }
         return super.update(role);

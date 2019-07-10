@@ -50,7 +50,8 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
     public int update(Menu menu) throws ApplicationException {
         // 同一个菜单下两个子菜单的名字不能一样
         Menu paramMenu = new Menu();
-        // paramMenu.setId(menu.getId());
+        // sql中的条件是<>
+        paramMenu.setId(menu.getId());
         paramMenu.setName(menu.getName());
         // 设置父级id
         if (StringUtils.isEmpty(menu.getParentId())) {
@@ -58,7 +59,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
         }
         paramMenu.setParentId(menu.getParentId());
         // 根据名字和父级id查询，如果返回的条数大于1，则存在相同的记录
-        if (super.baseMapper.exists(paramMenu) > 1) {
+        if (super.exists(paramMenu)) {
             throw new ApplicationException(SystemExceptionCode.MENU_NAME_REPEAT, menu.getName());
         }
         return super.updateSelective(menu);

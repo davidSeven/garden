@@ -37,8 +37,9 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
     public int update(User user) throws ApplicationException {
         // 验证编码不能重复
         User paramUser = new User();
+        paramUser.setId(user.getId());
         paramUser.setCode(user.getCode());
-        if (super.baseMapper.exists(paramUser) > 1) {
+        if (super.exists(paramUser)) {
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT, user.getCode());
         }
         return super.update(user);

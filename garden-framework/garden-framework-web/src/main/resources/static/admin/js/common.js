@@ -277,9 +277,14 @@ function setSelectValue(field, value) {
  * @param data
  */
 function jsonData(formId, data) {
-    var form = document.getElementById(formId);
+    var form;
+    if (formId.startsWith(".")) {
+        form = document.getElementsByClassName(formId.substr(1))[0];
+    } else {
+        form = document.getElementById(formId);
+    }
     if (!form) {
-        console.warn("this element id [" + formId + "] is not exits");
+        console.warn("this element [" + formId + "] is not exits");
         return;
     }
 
@@ -533,3 +538,17 @@ $.fn.resetTableHeight = function () {
     $this.find(".layui-table-view").height(tableHeight);
     console.log(tableHeight)
 };
+
+// 公共查询
+$(".search-form .search-btn").click(function (e) {
+    var where = jsonData(".search-form");
+    if ($.isEmptyObject(where)) {
+        where = null;
+    }
+    table.reload("tableData", {
+        where: where
+    });
+});
+$(".search-form .reset-btn").click(function (e) {
+    table.reload("tableData", { where: null });
+});

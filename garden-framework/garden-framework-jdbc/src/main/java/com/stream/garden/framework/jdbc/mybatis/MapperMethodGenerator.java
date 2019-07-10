@@ -118,7 +118,20 @@ public class MapperMethodGenerator {
         sb.append("\n select ");
         sb.append("\n count(0)");
         sb.append("\n    from " + table.getTable());
-        sb.append(getConditions4Query(table.getAllColumnList(), null, null));
+
+        CommonTableColumn idColumn = table.getIdColumn();
+        StringBuilder prefixSQL = new StringBuilder();
+        if("VARCHAR".equals(idColumn.getJdbcType()) ||  "CHAR".equals(idColumn.getJdbcType())  ||"LONGVARCHAR".equals(idColumn.getJdbcType()) )
+        {
+            prefixSQL.append("\n    <if test=\"" + idColumn.getProperty() + " != null and "+ idColumn.getProperty() +"!=''\" >");
+        }else {
+            prefixSQL.append("\n    <if test=\"" + idColumn.getProperty() + " != null\" >");
+        }
+        prefixSQL.append("\n   	  <![CDATA[AND " + idColumn.getColumn() + " <> #{" + idColumn.getProperty() + ", jdbcType=" + idColumn.getJdbcType() + "}]]>");
+        prefixSQL.append("\n    </if>");
+
+        // 不包括id
+        sb.append(getConditions4Query(table.getColumnList(), prefixSQL.toString(), null));
         sb.append("\n</select>\n");
         return sb.toString();
     }

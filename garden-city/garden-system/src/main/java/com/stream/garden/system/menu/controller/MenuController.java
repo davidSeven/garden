@@ -56,7 +56,7 @@ public class MenuController {
             return new Result<Integer>().ok().setData(menuService.insert(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.MENU_ADD_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.MENU_ADD_EXCEPTION);
         }
     }
 
@@ -67,7 +67,7 @@ public class MenuController {
             return new Result<Integer>().ok().setData(menuService.update(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.MENU_EDIT_EXCEPTION);
         }
     }
 

@@ -111,11 +111,14 @@
         // 表单验证
         form.verify({
             sorts: function (value, item) {
-                console.log(arguments);
+                if (!value) {
+                    return;
+                }
                 if (!/^[0-9]+$/.test(value)) {
                     return "请输入整数数字";
                 }
             }
+            //sorts: [/^[0-9]+$/, "请输入整数数字"]
         });
 
         //监听提交

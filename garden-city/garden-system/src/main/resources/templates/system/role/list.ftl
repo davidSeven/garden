@@ -32,7 +32,7 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-card">
-        <div id="layui-form" class="layui-form layui-card-header layuiadmin-card-header-auto">
+        <form class="layui-form layui-card-header layuiadmin-card-header-auto search-form">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">角色编号</label>
@@ -57,22 +57,22 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-btn-list list-search">
+                    <button type="button" class="layui-btn layuiadmin-btn-list search-btn">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
-                    <button type="button" class="layui-btn list-reset">
+                    <button type="reset" class="layui-btn reset-btn">
                         <i class="layui-icon layui-icon-refresh"></i>
                     </button>
                 </div>
             </div>
-        </div>
+        </form>
 
         <div class="layui-card-body">
             <div class="tool-btn">
-                <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="add"
                         data-url="/system/role/toEdit">添加</button>
-                <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/system/role/delete">删除</button>
             </div>
@@ -213,26 +213,6 @@
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
             }
-        });
-
-        $(".list-search").click(function (e) {
-            var where = jsonData("layui-form");
-            if ($.isEmptyObject(where)) {
-                where = null;
-            }
-            table.reload("tableData", {
-                where: where
-            });
-        });
-
-        $(".list-reset").click(function (e) {
-            jsonData("layui-form", {
-                "data.code": "",
-                "data.name": "",
-                "data.state": ""
-            });
-            form.render();
-            table.reload("tableData", { where: null });
         });
     });
 </script>
