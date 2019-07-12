@@ -545,10 +545,10 @@ $(".search-form .search-btn").click(function (e) {
     if ($.isEmptyObject(where)) {
         where = null;
     }
-    table.reload("tableData", {
+    layui.table.reload("tableData", {
         where: where
     });
 });
 $(".search-form .reset-btn").click(function (e) {
-    table.reload("tableData", { where: null });
+    layui.table.reload("tableData", { where: null });
 });
