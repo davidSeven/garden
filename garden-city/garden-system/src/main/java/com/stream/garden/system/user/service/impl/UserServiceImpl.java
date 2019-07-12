@@ -2,14 +2,11 @@ package com.stream.garden.system.user.service.impl;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
-import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.user.dao.IUserDao;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author garden

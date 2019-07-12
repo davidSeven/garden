@@ -7,7 +7,7 @@ package com.stream.garden.framework.api.model;
 public class PageSize {
 
     /** 默认每页页数 */
-    public static int DEFAULT_PAGESIZE = 10;
+    public static final int DEFAULT_PAGESIZE = 10;
 
     /** 页码 */
     protected int page;

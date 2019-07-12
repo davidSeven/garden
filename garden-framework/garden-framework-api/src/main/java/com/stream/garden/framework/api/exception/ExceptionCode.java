@@ -26,17 +26,8 @@ public enum ExceptionCode implements AppCode {
     }
 
     @Override
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    @Override
     public String getMessage() {
         return this.message;
     }
 
-    @Override
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

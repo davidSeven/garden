@@ -26,7 +26,7 @@ public class BaseVO<T, ID> {
 
     public Long[] getLongIds() {
         if(null == this.ids) {
-            return null;
+            return new Long[0];
         }
         Long[] longs = new Long[this.ids.length];
         for (int i = 0; i < this.ids.length; i++) {

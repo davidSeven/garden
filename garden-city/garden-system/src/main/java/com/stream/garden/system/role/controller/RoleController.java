@@ -1,6 +1,5 @@
 package com.stream.garden.system.role.controller;
 
-import com.stream.garden.framework.api.exception.AppCode;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;

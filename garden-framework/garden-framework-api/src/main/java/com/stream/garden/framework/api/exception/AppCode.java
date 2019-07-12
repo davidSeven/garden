@@ -1,7 +1,5 @@
 package com.stream.garden.framework.api.exception;
 
-import java.text.MessageFormat;
-
 /**
  * @author garden
  */
@@ -15,25 +13,11 @@ public interface AppCode {
     int getCode();
 
     /**
-     * 设置异常编码
-     *
-     * @param code 编码
-     */
-    void setCode(int code);
-
-    /**
      * 获取异常消息
      *
      * @return 消息
      */
     String getMessage();
-
-    /**
-     * 设置异常消息
-     *
-     * @param message 消息
-     */
-    void setMessage(String message);
 
     /**
      * 验证请求是否成功
