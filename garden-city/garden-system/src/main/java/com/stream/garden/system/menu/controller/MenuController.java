@@ -2,12 +2,16 @@ package com.stream.garden.system.menu.controller;
 
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.web.annotation.Limit;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,10 +26,15 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/system/menu")
 public class MenuController {
+    private final IMenuService menuService;
+    private static final String CACHE_NAMES = "system:menu";
+    private static final String CACHE_KEY = "'list'";
     private Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
-    private IMenuService menuService;
+    public MenuController(IMenuService menuService) {
+        this.menuService = menuService;
+    }
 
     /**
      * 跳转列表页面
@@ -51,6 +60,7 @@ public class MenuController {
 
     @PostMapping(value = "/add")
     @ResponseBody
+    @CacheEvict(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<Integer> add(Menu menu) {
         try {
             return new Result<Integer>().ok().setData(menuService.insert(menu));
@@ -62,6 +72,7 @@ public class MenuController {
 
     @PostMapping(value = "/edit")
     @ResponseBody
+    @CacheEvict(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<Integer> edit(Menu menu) {
         try {
             return new Result<Integer>().ok().setData(menuService.update(menu));
@@ -84,6 +95,8 @@ public class MenuController {
 
     @PostMapping(value = "/list")
     @ResponseBody
+    @Limit(name = "menu", key = "list", prefix = "limit:", period = 100, count = 3)
+    @Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<List<Menu>> list(Menu menu) {
         try {
             Thread.sleep(300);
@@ -96,6 +109,7 @@ public class MenuController {
 
     @PostMapping(value = "/delete")
     @ResponseBody
+    @CacheEvict(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<Integer> delete(Menu menu) {
         try {
             return new Result<Integer>().ok().setData(menuService.delete(menu.getId()));

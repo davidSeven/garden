@@ -7,13 +7,19 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.format.support.DefaultFormattingConversionService;
+
+import java.time.Duration;
 
 /**
  * @author garden
@@ -26,6 +32,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        redisCacheConfiguration = redisCacheConfiguration.computePrefixWith(new SpringCacheKeyPrefix());
         return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
     }
 
@@ -56,5 +63,10 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.afterPropertiesSet();
 
         return template;
+    }
+
+    @Bean
+    public SpringCacheKeyGenerator springCacheKeyGenerator() {
+        return new SpringCacheKeyGenerator();
     }
 }
