@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,19 +24,21 @@ public class ApplicationExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler(value = Exception.class)
-    public Result<String> baseErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public Result<String> baseErrorHandler(HttpServletRequest req, Exception e) {
         Result<String> result = new Result<>();
         logger.error("Exception Handler：Host {} invokes url {} ERROR: {}", req.getRemoteHost(), req.getRequestURL(), e.getMessage());
         logger.error("process is error!", e);
-
         if (BindException.class.isAssignableFrom(e.getClass())) {
             BindException bindException = (BindException) e;
             List<ObjectError> allErrors = bindException.getAllErrors();
             List<String> stringList = allErrors.stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList());
             result.setMsg(stringList.toString());
+        } else if (e instanceof UndeclaredThrowableException) {
+            Throwable throwable = ((UndeclaredThrowableException) e).getUndeclaredThrowable();
+            result.setCode(ExceptionCode.UNKOWN_EXCEPTION.getCode());
+            result.setMsg(throwable.getMessage());
         } else if (e instanceof ApplicationException) {
-            ApplicationException ae = (ApplicationException) e;
-            result.setAppCode(ae.getAppCode());
+            result = new Result<>(e, ExceptionCode.UNKOWN_EXCEPTION);
         } else {
             result.setCode(ExceptionCode.UNKOWN_EXCEPTION.getCode());
             result.setMsg(e.getMessage());

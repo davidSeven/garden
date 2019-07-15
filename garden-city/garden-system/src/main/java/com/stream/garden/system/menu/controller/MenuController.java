@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +25,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/system/menu")
 public class MenuController {
-    private final IMenuService menuService;
     private static final String CACHE_NAMES = "system:menu";
     private static final String CACHE_KEY = "'list'";
+    private final IMenuService menuService;
     private Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
@@ -95,8 +94,8 @@ public class MenuController {
 
     @PostMapping(value = "/list")
     @ResponseBody
-    @Limit(name = "menu", key = "list", prefix = "limit:", period = 100, count = 3)
-    @Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
+    @Limit(name = "menu", key = "list", prefix = "limit:", period = 1, count = 1)
+    //@Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<List<Menu>> list(Menu menu) {
         try {
             Thread.sleep(300);

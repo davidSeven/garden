@@ -8,6 +8,8 @@ import com.stream.garden.framework.cache.util.JsonUtil;
  */
 public class JsonHelper {
 
+    private JsonHelper() {}
+
     /**
      * Java对象序列化为JSON字符串
      *

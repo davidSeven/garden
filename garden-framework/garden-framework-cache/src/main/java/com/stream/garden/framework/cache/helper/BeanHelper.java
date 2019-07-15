@@ -13,6 +13,8 @@ import java.util.Locale;
  */
 public class BeanHelper {
 
+    private BeanHelper() {}
+
     /**
      * 判断是否是简单值类型.包括：基础数据类型、CharSequence、Number、Date、URL、URI、Locale、Class;
      *

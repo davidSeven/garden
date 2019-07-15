@@ -18,6 +18,7 @@ public class UserServiceTest extends BaseTest {
         user.setName("admin");
         user.setCode("admin");
         user.setState("1");
-        Assert.assertEquals(userService.insert(user), 1);
+        int result = 1;
+        Assert.assertEquals("新增失败", userService.insert(user), result);
     }
 }

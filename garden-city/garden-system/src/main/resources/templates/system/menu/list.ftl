@@ -108,17 +108,17 @@
 
         function getTree() {
 
-            var loadingIndex = parent.layer.msg('加载中', {
+            /*var loadingIndex = parent.layer.msg('加载中', {
                 icon: 16
                 ,shade: 0.2
                 ,time: 0
-            });
+            });*/
 
             ajaxPost('/system/menu/list', null, function (data) {
                 if (data.success) {
                     callback && callback(data.data);
                 } else {
-                    layer.msg(data.msg, {icon: 2});
+                    parent.layer.msg(data.msg, {icon: 2});
                 }
             });
 
