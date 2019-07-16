@@ -14,14 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import reactor.core.publisher.Flux;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +29,7 @@ import java.util.List;
  * <p>
  * 参考文档
  * <p>
- * 漏桶限流实现
+ * 计数法限流实现
  * https://www.cnblogs.com/carrychan/p/9435979.html
  * <p>
  * SpringCloud令牌桶限流
@@ -108,19 +107,21 @@ public class LimitInterceptor {
             List<String> keys = getKeys(key);
 
             String luaScript = buildLuaScript();
-            RedisScript<List<Long>> redisScript = new DefaultRedisScript<>(luaScript);
+            DefaultRedisScript<List> redisScript = new DefaultRedisScript<>(luaScript);
+            redisScript.setResultType(List.class);
 
             // The arguments to the LUA script. time() returns unixtime in seconds.
-            List<String> scriptArgs = Arrays.asList(replenishRate + "",
-                    burstCapacity + "", Instant.now().getEpochSecond() + "", "1");
-            List<Long> flux = this.limitRedisTemplate.execute(redisScript, keys, scriptArgs);
+            Object[] scriptArgs = new Long[] {(long) replenishRate, (long) burstCapacity, Instant.now().getEpochSecond(), 1L};
 
-            if (null != flux) {
+            List flux = this.limitRedisTemplate.execute(redisScript, keys, scriptArgs);
+
+            if (null != flux && 1L == Long.valueOf(flux.get(0).toString())) {
                 return pjp.proceed();
             } else {
                 throw new ApplicationException("You have been dragged into the blacklist");
             }
         } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
             throw new ApplicationException("server exception");
         }
     }
@@ -142,39 +143,38 @@ public class LimitInterceptor {
         lua.append("\nlocal rate = tonumber(ARGV[1])");
         // 令牌桶的容积大小，比如最大100个，那么系统最大可承载100个并发请求
         lua.append("\nlocal capacity = tonumber(ARGV[2])");
-
         // 当前时间戳
         lua.append("\nlocal now = tonumber(ARGV[3])");
         // 当前请求的令牌数量，Spring Cloud Gateway中默认是1，也就是当前请求
         lua.append("\nlocal requested = tonumber(ARGV[4])");
 
         lua.append("\nlocal fill_time = capacity/rate");
-        lua.append("\nlocal ttl = math.floor(fill_time * 2)");
+        lua.append("\nlocal ttl = math.floor(fill_time*2)");
 
-        lua.append("\nlocal last_tokens = tonumber(redis.call('get', tokens_key))");
+        lua.append("\nlocal last_tokens = tonumber(redis.call(\"get\", tokens_key))");
         lua.append("\nif last_tokens == nil then");
-        lua.append("\nlast_tokens = capacity");
+        lua.append("\n  last_tokens = capacity");
         lua.append("\nend");
 
-        lua.append("\nlocal last_refreshed = tonumber(redis.call('get', timestamp_key))");
+        lua.append("\nlocal last_refreshed = tonumber(redis.call(\"get\", timestamp_key))");
         lua.append("\nif last_refreshed == nil then");
-        lua.append("\nlast_refreshed = 0");
+        lua.append("\n  last_refreshed = 0");
         lua.append("\nend");
 
-        lua.append("\nlocal delta = math.max(0, now - last_refreshed)");
-        lua.append("\nlocal filled_tokens = math.min(capacity, last_tokens + (delta * rate))");
+        lua.append("\nlocal delta = math.max(0, now-last_refreshed)");
+        lua.append("\nlocal filled_tokens = math.min(capacity, last_tokens+(delta*rate))");
         lua.append("\nlocal allowed = filled_tokens >= requested");
         lua.append("\nlocal new_tokens = filled_tokens");
         lua.append("\nlocal allowed_num = 0");
         lua.append("\nif allowed then");
-        lua.append("\nnew_tokens = filled_tokens - requested");
-        lua.append("\nallowed_num = 1");
+        lua.append("\n  new_tokens = filled_tokens - requested");
+        lua.append("\n  allowed_num = 1");
         lua.append("\nend");
 
-        lua.append("\nredis.call('setex', tokens_key, ttl, new_tokens)");
-        lua.append("\nredis.call('setex', timestamp_key, ttl, now)");
+        lua.append("\nredis.call(\"setex\", tokens_key, ttl, new_tokens)");
+        lua.append("\nredis.call(\"setex\", timestamp_key, ttl, now)");
 
-        lua.append("\nreturn {allowed_num, new_tokens}");
+        lua.append("\nreturn { allowed_num, new_tokens }");
         return lua.toString();
     }
 
