@@ -2,11 +2,9 @@ package com.stream.garden.framework.web.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.stream.garden.framework.web.util.ApplicationUtil;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +15,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,10 +24,17 @@ import java.util.Map;
 public class GlobalApplicationRunner implements ApplicationRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    private GlobalConfig globalConfig;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
         line();
+        logger.debug(">>>path:{}", globalConfig.getPath());
+        logger.debug(">>>path:{}", globalConfig.path);
+        logger.debug(">>>path:{}", GlobalConfig.path);
+        logger.debug(">>>path:{}", GlobalConfig.uploadPath);
         printController();
         runCompleted();
         printServiceInfo();

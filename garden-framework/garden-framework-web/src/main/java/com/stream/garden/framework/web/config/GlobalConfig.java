@@ -1,6 +1,7 @@
 package com.stream.garden.framework.web.config;
 
 import com.alibaba.nacos.api.config.annotation.NacosValue;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,10 @@ public class GlobalConfig {
 
     // @NacosValue(value = "${garden.excludePath}", autoRefreshed = true)
     private List<String> excludePath;
+
+    public static String path;
+
+    public static String uploadPath;
 
     /**
      * 登录路径
@@ -71,6 +76,22 @@ public class GlobalConfig {
 
     public void setLoginPath(String loginPath) {
         this.loginPath = loginPath;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUploadPath() {
+        return uploadPath;
+    }
+
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
     }
 
     public static class JwtConfig {

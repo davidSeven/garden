@@ -13,7 +13,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: 123456
+    password:
     jedis:
       pool:
         # 连接池最大连接数（使用负值表示没有限制）
@@ -81,6 +81,8 @@ garden:
     - /favicon.ico
     - /static/**
   login-path: /login
+  path: /adsfsdf/asdfas/asdf
+  upload-path: /adsfsdf/asdfas/asdf
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=
