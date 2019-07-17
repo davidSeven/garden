@@ -94,11 +94,11 @@ public class MenuController {
 
     @PostMapping(value = "/list")
     @ResponseBody
-    @Limit(name = "menu", key = "list", prefix = "limit:", period = 1, count = 1)
+    @Limit(name = "menu", key = "list", prefix = "limit", period = 1, count = 1)
     //@Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<List<Menu>> list(Menu menu) {
         try {
-            Thread.sleep(300);
+            // Thread.sleep(300);
             return new Result<List<Menu>>().ok().setData(menuService.list(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
