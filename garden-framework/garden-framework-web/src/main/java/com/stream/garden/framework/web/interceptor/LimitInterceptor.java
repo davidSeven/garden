@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import reactor.core.publisher.Flux;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -42,35 +42,42 @@ import java.util.List;
 @Aspect
 @Configuration
 public class LimitInterceptor {
-    /**
-     * Remaining Rate Limit header name.
-     */
-    public static final String REMAINING_HEADER = "X-RateLimit-Remaining";
     private static final Logger logger = LoggerFactory.getLogger(LimitInterceptor.class);
     private static final String UNKNOWN = "unknown";
     private final RedisTemplate<String, Object> limitRedisTemplate;
-    /**
-     * The name of the header that returns number of remaining requests during the current
-     * second.
-     */
-    private String remainingHeader = REMAINING_HEADER;
-
-    private Config defaultConfig;
 
     @Autowired
     public LimitInterceptor(RedisTemplate<String, Object> limitRedisTemplate) {
         this.limitRedisTemplate = limitRedisTemplate;
-
-        this.defaultConfig = new Config(2, 5);
     }
 
-    static List<String> getKeys(String key) {
+    private List<String> getKeys(Limit limitAnnotation, String defaultKey) {
         // use `{}` around keys to use Redis Key hash tags
         // this allows for using redis cluster
-
+        LimitType limitType = limitAnnotation.limitType();
+        String key;
+        switch (limitType) {
+            case IP:
+                key = getIpAddress();
+                break;
+            case CUSTOMER:
+                key = limitAnnotation.key();
+                break;
+            default:
+                key = defaultKey;
+        }
         // Make a unique key per user.
-        String prefix = "request_rate_limiter.{" + key;
-
+        String annotationPrefix = "";
+        if (StringUtils.isNotEmpty(limitAnnotation.name())) {
+            annotationPrefix = limitAnnotation.name();
+        }
+        if (StringUtils.isNotEmpty(limitAnnotation.prefix())) {
+            if (StringUtils.isNotEmpty(limitAnnotation.name())) {
+                annotationPrefix += ":";
+            }
+            annotationPrefix += (limitAnnotation.prefix() + ":");
+        }
+        String prefix = annotationPrefix + "request_rate_limiter.{" + key;
         // You need two Redis keys for Token Bucket.
         String tokenKey = prefix + "}.tokens";
         String timestampKey = prefix + "}.timestamp";
@@ -82,45 +89,29 @@ public class LimitInterceptor {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         Limit limitAnnotation = method.getAnnotation(Limit.class);
-        LimitType limitType = limitAnnotation.limitType();
-        String name = limitAnnotation.name();
-        String key;
         int limitPeriod = limitAnnotation.period();
         int limitCount = limitAnnotation.count();
-        switch (limitType) {
-            case IP:
-                key = getIpAddress();
-                break;
-            case CUSTOMER:
-                key = limitAnnotation.key();
-                break;
-            default:
-                key = StringUtils.upperCase(method.getName());
-        }
-
-        // How many requests per second do you want a user to be allowed to do?
-        int replenishRate = defaultConfig.getReplenishRate();
-
-        // How much bursting do you want to allow?
-        int burstCapacity = defaultConfig.getBurstCapacity();
-
         try {
-            List<String> keys = getKeys(key);
-
+            List<String> keys = getKeys(limitAnnotation, StringUtils.upperCase(method.getName()));
+            DefaultTargetType<List<Long>> targetType = new DefaultTargetType<List<Long>>() {
+            };
             String luaScript = buildLuaScript();
-            RedisScript<List<Long>> redisScript = new DefaultRedisScript<>(luaScript);
-
+            DefaultRedisScript<List<Long>> redisScript = new DefaultRedisScript<>(luaScript);
+            redisScript.setResultType(targetType.getClassType());
             // The arguments to the LUA script. time() returns unixtime in seconds.
-            List<String> scriptArgs = Arrays.asList(replenishRate + "",
-                    burstCapacity + "", Instant.now().getEpochSecond() + "", "1");
+            Object[] scriptArgs = new Long[]{(long) limitPeriod,
+                    (long) limitCount, Instant.now().getEpochSecond(), 1L};
             List<Long> flux = this.limitRedisTemplate.execute(redisScript, keys, scriptArgs);
-
-            if (null != flux) {
+            if (null != flux && 1L == flux.get(0)) {
                 return pjp.proceed();
             } else {
-                throw new ApplicationException("You have been dragged into the blacklist");
+                throw new ApplicationException("请求过于频繁，请稍后再试");
             }
+        } catch (ApplicationException e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e.getMessage(), e);
         } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
             throw new ApplicationException("server exception");
         }
     }
@@ -130,7 +121,7 @@ public class LimitInterceptor {
      *
      * @return lua脚本
      */
-    public String buildLuaScript() {
+    private String buildLuaScript() {
         StringBuilder lua = new StringBuilder();
         // 令牌桶
         // 当前限流的标识，可以是ip，或者在spring cloud系统中，可以是一个服务的serviceID
@@ -183,7 +174,7 @@ public class LimitInterceptor {
      *
      * @return ip
      */
-    public String getIpAddress() {
+    private String getIpAddress() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
@@ -198,43 +189,36 @@ public class LimitInterceptor {
         return ip;
     }
 
-    public static class Config {
+    public static class DefaultTargetType<T> {
 
-        private int replenishRate;
-
-        private int burstCapacity = 1;
-
-        public Config() {
+        @SuppressWarnings("unchecked")
+        DefaultTargetType() {
+            Type superClass = getClass().getGenericSuperclass();
+            this.type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+            if (this.type instanceof ParameterizedType) {
+                this.classType = (Class<T>) ((ParameterizedType) this.type).getRawType();
+            } else {
+                this.classType = (Class<T>) this.type;
+            }
         }
 
-        public Config(int replenishRate, int burstCapacity) {
-            this.replenishRate = replenishRate;
-            this.burstCapacity = burstCapacity;
+        private Type type;
+        private Class<T> classType;
+
+        public Type getType() {
+            return type;
         }
 
-        public int getReplenishRate() {
-            return replenishRate;
+        public void setType(Type type) {
+            this.type = type;
         }
 
-        public Config setReplenishRate(int replenishRate) {
-            this.replenishRate = replenishRate;
-            return this;
+        public Class<T> getClassType() {
+            return classType;
         }
 
-        public int getBurstCapacity() {
-            return burstCapacity;
+        public void setClassType(Class<T> classType) {
+            this.classType = classType;
         }
-
-        public Config setBurstCapacity(int burstCapacity) {
-            this.burstCapacity = burstCapacity;
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return "Config{" + "replenishRate=" + replenishRate + ", burstCapacity="
-                    + burstCapacity + '}';
-        }
-
     }
 }
