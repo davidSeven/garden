@@ -83,6 +83,7 @@ garden:
   login-path: /login
   path: /adsfsdf/asdfas/asdf
   upload-path: /adsfsdf/asdfas/asdf
+  upload-dir: /adsfsdf/asdfas/asdf
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=

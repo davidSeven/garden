@@ -29,6 +29,9 @@ public class GlobalConfig {
 
     public static String uploadPath;
 
+    @Value("${garden.upload-dir}")
+    public static String UPLOAD_DIR = "NONE";
+
     /**
      * 登录路径
      */
@@ -83,7 +86,7 @@ public class GlobalConfig {
     }
 
     public void setPath(String path) {
-        this.path = path;
+        GlobalConfig.path = path;
     }
 
     public String getUploadPath() {
@@ -91,7 +94,11 @@ public class GlobalConfig {
     }
 
     public void setUploadPath(String uploadPath) {
-        this.uploadPath = uploadPath;
+        GlobalConfig.uploadPath = uploadPath;
+    }
+
+    public void setUploadDir(String uploadDir) {
+        GlobalConfig.UPLOAD_DIR = uploadDir;
     }
 
     public static class JwtConfig {

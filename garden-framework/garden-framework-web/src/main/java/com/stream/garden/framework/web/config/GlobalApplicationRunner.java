@@ -34,7 +34,8 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         logger.debug(">>>path:{}", globalConfig.getPath());
         logger.debug(">>>path:{}", globalConfig.path);
         logger.debug(">>>path:{}", GlobalConfig.path);
-        logger.debug(">>>path:{}", GlobalConfig.uploadPath);
+        logger.debug(">>>uploadPath:{}", GlobalConfig.uploadPath);
+        logger.debug(">>>UPLOAD_DIR:{}", GlobalConfig.UPLOAD_DIR);
         printController();
         runCompleted();
         printServiceInfo();
