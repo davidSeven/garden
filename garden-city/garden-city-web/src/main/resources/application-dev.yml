@@ -31,6 +31,10 @@ spring:
     # 设置静态文件路径，js,css等
     static-path-pattern: /static/**
 
+
+  resources:
+    static-locations: file:D:/images/
+
   # 配置freemarker
   freemarker:
     # 设置模板后缀名

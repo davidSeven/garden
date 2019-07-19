@@ -21,8 +21,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBean {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final GlobalConfig globalConfig;
+
     @Autowired
-    private GlobalConfig globalConfig;
+    public GlobalWebMvcConfigurer(GlobalConfig globalConfig) {
+        this.globalConfig = globalConfig;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -53,6 +57,9 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        logger.debug("---------------------------------------------");
+        logger.debug("---------------------------------------------");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/images/**").addResourceLocations("file:D:/images/");
     }
 }
