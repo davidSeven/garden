@@ -58,6 +58,7 @@
                     <dd><a href="javascript:;" data-url="system/user/toList" data-id='33' data-text="用户管理"><span class="l-line"></span>用户管理</a></dd>
                     <dd><a href="javascript:;" data-url="system/role/toList" data-id='39' data-text="角色管理"><span class="l-line"></span>角色管理</a></dd>
                     <dd><a href="javascript:;" data-url="system/function/toList" data-id='139' data-text="功能管理"><span class="l-line"></span>功能管理</a></dd>
+                    <dd><a href="javascript:;" data-url="system/function/toList" data-id='139' data-text="权限管理"><span class="l-line"></span>权限管理</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item">

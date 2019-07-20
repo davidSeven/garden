@@ -13,12 +13,6 @@
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/ztree/zTreeStyle.css"/>
     <style type="text/css">
-        /*body {
-            background-color: #f2f2f2;
-        }*/
-        .layui-fluid {
-            padding: 5px;
-        }
         .layui-card-header.layuiadmin-card-header-auto {
             padding: 10px;
             height: auto;
@@ -30,7 +24,7 @@
 </head>
 
 <body>
-<div class="layui-fluid">
+<div class="page-content-wrap">
     <div class="layui-col-md3">
         <ul id="menuTree" class="ztree"></ul>
     </div>
@@ -214,7 +208,7 @@
                     , limits: [10, 20, 50, 200]
                 }
                 //,height: '350'
-                , height: 'full-200'
+                , height: 'full-220'
                 , done: function (response, curr, count) {
                     //$(".layui-card-body").resetTableHeight();
                 }
