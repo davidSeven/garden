@@ -9,3 +9,5 @@ target/
 .settings/
 .project
 *.log
+
+*.pdb
