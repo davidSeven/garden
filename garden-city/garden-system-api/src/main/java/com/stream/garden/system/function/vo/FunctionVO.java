@@ -8,4 +8,5 @@ import com.stream.garden.system.function.model.Function;
  * @date 2019-07-20 15:54
  */
 public class FunctionVO extends BasePageVO<Function, String> {
+    private static final long serialVersionUID = 742989184962594564L;
 }

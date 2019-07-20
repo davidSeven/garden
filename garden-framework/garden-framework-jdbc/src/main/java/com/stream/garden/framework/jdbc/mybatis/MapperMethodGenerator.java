@@ -73,6 +73,10 @@ public class MapperMethodGenerator {
             writer.write(addOrdderByClauseSQL());
         }
 
+        if(!existMethodSet.contains("orderByClause2")){
+            writer.write(addOrdderByClauseSQL2());
+        }
+
         if (!existMethodSet.contains("exists")) {
             writer.write(addExistsByPrimaryKey(table, idProertyClassType));
         }
@@ -91,6 +95,28 @@ public class MapperMethodGenerator {
 
         return sb.toString();
     }
+
+    private static String addOrdderByClauseSQL2() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<sql id=\"orderByClause2\">                                                    \n");
+        sb.append("    <if test=\"orderByClauses != null\" >                                      \n");
+        sb.append("        <trim prefix=\" ORDER  BY \" suffix=\"  \" suffixOverrides=\",\">      \n");
+        sb.append("          <foreach collection=\"orderByClauses\" item=\"orderByObj\">          \n");
+        sb.append("              <if test=\"orderByObj.field != null and orderByObj.field != ''\">\n");
+        sb.append("                  <if test=\"orderByObj.orderByMode == 0\">                    \n");
+        sb.append("                      ${orderByObj.field} ASC ,                                \n");
+        sb.append("                  </if>                                                        \n");
+        sb.append("                  <if test=\"orderByObj.orderByMode != 0\">                    \n");
+        sb.append("                      ${orderByObj.field} DESC ,                               \n");
+        sb.append("                  </if>                                                        \n");
+        sb.append("              </if>                                                            \n");
+        sb.append("          </foreach>                                                           \n");
+        sb.append("        </trim>                                                                \n");
+        sb.append("    </if>                                                                      \n");
+        sb.append("</sql>                                                                         \n");
+        return sb.toString();
+    }
+
     private static String addOrdderByClauseSQL() {
         StringBuilder sb = new StringBuilder();
         sb.append("<sql id=\"orderByClause\">                                                     \n");
@@ -322,6 +348,9 @@ public class MapperMethodGenerator {
         sb.append(getColumns(table));
         sb.append("\n    from " + table.getTable());
         sb.append(getConditions4Query(table.getAllColumnList(), null, null));
+        sb.append("\n    <if test=\"orderByClauses != null \" >");
+        sb.append("\n       <include refid=\"orderByClause2\" />");
+        sb.append("\n    </if>");
         sb.append("\n</select>\n");
         return sb.toString();
     }

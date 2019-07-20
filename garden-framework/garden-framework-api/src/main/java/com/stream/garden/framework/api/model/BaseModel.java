@@ -5,10 +5,11 @@ import java.sql.Timestamp;
 
 /**
  * 基础父类
+ *
  * @param <ID>
  * @author garden
  */
-public class BaseModel<ID> implements Serializable {
+public class BaseModel<ID> extends OrderBy implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

@@ -52,6 +52,7 @@ public class LimitFilter extends ExcludeFilter implements Filter {
         if (!jump && LimitRule.APPLICATION.equals(limitConfig.getLimitRule())) {
             HandlerLimit handlerLimit = HandlerLimitFactory.getInstance().builder(LimitRule.APPLICATION);
             if (null != handlerLimit && !handlerLimit.handle(null)) {
+                logger.error("---{}", LimitExceptionCode.SYSTEM_BUSY.getMessage());
                 // throw new ServletException(LimitExceptionCode.SYSTEM_BUSY.getMessage());
                 HttpServletResponse response = (HttpServletResponse) res;
                 response.setHeader("Content-Type", "application/json;charset=UTF-8");

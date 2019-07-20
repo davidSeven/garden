@@ -2,6 +2,7 @@ package com.stream.garden.system.menu.controller;
 
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.framework.limit.annotation.Limit;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.model.Menu;
@@ -97,6 +98,7 @@ public class MenuController {
     public Result<List<Menu>> list(Menu menu) {
         try {
             // Thread.sleep(300);
+            menu.asOrderBy("SORTS", OrderByObj.ASC);
             return new Result<List<Menu>>().ok().setData(menuService.list(menu));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

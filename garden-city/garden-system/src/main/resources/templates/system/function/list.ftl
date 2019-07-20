@@ -230,8 +230,8 @@
                     {type: 'numbers'}
                     , {type: 'checkbox'}
                     , {field: 'name', width: 120, title: '功能名称'}
-                    , {field: 'code', width: 120, title: '功能编码', sort: true}
-                    , {field: 'url', width: 120, title: '功能地址', sort: true}
+                    , {field: 'code', width: 150, title: '功能编码', sort: true}
+                    , {field: 'url', width: 200, title: '功能地址', sort: true}
                     , {
                         field: 'state', width: 120, title: '状态', align: 'center', templet: function (row) {
                             if ("1" === row.state) {

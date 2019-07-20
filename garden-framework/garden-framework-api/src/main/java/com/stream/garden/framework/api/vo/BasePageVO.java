@@ -2,11 +2,9 @@ package com.stream.garden.framework.api.vo;
 
 import com.stream.garden.framework.api.model.PageSize;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BasePageVO<T, ID> extends BaseVO<T, ID> {
 
+    private static final long serialVersionUID = 7445342957138040313L;
     private PageSize pageSize = new PageSize();
     private Criteria<T> criteria;
 
@@ -30,14 +28,4 @@ public class BasePageVO<T, ID> extends BaseVO<T, ID> {
         this.criteria = criteria;
     }
 
-    public BasePageVO<T, ID> asOrderByUpdationDate() {
-        return asOrderByUpdationDate(OrderByObj.DESC);
-    }
-
-    public BasePageVO<T, ID> asOrderByUpdationDate(int orderByMode) {
-        List<OrderByObj> orders = new ArrayList<>();
-        orders.add(new OrderByObj("UPDATION_DATE", orderByMode));
-        this.getCriteria().setOrderByClauses(orders);
-        return this;
-    }
 }

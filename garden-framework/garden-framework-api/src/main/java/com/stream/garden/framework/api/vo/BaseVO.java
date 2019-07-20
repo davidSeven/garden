@@ -1,13 +1,16 @@
 package com.stream.garden.framework.api.vo;
 
+import com.stream.garden.framework.api.model.OrderBy;
+
 /**
  * 分页
  *
  * @param <T> 业务对象
  * @author city
  */
-public class BaseVO<T, ID> {
+public class BaseVO<T, ID> extends OrderBy {
 
+    private static final long serialVersionUID = 48442414440502818L;
     private T data;
 
     private ID[] ids;
@@ -25,7 +28,7 @@ public class BaseVO<T, ID> {
     }
 
     public Long[] getLongIds() {
-        if(null == this.ids) {
+        if (null == this.ids) {
             return new Long[0];
         }
         Long[] longs = new Long[this.ids.length];
