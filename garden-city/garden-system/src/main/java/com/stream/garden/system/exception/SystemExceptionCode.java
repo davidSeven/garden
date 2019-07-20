@@ -15,6 +15,7 @@ public enum SystemExceptionCode implements AppCode {
      * GROUP    26000 - 28999 (3000)
      * MENU     29000 - 31999 (3000)
      * FUNCTION 32000 - 34999 (3000)
+     * LOOKUP   35000 - 37999 (3000)
      */
 
     /**
@@ -31,6 +32,8 @@ public enum SystemExceptionCode implements AppCode {
      */
     ROLE_CODE_REPEAT(20301, "角色编码[{0}]已存在"),
 
+    GROUP_ADD_EXCEPTION(26000, "新增群组异常"),
+    GROUP_EDIT_EXCEPTION(26001, "修改群组异常"),
 
     MENU_ADD_EXCEPTION(20900, "新增菜单异常"),
     MENU_NAME_REPEAT(20901, "菜单[{0}]已存在"),
@@ -39,6 +42,12 @@ public enum SystemExceptionCode implements AppCode {
 
     FUNCTION_ADD_EXCEPTION(32000, "新增功能异常"),
     FUNCTION_EDIT_EXCEPTION(32001, "修改功能异常"),
+
+    LOOKUP_ADD_EXCEPTION(35000, "新增Lookup异常"),
+    LOOKUP_EDIT_EXCEPTION(35001, "修改Lookup异常"),
+
+    LOOKUP_ITEM_ADD_EXCEPTION(35002, "新增Lookup子项异常"),
+    LOOKUP_ITEM_EDIT_EXCEPTION(35003, "修改Lookup子项异常"),
     ;
 
     private int code;

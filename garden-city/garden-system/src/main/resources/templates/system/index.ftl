@@ -57,12 +57,16 @@
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" data-url="system/user/toList" data-id='33' data-text="用户管理"><span class="l-line"></span>用户管理</a></dd>
                     <dd><a href="javascript:;" data-url="system/role/toList" data-id='39' data-text="角色管理"><span class="l-line"></span>角色管理</a></dd>
+                    <dd><a href="javascript:;" data-url="system/group/toList" data-id='40' data-text="群组管理"><span class="l-line"></span>群组管理</a></dd>
                     <dd><a href="javascript:;" data-url="system/function/toList" data-id='139' data-text="功能管理"><span class="l-line"></span>功能管理</a></dd>
                     <dd><a href="javascript:;" data-url="system/function/toList" data-id='139' data-text="权限管理"><span class="l-line"></span>权限管理</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item">
-                <a href="javascript:;" data-url="system.html" data-id='6' data-text="系统设置"><i class="iconfont">&#xe60b;</i>系统设置</a>
+                <a href="javascript:;"><i class="iconfont">&#xe60b;</i>系统设置</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-url="system/lookup/toList" data-id='188' data-text="Lookup管理"><span class="l-line"></span>Lookup管理</a></dd>
+                </dl>
             </li>
         </ul>
     </div>
