@@ -19,10 +19,10 @@
 
 <body>
 <div class="page-content-wrap">
-    <div class="layui-col-md4">
+    <div class="layui-col-md3">
         <form class="layui-form" action="">
             <div class="layui-form-item">
-                <div class="layui-inline tool-btn">
+                <div class="layui-inline tool-btn" style="margin-right: 0;">
                     <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
                             permission="system.menu.add"
                             data-url="/system/menu/toEdit"><i class="layui-icon">&#xe654;</i></button>
@@ -40,7 +40,7 @@
         </form>
         <ul id="menuTree" class="ztree"></ul>
     </div>
-    <div id="viewForm" class="layui-form layui-col-md8">
+    <div id="viewForm" class="layui-form layui-col-md9">
         <div class="layui-form-item">
             <label class="layui-form-label">上级</label>
             <div class="layui-input-block">

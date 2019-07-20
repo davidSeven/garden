@@ -10,10 +10,11 @@ public enum SystemExceptionCode implements AppCode {
 
     /*
      * 20000-29999
-     * USER     20000 - 202999
-     * ROLE     20300 - 205999
-     * GROUP    20600 - 208999
-     * MENU     20900 - 311999
+     * USER     20000 - 22999 (3000)
+     * ROLE     23000 - 25999 (3000)
+     * GROUP    26000 - 28999 (3000)
+     * MENU     29000 - 31999 (3000)
+     * FUNCTION 32000 - 34999 (3000)
      */
 
     /**
@@ -35,6 +36,9 @@ public enum SystemExceptionCode implements AppCode {
     MENU_NAME_REPEAT(20901, "菜单[{0}]已存在"),
     MENU_EDIT_EXCEPTION(20902, "修改菜单异常"),
     MENU_EXISTS_CHILDREN_DELETE_EXCEPTION(20903, "存在子级菜单，不允许删除"),
+
+    FUNCTION_ADD_EXCEPTION(32000, "新增功能异常"),
+    FUNCTION_EDIT_EXCEPTION(32001, "修改功能异常"),
     ;
 
     private int code;

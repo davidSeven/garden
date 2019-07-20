@@ -2,6 +2,15 @@ package com.stream.garden.framework.api.vo;
 
 public class OrderByObj {
 
+    /**
+     * ASC升序
+     */
+    public static final int ASC = 0;
+    /**
+     * DESC降序
+     */
+    public static final int DESC = 1;
+
     // 排序字段
     private String field;
     // 0：ASC，1：DESC

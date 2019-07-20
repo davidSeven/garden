@@ -97,3 +97,7 @@ garden:
   # 限流配置
   limit:
     limit-rule: APPLICATION
+    # 1s
+    period: 1
+    # 10次
+    count: 10
