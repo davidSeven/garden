@@ -157,6 +157,7 @@ create table SYS_FUNCTION_T
    NAME                 VARCHAR(32) default '' comment '名称',
    CODE                 VARCHAR(128) default '' comment '编号',
    STATE                VARCHAR(2) default '' comment '状态',
+   URL                  VARCHAR(128) default '' comment '路径',
    CREATED_BY           VARCHAR(32) default '' comment '创建人',
    CREATION_DATE        TIMESTAMP default CURRENT_TIMESTAMP comment '创建时间',
    UPDATED_BY           VARCHAR(32) default '' comment '修改人',
