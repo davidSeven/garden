@@ -117,7 +117,7 @@
 
         function getTree() {
 
-            ajaxPost('/system/menu/list', null, function (data) {
+            ajaxPost('/system/function/menuList', null, function (data) {
                 if (data.success) {
                     callback && callback(data.data);
                 } else {
