@@ -15,7 +15,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = GlobalConfig.CONFIG_PREFIX)
 public class GlobalConfig {
 
-    public static final String CONFIG_PREFIX = "garden";
+    static final String CONFIG_PREFIX = "garden";
 
     // @NacosValue(value = "${garden.name}", autoRefreshed = true)
     private String name;

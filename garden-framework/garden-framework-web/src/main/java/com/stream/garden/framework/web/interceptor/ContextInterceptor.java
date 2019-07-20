@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 上下文拦截器
+ *
  * @author garden
  * @date 2019-06-22 13:46
  */
@@ -16,6 +18,7 @@ public class ContextInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        logger.debug("--- ContextInterceptor preHandle");
         return super.preHandle(request, response, handler);
     }
 

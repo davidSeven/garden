@@ -6,16 +6,18 @@ package com.stream.garden.framework.web.constant;
  */
 public class GlobalConstant {
 
+    private GlobalConstant() {}
+
     /** 登录验证header/cookie名称 */
-    public static String HEADER_AUTHORIZATION = "authorization";
+    public static final String HEADER_AUTHORIZATION = "authorization";
     /** 登录验证前缀验证 */
-    public static String HEADER_AUTHORIZATION_BEARER = "bearer.";
+    public static final String HEADER_AUTHORIZATION_BEARER = "bearer.";
 
     /** GET */
-    public static String GET = "GET";
+    public static final String GET = "GET";
     /** POST */
-    public static String POST = "POST";
+    public static final String POST = "POST";
     /** OPTIONS */
-    public static String OPTIONS = "OPTIONS";
+    public static final String OPTIONS = "OPTIONS";
 
 }

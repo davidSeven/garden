@@ -40,6 +40,11 @@
             <artifactId>garden-framework-log</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-framework-limit</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

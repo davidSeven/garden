@@ -19,9 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBean {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final GlobalConfig globalConfig;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public GlobalWebMvcConfigurer(GlobalConfig globalConfig) {
@@ -42,7 +41,7 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
     public FilterRegistrationBean<ContextFilter> setJwtFilter() {
         final FilterRegistrationBean<ContextFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new ContextFilter(globalConfig));
-        filter.setName("jwtFilter");
+        filter.setName("contextFilter");
         filter.addUrlPatterns("/*");
         filter.setOrder(2);
         return filter;

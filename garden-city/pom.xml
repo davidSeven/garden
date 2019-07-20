@@ -80,6 +80,11 @@
                 <artifactId>garden-framework-web</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-framework-limit</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.stream</groupId>

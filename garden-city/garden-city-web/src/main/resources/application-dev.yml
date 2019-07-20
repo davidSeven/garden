@@ -93,3 +93,7 @@ garden:
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=
     name: garden_api_user
     expiresSecond: 172800
+
+  # 限流配置
+  limit:
+    limit-rule: APPLICATION

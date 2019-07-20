@@ -1,4 +1,4 @@
-package com.stream.garden.framework.web.enums;
+package com.stream.garden.framework.limit.enums;
 
 /**
  * @author garden

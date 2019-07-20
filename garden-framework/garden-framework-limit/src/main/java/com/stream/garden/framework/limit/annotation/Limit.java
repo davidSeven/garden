@@ -1,6 +1,6 @@
-package com.stream.garden.framework.web.annotation;
+package com.stream.garden.framework.limit.annotation;
 
-import com.stream.garden.framework.web.enums.LimitType;
+import com.stream.garden.framework.limit.enums.LimitType;
 
 import java.lang.annotation.*;
 
