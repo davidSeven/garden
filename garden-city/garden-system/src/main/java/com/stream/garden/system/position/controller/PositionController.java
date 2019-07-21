@@ -1,4 +1,4 @@
-package com.stream.garden.system.user.controller;
+package com.stream.garden.system.position.controller;
 
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
@@ -6,9 +6,12 @@ import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.system.exception.SystemExceptionCode;
-import com.stream.garden.system.user.model.User;
-import com.stream.garden.system.user.service.IUserService;
-import com.stream.garden.system.user.vo.UserVO;
+import com.stream.garden.system.function.model.Function;
+import com.stream.garden.system.function.vo.FunctionVO;
+import com.stream.garden.system.menu.model.Menu;
+import com.stream.garden.system.position.model.Position;
+import com.stream.garden.system.position.service.IPositionService;
+import com.stream.garden.system.position.vo.PositionVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +21,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author garden
- * @date 2019-06-19 13:49
+ * @date 2019-07-20 15:47
  */
 @Controller
-@RequestMapping("/system/user")
-public class UserController {
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+@RequestMapping(value = "/system/position")
+public class PositionController {
+    private Logger logger = LoggerFactory.getLogger(PositionController.class);
 
     @Autowired
-    private IUserService userService;
+    private IPositionService positionService;
+
 
     /**
      * 跳转列表页面
@@ -40,32 +43,27 @@ public class UserController {
      */
     @GetMapping(value = "/toList")
     public String toList() {
-        logger.debug(">>>页面跳转：{}", "system/user/list");
-        return "system/user/list";
+        return "system/position/list";
     }
 
     /**
      * 跳转编辑页面
-     *
      * @return 页面路径
      */
     @GetMapping(value = "/toEdit")
     public String toEdit() {
-        logger.debug(">>>页面跳转：{}", "system/user/edit");
-        return "system/user/edit";
+        return "system/position/edit";
     }
 
     @PostMapping(value = "/pageList")
     @ResponseBody
-    public Result<PageInfo<User>> pageList(UserVO vo) {
+    public Result<PageInfo<Position>> pageList(PositionVO vo) {
         try {
             if (null == vo.getCriteria()) {
                 vo.setCriteria(new Criteria<>());
             }
-            List<OrderByObj> orders = new ArrayList<>();
-            orders.add(new OrderByObj("UPDATION_DATE", 1));
-            vo.getCriteria().setOrderByClauses(orders);
-            return new Result<PageInfo<User>>().setData(userService.pageList(vo)).ok();
+            vo.asOrderByUpdationDate();
+            return new Result<PageInfo<Position>>().setData(positionService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
@@ -74,35 +72,34 @@ public class UserController {
 
     @PostMapping(value = "/add")
     @ResponseBody
-    public Result<Integer> add(User user) {
+    public Result<Integer> add(Position position) {
         try {
-            return new Result<Integer>().setData(userService.insert(user)).ok();
+            return new Result<Integer>().setData(positionService.insert(position)).ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.USER_ADD_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.POSITION_ADD_EXCEPTION.getAppCode(e));
         }
     }
 
     @PostMapping(value = "/edit")
     @ResponseBody
-    public Result<Integer> edit(User user) {
+    public Result<Integer> edit(Position position) {
         try {
-            return new Result<Integer>().ok().setData(userService.update(user));
+            return new Result<Integer>().ok().setData(positionService.update(position));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.MENU_EDIT_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.POSITION_EDIT_EXCEPTION.getAppCode(e));
         }
     }
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    public Result<Integer> delete(User user) {
+    public Result<Integer> delete(Position position) {
         try {
-            return new Result<Integer>().ok().setData(userService.delete(user.getId()));
+            return new Result<Integer>().ok().setData(positionService.delete(position.getId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
         }
     }
-
 }

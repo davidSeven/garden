@@ -18,6 +18,11 @@ public class BaseModel<ID> extends OrderBy implements Serializable {
     private ID id;
 
     /**
+     * 备注
+     */
+    private String remark;
+
+    /**
      * 创建人ID
      */
     private String createdBy;
@@ -101,5 +106,13 @@ public class BaseModel<ID> extends OrderBy implements Serializable {
 
     public void setTraceId(String traceId) {
         this.traceId = traceId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

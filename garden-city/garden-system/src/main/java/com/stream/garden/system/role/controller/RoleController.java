@@ -78,7 +78,7 @@ public class RoleController {
             return new Result<Integer>().setData(roleService.insert(role)).ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.USER_INSERT_EXCEPTION.getAppCode(e));
+            return new Result<>(e, SystemExceptionCode.USER_ADD_EXCEPTION.getAppCode(e));
         }
     }
 

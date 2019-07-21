@@ -259,3 +259,36 @@ create index IDX_SYS_LOOKUP_ITEM_T_CODE on SYS_LOOKUP_ITEM_T (CODE);
 /* Index: IDX_SYS_LOOKUP_ITEM_T_PARENT_CODE                     */
 /*==============================================================*/
 create index IDX_SYS_LOOKUP_ITEM_T_PARENT_CODE on SYS_LOOKUP_ITEM_T (PARENT_CODE);
+
+CREATE TABLE `SYS_ORGANIZATION_T` (
+  `ID` varchar(32) NOT NULL COMMENT 'ID',
+  `NAME` varchar(32) DEFAULT '' COMMENT '名称',
+  `CODE` varchar(128) DEFAULT '' COMMENT '编号',
+  `STATE` varchar(2) DEFAULT '' COMMENT '状态',
+  `SORTS` int(4) DEFAULT '1' COMMENT '顺序',
+  `PARENT_ID` varchar(32) DEFAULT NULL COMMENT '父级ID',
+  `REMARK` varchar(255) DEFAULT '' COMMENT '备注',
+  `CREATED_BY` varchar(32) DEFAULT '' COMMENT '创建人',
+  `CREATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `UPDATED_BY` varchar(32) DEFAULT '' COMMENT '修改人',
+  `UPDATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ENABLED_FLAG` int(1) DEFAULT '1' COMMENT '是否禁用',
+  `TRACE_ID` varchar(16) DEFAULT '' COMMENT '日志ID',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组织架构表';
+
+CREATE TABLE `SYS_POSITION_T` (
+  `ID` varchar(32) NOT NULL COMMENT 'ID',
+  `NAME` varchar(32) DEFAULT '' COMMENT '名称',
+  `CODE` varchar(128) DEFAULT '' COMMENT '编号',
+  `STATE` varchar(2) DEFAULT '' COMMENT '状态',
+  `REMARK` varchar(255) DEFAULT '' COMMENT '备注',
+  `CREATED_BY` varchar(32) DEFAULT '' COMMENT '创建人',
+  `CREATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `UPDATED_BY` varchar(32) DEFAULT '' COMMENT '修改人',
+  `UPDATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ENABLED_FLAG` int(1) DEFAULT '1' COMMENT '是否禁用',
+  `TRACE_ID` varchar(16) DEFAULT '' COMMENT '日志ID',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='职务表';
+
