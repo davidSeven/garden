@@ -67,10 +67,4 @@ public class LimitInterceptor {
         }
     }
 
-    private LimitRule getLimitRule() {
-        if (LimitRule.METHOD.equals(limitConfig.getLimitRule())) {
-            return LimitRule.METHOD;
-        }
-        return null;
-    }
 }

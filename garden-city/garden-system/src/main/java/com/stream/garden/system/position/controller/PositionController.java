@@ -4,11 +4,7 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
-import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.system.exception.SystemExceptionCode;
-import com.stream.garden.system.function.model.Function;
-import com.stream.garden.system.function.vo.FunctionVO;
-import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.position.model.Position;
 import com.stream.garden.system.position.service.IPositionService;
 import com.stream.garden.system.position.vo.PositionVO;
@@ -20,8 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * @author garden
@@ -48,6 +42,7 @@ public class PositionController {
 
     /**
      * 跳转编辑页面
+     *
      * @return 页面路径
      */
     @GetMapping(value = "/toEdit")

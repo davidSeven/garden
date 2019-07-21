@@ -26,8 +26,6 @@ public class Menu extends BaseModel<String> {
     private String parentId;
     /** 菜单图标 */
     private String icon;
-    /** 备注 */
-    private String remark;
 
     public String getName() {
         return name;
@@ -93,11 +91,4 @@ public class Menu extends BaseModel<String> {
         this.icon = icon;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

@@ -1,6 +1,9 @@
 package com.stream.garden.framework.api.vo;
 
-public class OrderByObj {
+import java.io.Serializable;
+
+public class OrderByObj implements Serializable {
+    private static final long serialVersionUID = -8994175319212786192L;
 
     /**
      * ASC升序

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderBy implements Serializable {
-
     private static final long serialVersionUID = 1103089400305042567L;
+
     /**
      * 排序字段
      */
