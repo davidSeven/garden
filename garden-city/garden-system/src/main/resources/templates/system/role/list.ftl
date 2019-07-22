@@ -75,6 +75,9 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/system/role/delete">删除</button>
+                <button id="setFunctionBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="setFunction"
+                        data-url="/system/role/toSetFunction">权限设置</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -187,6 +190,22 @@
                     });
                     // layer.close(index);
                 });
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        // 权限设置
+        $("#setFunctionBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var url = $(this).attr('data-url');
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("权限设置", url, iframeObj, w = "400px", h = "600px", {isInsert: false, data: data});
+                return false;
             } else {
                 layer.msg('请选择一条记录', {icon: 7});
             }

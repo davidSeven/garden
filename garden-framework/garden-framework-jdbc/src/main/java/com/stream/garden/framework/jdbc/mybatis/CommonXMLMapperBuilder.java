@@ -154,8 +154,10 @@ public class CommonXMLMapperBuilder {
 
         //组装主键
         Node idNode = (Node) xpath.evaluate("id[1]", resultMapNode, XPathConstants.NODE);
-        table.setIdColumn(createTableColumn(idNode));
-        table.setBaseResultMap(baseResultMap);
+        if (null != idNode) {
+            table.setIdColumn(createTableColumn(idNode));
+            table.setBaseResultMap(baseResultMap);
+        }
 
         //组装非主键字段
         ArrayList<CommonTableColumn> columnList = new ArrayList<CommonTableColumn>();
