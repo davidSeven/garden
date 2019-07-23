@@ -13,6 +13,8 @@ public class RoleFunction extends OrderBy implements Serializable {
 
     private String roleId;
     private String functionId;
+    // 类型，1菜单，2功能
+    private int type;
 
     public String getRoleId() {
         return roleId;
@@ -28,5 +30,13 @@ public class RoleFunction extends OrderBy implements Serializable {
 
     public void setFunctionId(String functionId) {
         this.functionId = functionId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

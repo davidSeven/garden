@@ -60,7 +60,7 @@
             });
 
             var orgList = [];
-            ajaxPost('/system/organization/list', null, function (data) {
+            ajaxPost('/system/role/getMenuFunction', null, function (data) {
                 if (data.success) {
                     orgList = data.data;
                     doCallback();
@@ -142,11 +142,13 @@
         layui.refresh = function() {
             getTree();
         };
-        layui.refresh();
 
         // 初始化方法
         layui.init = function (params) {
             roleId = params.data[0].id;
+
+            // 赋值之后再去查询
+            layui.refresh();
         };
 
         //监听提交
@@ -158,7 +160,10 @@
             var roleFunctionList = [];
             if (nodes && nodes.length) {
                 $.each(nodes, function (i, v) {
-                   roleFunctionList.push({ functionId: v.id });
+                   roleFunctionList.push({
+                       type: v.type,
+                       functionId: v.id
+                   });
                 });
             }
             var vo = {

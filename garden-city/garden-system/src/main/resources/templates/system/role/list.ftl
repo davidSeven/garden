@@ -233,6 +233,23 @@
                 parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
             }
         });
+
+        // 点击行选中
+        $(document).on("click", ".layui-table-body table.layui-table tbody tr", function(){
+            var obj = event ? event.target : event.srcElement;
+            var tag = obj.tagName;
+            var checkbox = $(this).find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+            if(checkbox.length !== 0){
+                if(tag === 'DIV') {
+                    checkbox.click();
+                }
+            }
+
+        });
+
+        $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function(e){
+            e.stopPropagation();
+        });
     });
 </script>
 </body>

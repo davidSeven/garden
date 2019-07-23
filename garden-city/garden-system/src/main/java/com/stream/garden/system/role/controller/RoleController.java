@@ -11,6 +11,7 @@ import com.stream.garden.system.role.model.Role;
 import com.stream.garden.system.role.model.RoleFunction;
 import com.stream.garden.system.role.service.IRoleFunctionService;
 import com.stream.garden.system.role.service.IRoleService;
+import com.stream.garden.system.role.vo.MenuFunctionVO;
 import com.stream.garden.system.role.vo.RoleFunctionVO;
 import com.stream.garden.system.role.vo.RoleVO;
 import com.stream.garden.system.user.controller.UserController;
@@ -111,6 +112,17 @@ public class RoleController {
     public Result<Integer> delete(Role role) {
         try {
             return new Result<Integer>().ok().setData(roleService.delete(role.getId()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
+
+    @PostMapping(value = "/getMenuFunction")
+    @ResponseBody
+    public Result<List<MenuFunctionVO>> getMenuFunction() {
+        try {
+            return new Result<List<MenuFunctionVO>>().ok().setData(roleFunctionService.getMenuFunction());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));

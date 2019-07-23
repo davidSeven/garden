@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.stream.garden.system.role.model.RoleFunction">
         <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
         <result column="FUNCTION_ID" jdbcType="VARCHAR" property="functionId" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
     </resultMap>
     <sql id="BaseTable">
         SYS_ROLE_FUNCTION_T
