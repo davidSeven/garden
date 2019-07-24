@@ -12,6 +12,7 @@ public class GlobalConstant {
     public static final String HEADER_AUTHORIZATION = "authorization";
     /** 登录验证前缀验证 */
     public static final String HEADER_AUTHORIZATION_BEARER = "bearer.";
+    public static final int HEADER_AUTHORIZATION_BEARER_LENGTH = HEADER_AUTHORIZATION_BEARER.length();
 
     /** GET */
     public static final String GET = "GET";

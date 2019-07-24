@@ -4,6 +4,9 @@ import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.util.CookieUtil;
 import com.stream.garden.framework.web.util.JwtHelper;
+import com.stream.garden.system.constant.SystemConstant;
+import com.stream.garden.system.login.service.ILoginService;
+import com.stream.garden.system.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,9 @@ public class LoginController {
 
     @Autowired
     private GlobalConfig globalConfig;
+
+    @Autowired
+    private ILoginService loginService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
@@ -50,18 +56,29 @@ public class LoginController {
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {
             return "redirect:/";
         }
-        String username = request.getParameter("username"),
-                password = request.getParameter("password");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             request.setAttribute("login_error_msg", "username or password cannot be empty");
             return "system/login";
         }
-        if (!globalConfig.getName().equals(username) || !globalConfig.getPassword().equals(password)) {
-            request.setAttribute("login_error_msg", "wrong username or password");
-            return "system/login";
-        }
         try {
-            String token = JwtHelper.createJWT(username, "", "", globalConfig.getJwt());
+            // 登录
+            User user = loginService.login(username, password);
+            // 用户不存在/密码错误
+            if (null == user) {
+                request.setAttribute("login_error_msg", "wrong username or password");
+                return "system/login";
+            }
+            // 判断用户是否可以登录
+            if (SystemConstant.USER_STATE_DISABLED.equals(user.getState())) {
+                request.setAttribute("login_error_msg", "user has been disabled");
+                return "system/login";
+            } else if (SystemConstant.USER_STATE_LOCKED.equals(user.getState())) {
+                request.setAttribute("login_error_msg", "user has been locked");
+                return "system/login";
+            }
+            String token = JwtHelper.createJWT(user.getName(), user.getId(), user.getCurrentRoleId(), globalConfig.getJwt());
             token = GlobalConstant.HEADER_AUTHORIZATION_BEARER + token;
             CookieUtil.addCookie(response, GlobalConstant.HEADER_AUTHORIZATION, token, 24 * 60 * 60);
             response.setHeader(GlobalConstant.HEADER_AUTHORIZATION, token);

@@ -62,6 +62,9 @@ public class ContextFilter extends ExcludeFilter implements Filter {
                     }
                     Context context = new Context();
                     context.setUserName((String) claims.get("unique_name"));
+                    context.setUserCode((String) claims.get("userCode"));
+                    context.setUserId((String) claims.get("userId"));
+                    context.setRoleId((String) claims.get("roleId"));
                     ContextUtil.setContext(context);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);

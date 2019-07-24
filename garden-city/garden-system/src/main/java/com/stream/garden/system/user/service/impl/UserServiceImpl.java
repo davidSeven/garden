@@ -19,6 +19,10 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
         super(iUserDao);
     }
 
+    public IUserDao getDao() {
+        return (IUserDao) super.baseMapper;
+    }
+
     @Override
     public int insert(User user) throws ApplicationException {
         // 验证编码不能重复
@@ -40,5 +44,10 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT, user.getCode());
         }
         return super.update(user);
+    }
+
+    @Override
+    public User getByName(String name) {
+        return this.getDao().getByName(name);
     }
 }

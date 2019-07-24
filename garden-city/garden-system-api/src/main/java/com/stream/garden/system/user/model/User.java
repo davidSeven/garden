@@ -1,11 +1,15 @@
 package com.stream.garden.system.user.model;
 
 import com.stream.garden.framework.api.model.BaseModel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author garden
  * @date 2019-06-19 11:19
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseModel<String> {
     private static final long serialVersionUID = -4012795609268802239L;
 
@@ -24,27 +28,30 @@ public class User extends BaseModel<String> {
      */
     private String state;
 
-    public String getName() {
-        return name;
-    }
+    /**
+     * 当前用户角色id
+     */
+    private String currentRoleId;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    /**
+     * 密码
+     */
+    private String password;
 
-    public String getCode() {
-        return code;
-    }
+    /**
+     * 登录失败次数
+     * login_fail_lock_enable: true
+     * login_fail_lock_count: 3
+     */
+    private Integer loginFailCount;
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    /**
+     * 最后登录ip
+     */
+    private String lastLoginIp;
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
+    /**
+     * 最后登录时间
+     */
+    private String lastLoginDate;
 }

@@ -10,4 +10,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IUserDao extends IBaseMapper<User, String> {
+
+    /**
+     * 根据用户名查询用户
+     *
+     * @param name 用户名
+     * @return User
+     */
+    User getByName(String name);
 }

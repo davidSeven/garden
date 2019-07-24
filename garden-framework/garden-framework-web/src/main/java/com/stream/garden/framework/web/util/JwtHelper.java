@@ -13,8 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 public class JwtHelper {
+
+    private JwtHelper() {
+    }
 
     /**
      * 解析jwt
@@ -36,7 +40,7 @@ public class JwtHelper {
             if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith(GlobalConstant.HEADER_AUTHORIZATION_BEARER)) {
                 return null;
             }
-            String token = authHeader.substring(7);
+            String token = authHeader.substring(GlobalConstant.HEADER_AUTHORIZATION_BEARER_LENGTH);
             return JwtHelper.parseJWT(token, base64Security);
         } catch (Exception e) {
             return null;
@@ -47,14 +51,18 @@ public class JwtHelper {
         return null != parseJWT(request, base64Security);
     }
 
-    public static String createJWT(String name, String userId, String role, GlobalConfig.JwtConfig jwtConfig) {
-        return createJWT(name, userId, role, jwtConfig.getClientId(), jwtConfig.getName(), jwtConfig.getExpiresSecond(), jwtConfig.getBase64Secret());
+    public static String createJWT(String name, String userId, String roleId, Map<String, Object> map, GlobalConfig.JwtConfig jwtConfig) {
+        return createJWT(name, userId, roleId, map, jwtConfig.getClientId(), jwtConfig.getName(), jwtConfig.getExpiresSecond(), jwtConfig.getBase64Secret());
+    }
+
+    public static String createJWT(String name, String userId, String roleId, GlobalConfig.JwtConfig jwtConfig) {
+        return createJWT(name, userId, roleId, null, jwtConfig.getClientId(), jwtConfig.getName(), jwtConfig.getExpiresSecond(), jwtConfig.getBase64Secret());
     }
 
     /**
      * 构建jwt
      */
-    public static String createJWT(String name, String userId, String role, String audience, String issuer, long TTLMillis, String base64Security) {
+    public static String createJWT(String name, String userId, String roleId, Map<String, Object> map, String audience, String issuer, long ttlMillis, String base64Security) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowMillis = System.currentTimeMillis();
@@ -65,11 +73,14 @@ public class JwtHelper {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         // 添加构成JWT的参数
-        JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT").claim("role", role).claim("unique_name", name).claim("userid", userId).setIssuer(issuer).setAudience(audience)
+        JwtBuilder builder = Jwts.builder().setHeaderParam("type", "JWT").claim("roleId", roleId).claim("unique_name", name).claim("userId", userId).setIssuer(issuer).setAudience(audience)
                 .signWith(signatureAlgorithm, signingKey);
+        if (null != map) {
+            builder.setClaims(map);
+        }
         // 添加Token过期时间
-        if (TTLMillis >= 0) {
-            long expMillis = nowMillis + (TTLMillis * 1000);
+        if (ttlMillis >= 0) {
+            long expMillis = nowMillis + (ttlMillis * 1000);
             Date exp = new Date(expMillis);
             builder.setExpiration(exp).setNotBefore(now);
         }
