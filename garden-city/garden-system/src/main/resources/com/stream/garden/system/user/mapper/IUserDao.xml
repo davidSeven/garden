@@ -6,21 +6,26 @@
         <result column="NAME" jdbcType="VARCHAR" property="name" />
         <result column="CODE" jdbcType="VARCHAR" property="code" />
         <result column="STATE" jdbcType="VARCHAR" property="state" />
+        <result column="CURRENT_ROLE_ID" jdbcType="VARCHAR" property="currentRoleId" />
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+        <result column="LOGIN_FAIL_COUNT" jdbcType="INTEGER" property="loginFailCount" />
+        <result column="LAST_LOGIN_IP" jdbcType="VARCHAR" property="lastLoginIp" />
+        <result column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP" property="lastLoginDate" />
         <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
-        <result column="CREATION_DATE" jdbcType="VARCHAR" property="creationDate" />
+        <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
         <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />
-        <result column="UPDATION_DATE" jdbcType="VARCHAR" property="updationDate" />
-        <result column="ENABLED_FLAG" jdbcType="VARCHAR" property="enabledFlag" />
+        <result column="UPDATION_DATE" jdbcType="TIMESTAMP" property="updationDate" />
+        <result column="ENABLED_FLAG" jdbcType="INTEGER" property="enabledFlag" />
         <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId" />
     </resultMap>
     <sql id="BaseTable">
         SYS_USER_T
     </sql>
 
-    <select id="getByName" resultMap="BaseResultMap">
+    <select id="getByCode" resultMap="BaseResultMap">
         SELECT * FROM <include refid="BaseTable"/>
         <where>
-            NAME = #{name,jdbcType=VARCHAR}
+            CODE = #{code,jdbcType=VARCHAR}
         </where>
     </select>
 </mapper>

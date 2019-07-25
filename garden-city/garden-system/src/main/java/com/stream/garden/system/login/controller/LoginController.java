@@ -3,6 +3,7 @@ package com.stream.garden.system.login.controller;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.util.CookieUtil;
+import com.stream.garden.framework.web.util.IPUtil;
 import com.stream.garden.framework.web.util.JwtHelper;
 import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.login.service.ILoginService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * @author garden
@@ -78,6 +80,10 @@ public class LoginController {
                 request.setAttribute("login_error_msg", "user has been locked");
                 return "system/login";
             }
+
+            // 登录成功，更新最后登录信息
+            loginService.updateLastLogin(user.getId(), IPUtil.getIpAddress(request), new Date());
+
             String token = JwtHelper.createJWT(user.getName(), user.getId(), user.getCurrentRoleId(), globalConfig.getJwt());
             token = GlobalConstant.HEADER_AUTHORIZATION_BEARER + token;
             CookieUtil.addCookie(response, GlobalConstant.HEADER_AUTHORIZATION, token, 24 * 60 * 60);

@@ -7,17 +7,17 @@ package com.stream.garden.system.constant;
 public class SystemConstant {
 
     /**
+     * 用户状态：0禁用
+     */
+    public static final String USER_STATE_DISABLED = "0";
+    /**
      * 用户状态：1正常
      */
     public static final String USER_STATE_NORMAL = "1";
     /**
-     * 用户状态：2禁用
+     * 用户状态：2锁定
      */
-    public static final String USER_STATE_DISABLED = "2";
-    /**
-     * 用户状态：3锁定
-     */
-    public static final String USER_STATE_LOCKED = "3";
+    public static final String USER_STATE_LOCKED = "2";
 
     private SystemConstant() {
     }

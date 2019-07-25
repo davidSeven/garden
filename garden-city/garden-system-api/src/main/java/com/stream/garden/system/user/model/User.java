@@ -4,6 +4,8 @@ import com.stream.garden.framework.api.model.BaseModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Timestamp;
+
 /**
  * @author garden
  * @date 2019-06-19 11:19
@@ -30,11 +32,13 @@ public class User extends BaseModel<String> {
 
     /**
      * 当前用户角色id
+     * CURRENT_ROLE_ID
      */
     private String currentRoleId;
 
     /**
      * 密码
+     * PASSWORD
      */
     private String password;
 
@@ -42,16 +46,19 @@ public class User extends BaseModel<String> {
      * 登录失败次数
      * login_fail_lock_enable: true
      * login_fail_lock_count: 3
+     * LOGIN_FAIL_COUNT
      */
     private Integer loginFailCount;
 
     /**
      * 最后登录ip
+     * LAST_LOGIN_IP
      */
     private String lastLoginIp;
 
     /**
      * 最后登录时间
+     * LAST_LOGIN_DATE
      */
-    private String lastLoginDate;
+    private Timestamp lastLoginDate;
 }

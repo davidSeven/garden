@@ -130,12 +130,21 @@
                 ,{field:'code', width:120, title: '用户编号'}
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
                 ,{field:'state', width:120, title: '状态', align: 'center', templet: function (row) {
-                    if ("1" === row.state) {
-                        return '<span class="layui-badge layui-bg-blue">启用</span>';
-                    } else {
+                    if ("0" === row.state) {
                         return '<span class="layui-badge layui-bg-gray">禁用</span>';
+                    } else if ("1" === row.state) {
+                        return '<span class="layui-badge layui-bg-blue">启用</span>';
+                    } else if ("2" === row.state) {
+                        return '<span class="layui-badge layui-bg-orange">锁定</span>';
                     }
+                    return row.state;
                 }}
+                ,{field:'password', width:120, title: '密码'}
+                ,{field:'lastLoginIp', width:120, title: '最后登录IP'}
+                ,{field:'lastLoginDate', width:160, title: '最后登录时间', templet: function (row) {
+                        return formatDate(row.lastLoginDate);
+                    }
+                }
                 ,{field:'createdBy', width:120, title: '创建人'}
                 ,{field:'creationDate', width:160, title: '创建时间', templet: function (row) {
                         return formatDate(row.creationDate);

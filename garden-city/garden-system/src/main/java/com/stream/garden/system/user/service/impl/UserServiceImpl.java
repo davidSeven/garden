@@ -31,7 +31,7 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
         if (super.exists(paramUser)) {
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT, user.getCode());
         }
-        return super.insert(user);
+        return super.insertSelective(user);
     }
 
     @Override
@@ -43,11 +43,11 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
         if (super.exists(paramUser)) {
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT, user.getCode());
         }
-        return super.update(user);
+        return super.updateSelective(user);
     }
 
     @Override
-    public User getByName(String name) {
-        return this.getDao().getByName(name);
+    public User getByCode(String code) {
+        return this.getDao().getByCode(code);
     }
 }
