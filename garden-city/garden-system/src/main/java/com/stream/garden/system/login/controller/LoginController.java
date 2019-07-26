@@ -55,6 +55,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(HttpServletRequest request, HttpServletResponse response) {
+        long startTime = System.currentTimeMillis();
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {
             return "redirect:/";
         }
@@ -64,9 +65,17 @@ public class LoginController {
             request.setAttribute("login_error_msg", "username or password cannot be empty");
             return "system/login";
         }
+        if (logger.isDebugEnabled()) {
+            logger.debug("获取登录参数，耗时:{}", (System.currentTimeMillis() - startTime));
+            startTime = System.currentTimeMillis();
+        }
         try {
             // 登录
             User user = loginService.login(username, password);
+            if (logger.isDebugEnabled()) {
+                logger.debug("用户验证，耗时:{}", (System.currentTimeMillis() - startTime));
+                startTime = System.currentTimeMillis();
+            }
             // 用户不存在/密码错误
             if (null == user) {
                 request.setAttribute("login_error_msg", "wrong username or password");
@@ -88,6 +97,9 @@ public class LoginController {
             token = GlobalConstant.HEADER_AUTHORIZATION_BEARER + token;
             CookieUtil.addCookie(response, GlobalConstant.HEADER_AUTHORIZATION, token, 24 * 60 * 60);
             response.setHeader(GlobalConstant.HEADER_AUTHORIZATION, token);
+            if (logger.isDebugEnabled()) {
+                logger.debug("登录验证，耗时:{}", (System.currentTimeMillis() - startTime));
+            }
         } catch (Exception e) {
             logger.error("login exception", e);
             request.setAttribute("login_error_msg", "login exception");

@@ -28,17 +28,21 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public User login(String username, String password) throws ApplicationException {
         try {
+            // 查询用户信息
             User user = userService.getByCode(username);
+            // 没有查询到用户信息
             if (null == user) {
                 return null;
             }
+            // 验证密码
             if (Md5SaltUtil.validPassword(password, user.getPassword())) {
                 return user;
             }
+            // 用户被锁定
             if (SystemConstant.USER_STATE_LOCKED.equals(user.getState())) {
                 return null;
             }
-            // 累计失败次数
+            // 登录失败，密码错误，累计失败次数
             Integer loginFailCount = user.getLoginFailCount();
             if (null == loginFailCount) {
                 loginFailCount = 0;
