@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * md5加盐加密工具类
  *
- * @author zhangyuyuan
+ * @author garden
  * @date 2019-07-24 17:41
  */
 public class Md5SaltUtil {

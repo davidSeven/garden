@@ -38,7 +38,7 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
     }
 
     @Bean
-    public FilterRegistrationBean<ContextFilter> setJwtFilter() {
+    public FilterRegistrationBean<ContextFilter> getContextFilter() {
         final FilterRegistrationBean<ContextFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new ContextFilter(globalConfig));
         filter.setName("contextFilter");
@@ -46,6 +46,16 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         filter.setOrder(2);
         return filter;
     }
+
+    /*@Bean
+    public FilterRegistrationBean<RequestFilter> getRequestFilter() {
+        final FilterRegistrationBean<RequestFilter> filter = new FilterRegistrationBean<>();
+        filter.setFilter(new RequestFilter(globalConfig));
+        filter.setName(RequestFilter.FILTER_NAME);
+        filter.addUrlPatterns(RequestFilter.URL_PATTERNS);
+        filter.setOrder(-200);
+        return filter;
+    }*/
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
