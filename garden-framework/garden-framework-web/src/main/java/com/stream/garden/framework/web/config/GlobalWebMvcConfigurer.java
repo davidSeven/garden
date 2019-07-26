@@ -1,6 +1,7 @@
 package com.stream.garden.framework.web.config;
 
 import com.stream.garden.framework.web.filter.ContextFilter;
+import com.stream.garden.framework.web.filter.RequestFilter;
 import com.stream.garden.framework.web.interceptor.ContextInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,15 +48,15 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         return filter;
     }
 
-    /*@Bean
+    @Bean
     public FilterRegistrationBean<RequestFilter> getRequestFilter() {
         final FilterRegistrationBean<RequestFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new RequestFilter(globalConfig));
         filter.setName(RequestFilter.FILTER_NAME);
         filter.addUrlPatterns(RequestFilter.URL_PATTERNS);
-        filter.setOrder(-200);
+        filter.setOrder(1);
         return filter;
-    }*/
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
