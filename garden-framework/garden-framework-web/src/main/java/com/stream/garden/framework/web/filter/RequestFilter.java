@@ -152,6 +152,8 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
             int size = requestWrapper.getContentLength();
             if (size < CONTENT_LENGTH) {
                 ContextServletInputStream contextServletInputStream = requestWrapper.getContextServletInputStream();
+                // 1.这里无法读取到流的信息，就直接获取request中的参数就行了
+                // 2.虽然修改了Filter的顺序，或者是重写HiddenHttpMethodFilter，也无法读取到流
                 if (contextServletInputStream != null) {
                     body = new String(contextServletInputStream.getContent().getBytes(), StandardCharsets.UTF_8);
                 } else {
