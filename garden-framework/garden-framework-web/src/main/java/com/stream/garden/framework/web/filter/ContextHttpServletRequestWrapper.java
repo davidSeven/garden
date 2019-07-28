@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author garden
  */
 public class ContextHttpServletRequestWrapper extends HttpServletRequestWrapper {
-
+    // 用于将流保存下来
     private ContextServletInputStream contextServletInputStream;
 
     /**
@@ -18,7 +18,7 @@ public class ContextHttpServletRequestWrapper extends HttpServletRequestWrapper 
      * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
-    public ContextHttpServletRequestWrapper(HttpServletRequest request) {
+    public ContextHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
     }
 

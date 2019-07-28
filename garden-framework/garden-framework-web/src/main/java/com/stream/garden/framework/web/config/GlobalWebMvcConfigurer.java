@@ -8,11 +8,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author garden
@@ -54,9 +62,25 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         filter.setFilter(new RequestFilter(globalConfig));
         filter.setName(RequestFilter.FILTER_NAME);
         filter.addUrlPatterns(RequestFilter.URL_PATTERNS);
-        filter.setOrder(1);
+        filter.setOrder(-20000);
         return filter;
     }
+
+    /**
+     * https://blog.csdn.net/kanaiji123/article/details/88695332
+     * @return OrderedHiddenHttpMethodFilter
+     */
+    /*@Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new OrderedHiddenHttpMethodFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request,
+                                            HttpServletResponse response, FilterChain filterChain) throws
+                    ServletException, IOException {
+                filterChain.doFilter(request, response);
+            }
+        };
+    }*/
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -1,10 +1,12 @@
 package com.stream.garden.framework.web.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @author garden
@@ -93,16 +96,6 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String bodyString = getBodyString(servletRequest);
-
-        // byte[] bytes1 = IOUtils.toByteArray(servletRequest.getInputStream());
-/*
-        RequestFacade requestFacade = (RequestFacade) servletRequest;
-        BufferedReader bufferedReader = requestFacade.getReader();
-        char[] chars = new char[1024];
-        bufferedReader.read(chars, 0, 1024);*/
-
-
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -145,7 +138,7 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
         logger.info("destroy");
     }
 
-    private String requestParam(ContextHttpServletRequestWrapper requestWrapper) {
+    private String requestParam(ContextHttpServletRequestWrapper requestWrapper) throws IOException {
         String body = "";
         String method = requestWrapper.getMethod();
         // 处理GET请求参数
@@ -161,6 +154,9 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
                 ContextServletInputStream contextServletInputStream = requestWrapper.getContextServletInputStream();
                 if (contextServletInputStream != null) {
                     body = new String(contextServletInputStream.getContent().getBytes(), StandardCharsets.UTF_8);
+                } else {
+                    Map<String, Object> objectMap = WebUtils.getParametersStartingWith(requestWrapper, null);
+                    body = JSONObject.toJSONString(objectMap);
                 }
             }
         }

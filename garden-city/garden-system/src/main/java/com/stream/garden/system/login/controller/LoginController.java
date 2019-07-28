@@ -48,6 +48,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(HttpServletRequest request) {
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {
+            // return "redirect:/";
             return "redirect:/";
         }
         return "system/login";

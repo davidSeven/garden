@@ -25,6 +25,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <apache.commons.version>3.7</apache.commons.version>
+        <commons.io.version>2.6</commons.io.version>
         <spring.version>5.0.6.RELEASE</spring.version>
         <spring.boot.starter.web.version>2.0.2.RELEASE</spring.boot.starter.web.version>
         <spring.boot.starter.freemarker.version>2.0.2.RELEASE</spring.boot.starter.freemarker.version>
@@ -38,6 +39,13 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache.commons.version}</version>
+            </dependency>
+
+            <!-- apache部分 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
             </dependency>
 
             <!-- jdbc部分 开始 -->
