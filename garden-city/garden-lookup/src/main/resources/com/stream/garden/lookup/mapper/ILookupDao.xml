@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.stream.garden.system.lookup.dao.ILookupDao">
-    <resultMap id="BaseResultMap" type="com.stream.garden.system.lookup.model.Lookup">
+<mapper namespace="com.stream.garden.lookup.dao.ILookupDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.lookup.model.Lookup">
         <id column="ID" jdbcType="VARCHAR" property="id" />
         <result column="NAME" jdbcType="VARCHAR" property="name" />
         <result column="CODE" jdbcType="VARCHAR" property="code" />

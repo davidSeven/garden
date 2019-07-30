@@ -1,7 +1,7 @@
-package com.stream.garden.system.lookup.dao;
+package com.stream.garden.lookup.dao;
 
 import com.stream.garden.framework.jdbc.mapper.IBaseMapper;
-import com.stream.garden.system.lookup.model.Lookup;
+import com.stream.garden.lookup.model.Lookup;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

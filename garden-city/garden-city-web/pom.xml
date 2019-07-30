@@ -26,6 +26,16 @@
             <artifactId>garden-system</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-lookup-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-lookup</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

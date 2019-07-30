@@ -1,13 +1,13 @@
-package com.stream.garden.system.lookup.controller;
+package com.stream.garden.lookup.controller;
 
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
-import com.stream.garden.system.exception.SystemExceptionCode;
-import com.stream.garden.system.lookup.model.Lookup;
-import com.stream.garden.system.lookup.service.ILookupService;
-import com.stream.garden.system.lookup.vo.LookupVO;
+import com.stream.garden.lookup.exception.LookupExceptionCode;
+import com.stream.garden.lookup.model.Lookup;
+import com.stream.garden.lookup.service.ILookupService;
+import com.stream.garden.lookup.vo.LookupVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author garden
  */
 @Controller
-@RequestMapping("/system/lookup")
+@RequestMapping("/lookup/lookup")
 public class LookupController {
 
     private Logger logger = LoggerFactory.getLogger(LookupController.class);
@@ -36,7 +36,7 @@ public class LookupController {
      */
     @GetMapping(value = "/toList")
     public String toList() {
-        return "system/lookup/list";
+        return "lookup/list";
     }
 
     /**
@@ -46,7 +46,7 @@ public class LookupController {
      */
     @GetMapping(value = "/toEdit")
     public String toEdit() {
-        return "system/lookup/edit";
+        return "lookup/edit";
     }
 
     @PostMapping(value = "/pageList")
@@ -71,7 +71,7 @@ public class LookupController {
             return new Result<Integer>().setData(lookupService.insert(lookup)).ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.LOOKUP_ADD_EXCEPTION.getAppCode(e));
+            return new Result<>(e, LookupExceptionCode.LOOKUP_ADD_EXCEPTION.getAppCode(e));
         }
     }
 
@@ -82,7 +82,7 @@ public class LookupController {
             return new Result<Integer>().ok().setData(lookupService.update(lookup));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, SystemExceptionCode.LOOKUP_EDIT_EXCEPTION.getAppCode(e));
+            return new Result<>(e, LookupExceptionCode.LOOKUP_EDIT_EXCEPTION.getAppCode(e));
         }
     }
 

@@ -1,7 +1,7 @@
-package com.stream.garden.system.lookup.vo;
+package com.stream.garden.lookup.vo;
 
 import com.stream.garden.framework.api.vo.BasePageVO;
-import com.stream.garden.system.lookup.model.LookupItem;
+import com.stream.garden.lookup.model.LookupItem;
 
 /**
  * @author garden

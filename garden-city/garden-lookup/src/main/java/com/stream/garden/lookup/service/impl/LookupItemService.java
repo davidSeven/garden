@@ -1,9 +1,9 @@
-package com.stream.garden.system.lookup.service.impl;
+package com.stream.garden.lookup.service.impl;
 
 import com.stream.garden.framework.service.AbstractBaseService;
-import com.stream.garden.system.lookup.dao.ILookupItemDao;
-import com.stream.garden.system.lookup.model.LookupItem;
-import com.stream.garden.system.lookup.service.ILookupItemService;
+import com.stream.garden.lookup.dao.ILookupItemDao;
+import com.stream.garden.lookup.model.LookupItem;
+import com.stream.garden.lookup.service.ILookupItemService;
 import org.springframework.stereotype.Service;
 
 /**

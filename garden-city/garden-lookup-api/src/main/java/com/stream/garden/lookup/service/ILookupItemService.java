@@ -1,7 +1,7 @@
-package com.stream.garden.system.lookup.service;
+package com.stream.garden.lookup.service;
 
 import com.stream.garden.framework.service.IBaseService;
-import com.stream.garden.system.lookup.model.LookupItem;
+import com.stream.garden.lookup.model.LookupItem;
 
 /**
  * @author garden

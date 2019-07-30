@@ -32,9 +32,6 @@ public class RequestFilterHandlerEventListener implements ApplicationListener<Re
         Map<String, Object> objectMap = eventObject.getObjectMap();
         String uri = (String) objectMap.get(RequestFilterHandlerEvent.URI);
         long times = (long) objectMap.get(RequestFilterHandlerEvent.TIMES);
-        logger.info("uri:{}", uri);
-        logger.info("times:{}", times);
-
         for (RequestFilterHandler handler : requestFilterHandlers) {
             handler.after(uri, times);
         }
@@ -45,7 +42,7 @@ public class RequestFilterHandlerEventListener implements ApplicationListener<Re
         // 获取RequestFilterHandler所有的实现
         Map<String, RequestFilterHandler> requestFilterHandlerMap = this.applicationContext.getBeansOfType(RequestFilterHandler.class);
         if (!requestFilterHandlerMap.isEmpty()) {
-            requestFilterHandlers = requestFilterHandlerMap.values();
+            setRequestFilterHandlers(requestFilterHandlerMap.values());
             hasRequestFilterHandler = true;
         }
     }
