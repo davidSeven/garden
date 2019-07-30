@@ -44,7 +44,6 @@ public class ContextFilter extends ExcludeFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
 
-        long startTime = System.currentTimeMillis();
         String uri = request.getRequestURI();
         logger.debug("-------------------------------------------");
         logger.debug("request uri: {}", uri);
@@ -76,8 +75,6 @@ public class ContextFilter extends ExcludeFilter implements Filter {
         }
 
         chain.doFilter(req, res);
-        logger.debug("请求耗时：{}", (System.currentTimeMillis() - startTime));
-        logger.debug("-------------------------------------------");
     }
 
     @Override

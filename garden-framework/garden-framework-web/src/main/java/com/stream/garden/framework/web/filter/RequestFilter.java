@@ -3,6 +3,9 @@ package com.stream.garden.framework.web.filter;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
+import com.stream.garden.framework.web.filter.event.RequestFilterHandlerEvent;
+import com.stream.garden.framework.web.filter.event.RequestFilterHandlerEventListener;
+import com.stream.garden.framework.web.util.ApplicationUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +15,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -46,64 +48,17 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
         }
     }
 
-    public String getBodyString(final ServletRequest request) {
-        StringBuilder sb = new StringBuilder();
-        InputStream inputStream = null;
-        BufferedReader reader = null;
-        try {
-            inputStream = cloneInputStream(request.getInputStream());
-            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return sb.toString();
-    }
-
-    public InputStream cloneInputStream(ServletInputStream inputStream) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        try {
-            while ((len = inputStream.read(buffer)) > -1) {
-                byteArrayOutputStream.write(buffer, 0, len);
-            }
-            byteArrayOutputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        InputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        return byteArrayInputStream;
-    }
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String uri = request.getRequestURI();
+        String method = request.getMethod();
+        long startTime = System.currentTimeMillis();
+
         boolean jump = super.exclude(uri);
         if (!jump) {
-            String method = request.getMethod();
-            long startTime = System.currentTimeMillis();
             ContextHttpServletRequestWrapper requestWrapper = new ContextHttpServletRequestWrapper(request);
             ContextHttpServletResponseWrapper responseWrapper = new ContextHttpServletResponseWrapper(response);
 
@@ -125,11 +80,18 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
                 logger.debug(builder.toString());
             }
 
-            long endTime = System.currentTimeMillis();
-            logger.info(">>>请求路径：{}[{}]，开始时间：{}，结束时间：{}，总耗时：{}",
-                    uri, method, startTime, endTime, (endTime - startTime));
         } else {
             filterChain.doFilter(request, response);
+        }
+
+        long endTime = System.currentTimeMillis();
+        long times = (endTime - startTime);
+        if (logger.isInfoEnabled()) {
+            logger.info(">>>请求路径：{}[{}]，开始时间：{}，结束时间：{}，总耗时：{}",
+                    uri, method, startTime, endTime, times);
+        }
+        if (RequestFilterHandlerEventListener.hasRequestFilterHandler) {
+            ApplicationUtil.publishEvent(new RequestFilterHandlerEvent(this, uri, times));
         }
     }
 

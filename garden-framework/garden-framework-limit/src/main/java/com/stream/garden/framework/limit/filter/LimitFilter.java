@@ -48,6 +48,9 @@ public class LimitFilter extends ExcludeFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) req;
         String uri = request.getRequestURI();
+        String contentType = request.getHeader("Content-Type");
+        logger.debug("Content-Type: {}", contentType);
+        logger.debug("Content-Type: {}", res.getContentType());
         boolean jump = super.exclude(uri);
         if (!jump && LimitRule.APPLICATION.equals(limitConfig.getLimitRule())) {
             HandlerLimit handlerLimit = HandlerLimitFactory.getInstance().builder(LimitRule.APPLICATION);

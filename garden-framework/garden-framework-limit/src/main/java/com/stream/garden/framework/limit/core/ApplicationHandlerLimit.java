@@ -13,6 +13,7 @@ import java.lang.annotation.Annotation;
 public class ApplicationHandlerLimit extends AbstractHandlerLimit {
 
     private LimitConfig limitConfig;
+    private Limit limit;
 
     public ApplicationHandlerLimit(LimitConfig limitConfig) {
         this.limitConfig = limitConfig;
@@ -27,41 +28,44 @@ public class ApplicationHandlerLimit extends AbstractHandlerLimit {
     }
 
     private Limit getLimit() {
-        return new Limit() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return Limit.class;
-            }
+        if (null == limit) {
+            this.limit = new Limit() {
+                @Override
+                public Class<? extends Annotation> annotationType() {
+                    return Limit.class;
+                }
 
-            @Override
-            public String name() {
-                return limitConfig.getName();
-            }
+                @Override
+                public String name() {
+                    return limitConfig.getName();
+                }
 
-            @Override
-            public String key() {
-                return limitConfig.getKey();
-            }
+                @Override
+                public String key() {
+                    return limitConfig.getKey();
+                }
 
-            @Override
-            public String prefix() {
-                return limitConfig.getPrefix();
-            }
+                @Override
+                public String prefix() {
+                    return limitConfig.getPrefix();
+                }
 
-            @Override
-            public int period() {
-                return limitConfig.getPeriod();
-            }
+                @Override
+                public int period() {
+                    return limitConfig.getPeriod();
+                }
 
-            @Override
-            public int count() {
-                return limitConfig.getCount();
-            }
+                @Override
+                public int count() {
+                    return limitConfig.getCount();
+                }
 
-            @Override
-            public LimitType limitType() {
-                return limitConfig.getLimitType();
-            }
-        };
+                @Override
+                public LimitType limitType() {
+                    return limitConfig.getLimitType();
+                }
+            };
+        }
+        return this.limit;
     }
 }
