@@ -20,6 +20,7 @@
         <module>garden-system-api</module>
         <module>garden-system</module>
         <module>garden-city-web</module>
+        <module>garden-lookup-api</module>
     </modules>
 
     <properties>
