@@ -18,7 +18,8 @@
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
     <!-- 彩色日志格式 -->
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-
+    <!-- 控制台的日志输出样式 -->
+    <!--<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
 
     <!--输出到控制台-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -169,15 +170,40 @@
         可以包含零个或多个元素，标识这个appender将会添加到这个logger。
     -->
 
+    <!-- 日志输出到logstash -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>127.0.0.1:4560</destination>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "logLevel": "%level",
+                        "serviceName": "${springAppName:-}",
+                        "pid": "${PID:-}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "rest": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="com.stream.garden.framework.jdbc" level="debug"/>
+        <logger name="com.stream.garden.framework.jdbc" level="info"/>
         <logger name="org.mybatis" level="debug"/>
         <logger name="com.stream.garden" level="debug"/>
     </springProfile>
 
     <root level="debug">
         <appender-ref ref="CONSOLE" />
+        <!--<appender-ref ref="LOGSTASH" />-->
         <appender-ref ref="DEBUG_FILE" />
         <appender-ref ref="INFO_FILE" />
         <appender-ref ref="WARN_FILE" />
