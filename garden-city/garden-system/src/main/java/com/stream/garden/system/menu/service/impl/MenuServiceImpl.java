@@ -2,13 +2,20 @@ package com.stream.garden.system.menu.service.impl;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
+import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.dao.IMenuDao;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
+import com.stream.garden.system.menu.vo.MenuVO;
+import com.stream.garden.system.user.service.IUserService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author garden
@@ -19,6 +26,13 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
     public MenuServiceImpl(IMenuDao iMenuDao) {
         super(iMenuDao);
     }
+
+    public IMenuDao getMapper() {
+        return (IMenuDao) super.baseMapper;
+    }
+
+    @Autowired
+    private IUserService userService;
 
     @Override
     public int insert(Menu menu) throws ApplicationException {
@@ -74,5 +88,43 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
             }
         }
         return super.delete(strings);
+    }
+
+    @Override
+    public List<MenuVO> getUserMenu(String userId) throws ApplicationException {
+
+        return null;
+    }
+
+    @Override
+    public List<MenuVO> getRoleMenu(String roleId) throws ApplicationException {
+        List<Menu> menuList = this.getMapper().getRoleMenu(roleId);
+        if (CollectionUtil.isNotEmpty(menuList)) {
+            return toMenuTree(menuList);
+        }
+        return new ArrayList<>();
+    }
+
+    private List<MenuVO> toMenuTree(List<Menu> menuList) {
+        List<MenuVO> voList = new ArrayList<>();
+        for (Menu menu : menuList) {
+            if ("0".equals(menu.getParentId())) {
+                MenuVO vo = new MenuVO(menu);
+                vo.setChildren(getChild(menu.getId(), menuList));
+                voList.add(vo);
+            }
+        }
+        return voList;
+    }
+
+    private List<MenuVO> getChild(String id, List<Menu> menuList) {
+        List<MenuVO> voList = new ArrayList<>();
+        for (Menu menu : menuList) {
+            if (id.equals(menu.getParentId())) {
+                MenuVO vo = new MenuVO(menu);
+                voList.add(vo);
+            }
+        }
+        return voList;
     }
 }

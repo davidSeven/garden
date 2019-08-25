@@ -1,6 +1,7 @@
 package com.stream.garden.system.role.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
@@ -12,7 +13,7 @@ import com.stream.garden.system.role.model.RoleFunction;
 import com.stream.garden.system.role.service.IRoleFunctionService;
 import com.stream.garden.system.role.service.IRoleService;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
-import com.stream.garden.system.role.vo.RoleFunctionVO;
+import com.stream.garden.system.role.vo.RoleMenuVO;
 import com.stream.garden.system.role.vo.RoleVO;
 import com.stream.garden.system.user.controller.UserController;
 import org.slf4j.Logger;
@@ -120,9 +121,9 @@ public class RoleController {
 
     @PostMapping(value = "/getMenuFunction")
     @ResponseBody
-    public Result<List<MenuFunctionVO>> getMenuFunction() {
+    public Result<List<MenuFunctionVO>> getMenuFunction(Role role) {
         try {
-            return new Result<List<MenuFunctionVO>>().ok().setData(roleFunctionService.getMenuFunction());
+            return new Result<List<MenuFunctionVO>>().ok().setData(roleFunctionService.getMenuFunction(role.getId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
@@ -144,8 +145,9 @@ public class RoleController {
     @ResponseBody
     public Result<Integer> saveRoleFunction(String voJson) {
         try {
-            RoleFunctionVO vo = JSONObject.parseObject(voJson, RoleFunctionVO.class);
-            return new Result<Integer>().ok().setData(roleFunctionService.saveRoleFunction(vo));
+            RoleMenuVO vo = JSONObject.parseObject(voJson, RoleMenuVO.class);
+            this.roleFunctionService.saveMenuFunction(vo);
+            return new Result<Integer>().ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));

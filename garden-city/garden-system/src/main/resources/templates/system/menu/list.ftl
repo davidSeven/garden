@@ -128,7 +128,7 @@
                     $.each(datas, function (i, v) {
                         var ns = [v.name];
                         if (v.icon && config.showIcon) {
-                            ns.push('<i style="margin-left: 5px;" class="layui-icon ' + v.icon + '"></i>');
+                            ns.push('<i style="margin-left: 5px;" class="layui-icon">' + v.icon + '</i>');
                         }
                         v['name_ztree'] = ns.join("");
                     });

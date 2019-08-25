@@ -20,6 +20,9 @@ public class MenuVO extends Menu {
         super.setId(menu.getId());
         super.setName(menu.getName());
         super.setParentId(menu.getParentId());
+
+        super.setPath(menu.getPath());
+        super.setIcon(menu.getIcon());
     }
 
     public List<MenuVO> getChildren() {

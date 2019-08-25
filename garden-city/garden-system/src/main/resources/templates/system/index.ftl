@@ -25,6 +25,13 @@
             background-color: #20222A;
             top: 0 !important;
         }
+        .main-layout-container {
+            overflow: hidden;
+        }
+        .layui-icon-menu {
+            font-size: 18px;
+            padding-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -34,6 +41,21 @@
         <div class="m-logo">
         </div>
         <ul class="layui-nav layui-nav-tree" lay-filter="leftNav">
+
+            <#list menuList as menu>
+            <li class="layui-nav-item">
+                <a href="javascript:;" data-url="${menu.path!""}" data-id='${menu.id}' data-text="${menu.name}"><i class="layui-icon layui-icon-menu">${menu.icon!""}</i>${menu.name}</a>
+                <#if menu.children?? && (menu.children?size > 0)>
+                <dl class="layui-nav-child">
+                    <#list menu.children as child>
+                    <dd><a href="javascript:;" data-url="${child.path!""}" data-id='${child.id}' data-text="${child.name}"><span class="l-line"></span>${child.name}</a></dd>
+                    </#list>
+                </dl>
+                </#if>
+            </li>
+            </#list>
+
+            <#--
             <li class="layui-nav-item layui-nav-itemed">
                 <a href="javascript:;"><i class="iconfont">&#xe607;</i>菜单管理</a>
                 <dl class="layui-nav-child">
@@ -71,6 +93,7 @@
                     <dd><a href="javascript:;" data-url="lookup/lookup/toList" data-id='188' data-text="Lookup管理"><span class="l-line"></span>Lookup管理</a></dd>
                 </dl>
             </li>
+            -->
         </ul>
     </div>
     <!--右侧内容-->

@@ -1,24 +1,31 @@
 package com.stream.garden.system.login.controller;
 
+import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
+import com.stream.garden.framework.web.model.Context;
+import com.stream.garden.framework.web.util.ContextUtil;
 import com.stream.garden.framework.web.util.CookieUtil;
 import com.stream.garden.framework.web.util.IPUtil;
 import com.stream.garden.framework.web.util.JwtHelper;
 import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.login.service.ILoginService;
+import com.stream.garden.system.menu.service.IMenuService;
+import com.stream.garden.system.menu.vo.MenuVO;
 import com.stream.garden.system.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author garden
@@ -30,12 +37,22 @@ public class LoginController {
 
     @Autowired
     private GlobalConfig globalConfig;
-
     @Autowired
     private ILoginService loginService;
+    @Autowired
+    private IMenuService menuService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index() {
+    @GetMapping(value = "/")
+    public String index(HttpServletRequest request) {
+        try {
+            // 加载菜单
+            List<MenuVO> menuList = this.menuService.getRoleMenu(ContextUtil.getRoleId());
+            request.setAttribute("menuList", menuList);
+            // 加载权限
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+        }
+
 
         return "system/index";
     }
@@ -94,6 +111,9 @@ public class LoginController {
             // 登录成功，更新最后登录信息
             loginService.updateLastLogin(user.getId(), IPUtil.getIpAddress(request), new Date());
 
+            // 测试
+            user.setCurrentRoleId("308560784638578688");
+
             String token = JwtHelper.createJWT(user.getName(), user.getId(), user.getCurrentRoleId(), globalConfig.getJwt());
             token = GlobalConstant.HEADER_AUTHORIZATION_BEARER + token;
             CookieUtil.addCookie(response, GlobalConstant.HEADER_AUTHORIZATION, token, 24 * 60 * 60);
@@ -101,6 +121,12 @@ public class LoginController {
             if (logger.isDebugEnabled()) {
                 logger.debug("登录验证，耗时:{}", (System.currentTimeMillis() - startTime));
             }
+
+            // 设置上下文信息
+            Context context = new Context();
+            context.setUserId(user.getId());
+            context.setRoleId(user.getCurrentRoleId());
+            ContextUtil.setContext(context);
         } catch (Exception e) {
             logger.error("login exception", e);
             request.setAttribute("login_error_msg", "login exception");

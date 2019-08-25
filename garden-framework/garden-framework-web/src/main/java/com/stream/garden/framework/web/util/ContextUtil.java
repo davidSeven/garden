@@ -24,4 +24,12 @@ public class ContextUtil {
     public static boolean isLogin() {
         return null != threadLocal.get();
     }
+
+    public static String getUserId() {
+        return getContext().getUserId();
+    }
+
+    public static String getRoleId() {
+        return getContext().getRoleId();
+    }
 }

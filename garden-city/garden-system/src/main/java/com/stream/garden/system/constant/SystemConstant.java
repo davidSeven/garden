@@ -19,6 +19,15 @@ public class SystemConstant {
      */
     public static final String USER_STATE_LOCKED = "2";
 
+    /**
+     * 状态：1启用
+     */
+    public static final String STATE_1 = "1";
+    /**
+     * 状态：0禁用
+     */
+    public static final String STATE_0 = "0";
+
     private SystemConstant() {
     }
 }

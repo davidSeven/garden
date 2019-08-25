@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.system.role.dao.IRoleMenuDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.system.role.model.RoleMenu">
+        <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+        <result column="MENU_ID" jdbcType="VARCHAR" property="menuId" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_ROLE_MENU_T
+    </sql>
+
+    <delete id="deleteByRoleId" parameterType="com.stream.garden.system.role.model.RoleMenu">
+        DELETE FROM SYS_ROLE_MENU_T WHERE ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

@@ -3,20 +3,26 @@ package com.stream.garden.system.role.service.impl;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
+import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.function.model.Function;
 import com.stream.garden.system.function.service.IFunctionService;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
 import com.stream.garden.system.role.dao.IRoleFunctionDao;
 import com.stream.garden.system.role.model.RoleFunction;
+import com.stream.garden.system.role.model.RoleMenu;
 import com.stream.garden.system.role.service.IRoleFunctionService;
+import com.stream.garden.system.role.service.IRoleMenuService;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
 import com.stream.garden.system.role.vo.RoleFunctionVO;
+import com.stream.garden.system.role.vo.RoleMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author garden
@@ -37,45 +43,87 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
     private IMenuService menuService;
     @Autowired
     private IFunctionService functionService;
-
-    @Override
-    public int saveRoleFunction(RoleFunctionVO vo) throws ApplicationException {
-        // 先删后增
-        this.deleteByRoleId(vo.getRoleId());
-        if (CollectionUtil.isNotEmpty(vo.getRoleFunctionList())) {
-            for (RoleFunction roleFunction : vo.getRoleFunctionList()) {
-                roleFunction.setRoleId(vo.getRoleId());
-            }
-            return this.insertBatch(vo.getRoleFunctionList());
-        }
-        return 0;
-    }
+    @Autowired
+    private IRoleMenuService roleMenuService;
 
     @Override
     public int deleteByRoleId(String roleId) throws ApplicationException {
-        RoleFunction roleFunction = new RoleFunction();
-        roleFunction.setRoleId(roleId);
-        return this.getMapper().deleteByRoleId(roleFunction);
+        return this.getMapper().deleteByRoleId(new RoleFunction(roleId));
     }
 
     @Override
-    public List<MenuFunctionVO> getMenuFunction() throws ApplicationException {
+    public void saveMenuFunction(RoleMenuVO vo) throws ApplicationException {
+        String roleId = vo.getRoleId();
+        this.roleMenuService.deleteByRoleId(roleId);
+        this.deleteByRoleId(roleId);
+        List<MenuFunctionVO> voList = vo.getVoList();
+        if (CollectionUtil.isNotEmpty(voList)) {
+            // 角色菜单集合
+            List<RoleMenu> roleMenuList = new ArrayList<>();
+            // 角色功能集合
+            List<RoleFunction> roleFunctionList = new ArrayList<>();
+            for (MenuFunctionVO item :voList){
+                if (MenuFunctionVO.TYPE_MENU == item.getType()) {
+                    roleMenuList.add(new RoleMenu(roleId, item.getId()));
+                } else if (MenuFunctionVO.TYPE_FUNCTION == item.getType()) {
+                    roleFunctionList.add(new RoleFunction(roleId, item.getId(), item.getType()));
+                }
+            }
+            // 保存数据
+            if (CollectionUtil.isNotEmpty(roleMenuList)) {
+                this.roleMenuService.insertBatch(roleMenuList);
+            }
+            if (CollectionUtil.isNotEmpty(roleFunctionList)) {
+                this.insertBatch(roleFunctionList);
+            }
+        }
+    }
+
+    @Override
+    public List<MenuFunctionVO> getMenuFunction(String roleId) throws ApplicationException {
+        // 查询启用的菜单
         Menu paramsMenu = new Menu();
-        paramsMenu.setState("1");
+        paramsMenu.setState(SystemConstant.STATE_1);
         List<Menu> menuList = menuService.list(paramsMenu);
 
+        // 查询配置的功能信息
         Function paramsFunction = new Function();
         List<Function> functionList = functionService.list(paramsFunction);
+
+        // 查询当前角色已经设置的菜单信息
+        List<RoleMenu> roleMenuList = this.roleMenuService.list(new RoleMenu(roleId));
+        Set<String> roleMenuSet = new HashSet<>();
+        if (CollectionUtil.isNotEmpty(roleMenuList)) {
+            for (RoleMenu roleMenu : roleMenuList) {
+                roleMenuSet.add(roleMenu.getMenuId());
+            }
+        }
+        // 查询当前角色已经设置的功能信息
+        List<RoleFunction> roleFunctionList = this.list(new RoleFunction(roleId));
+        Set<String> roleFunctionSet = new HashSet<>();
+        if (CollectionUtil.isNotEmpty(roleFunctionList)) {
+            for (RoleFunction roleFunction : roleFunctionList) {
+                roleFunctionSet.add(roleFunction.getFunctionId());
+            }
+        }
 
         List<MenuFunctionVO> menuFunctionVOList = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(menuList)) {
             for (Menu menu : menuList) {
-                menuFunctionVOList.add(new MenuFunctionVO(menu.getId(), menu.getName(), menu.getParentId()));
+                if (roleMenuSet.contains(menu.getId())) {
+                    menuFunctionVOList.add(new MenuFunctionVO(menu.getId(), menu.getName(), menu.getParentId(), true));
+                } else {
+                    menuFunctionVOList.add(new MenuFunctionVO(menu.getId(), menu.getName(), menu.getParentId()));
+                }
             }
         }
         if (CollectionUtil.isNotEmpty(functionList)) {
             for (Function function : functionList) {
-                menuFunctionVOList.add(new MenuFunctionVO(MenuFunctionVO.TYPE_FUNCTION, function.getId(), function.getName(), function.getMenuId()));
+                if (roleFunctionSet.contains(function.getId())) {
+                    menuFunctionVOList.add(new MenuFunctionVO(MenuFunctionVO.TYPE_FUNCTION, function.getId(), function.getName(), function.getMenuId(), true));
+                } else {
+                    menuFunctionVOList.add(new MenuFunctionVO(MenuFunctionVO.TYPE_FUNCTION, function.getId(), function.getName(), function.getMenuId()));
+                }
             }
         }
 

@@ -23,4 +23,12 @@
         SYS_MENU_T
     </sql>
 
+    <select id="getRoleMenu" resultMap="BaseResultMap">
+        SELECT
+          t.*
+        FROM SYS_MENU_T t
+        LEFT JOIN SYS_ROLE_MENU_T t2 ON t.ID = t2.MENU_ID
+        WHERE t2.ROLE_ID = #{roleId,jdbcType=VARCHAR}
+        ORDER BY t.SORTS ASC
+    </select>
 </mapper>

@@ -48,49 +48,15 @@
         var roleId = null;
 
         function getTree() {
-
-            var checkList = [];
-            ajaxPost('/system/role/getRoleFunction', {roleId: roleId}, function (data) {
-                if (data.success) {
-                    checkList = data.data;
-                    doCallback();
-                } else {
-                    parent.layer.msg(data.msg, {icon: 2});
-                }
-            });
-
             var orgList = [];
-            ajaxPost('/system/role/getMenuFunction', null, function (data) {
+            ajaxPost('/system/role/getMenuFunction', {id: roleId}, function (data) {
                 if (data.success) {
                     orgList = data.data;
-                    doCallback();
+                    callback(orgList);
                 } else {
                     parent.layer.msg(data.msg, {icon: 2});
                 }
             });
-
-            var dataInit = 0;
-            function doCallback() {
-                dataInit ++;
-                if (dataInit === 2) {
-
-                    // 处理选中
-                    if (orgList && orgList.length && checkList && checkList.length) {
-                        var checkMap = {};
-                        $.each(checkList, function (i, v) {
-                           checkMap[v.functionId] = true;
-                        });
-
-                        $.each(orgList, function (i, v) {
-                           if (checkMap.hasOwnProperty(v.id)) {
-                               v.checked = true;
-                           }
-                        });
-                    }
-
-                    callback(orgList);
-                }
-            }
 
             // 成功后的回调
             function callback(datas) {
@@ -157,18 +123,18 @@
             var treeObj = $.fn.zTree.getZTreeObj("organizationTree");
             var nodes = treeObj.getCheckedNodes(true);
             console.log(nodes);
-            var roleFunctionList = [];
+            var voList = [];
             if (nodes && nodes.length) {
                 $.each(nodes, function (i, v) {
-                   roleFunctionList.push({
+                   voList.push({
                        type: v.type,
-                       functionId: v.id
+                       id: v.id
                    });
                 });
             }
             var vo = {
                 roleId: roleId,
-                roleFunctionList: roleFunctionList
+                voList: voList
             };
             var url = '/system/role/saveRoleFunction';
             ajaxPost(url, {voJson: JSON.stringify(vo)}, function (data) {

@@ -23,6 +23,10 @@ public class MenuFunctionVO implements Serializable {
     private String id;
     private String name;
     private String parentId;
+    private boolean checked;
+
+    public MenuFunctionVO() {
+    }
 
     public MenuFunctionVO(String id, String name, String parentId) {
         this.id = id;
@@ -30,11 +34,19 @@ public class MenuFunctionVO implements Serializable {
         this.parentId = parentId;
     }
 
+    public MenuFunctionVO(String id, String name, String parentId, boolean checked) {
+        this(id, name, parentId);
+        this.checked = checked;
+    }
+
     public MenuFunctionVO(int type, String id, String name, String parentId) {
+        this(id, name, parentId);
         this.type = type;
-        this.id = id;
-        this.name = name;
-        this.parentId = parentId;
+    }
+
+    public MenuFunctionVO(int type, String id, String name, String parentId, boolean checked) {
+        this(type, id, name, parentId);
+        this.checked = checked;
     }
 
     public int getType() {
@@ -67,5 +79,13 @@ public class MenuFunctionVO implements Serializable {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }
