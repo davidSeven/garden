@@ -1,4 +1,4 @@
-package com.stream.garden.system.exception;
+package com.stream.garden.framework.web.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
