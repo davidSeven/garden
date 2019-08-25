@@ -1,4 +1,4 @@
-<#import "../../spring.ftl" as spring />
+<#import "../spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,9 +70,9 @@
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
             var id = data.field.id;
-            var url = '/system/lookup/add';
+            var url = '/lookup/lookup/add';
             if (id) {
-                url = '/system/lookup/edit';
+                url = '/lookup/lookup/edit';
             }
             ajaxPost(url, data.field, function (data) {
                 if (data.success) {

@@ -68,7 +68,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;"><i class="iconfont">&#xe60b;</i>系统设置</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-url="system/lookup/toList" data-id='188' data-text="Lookup管理"><span class="l-line"></span>Lookup管理</a></dd>
+                    <dd><a href="javascript:;" data-url="lookup/lookup/toList" data-id='188' data-text="Lookup管理"><span class="l-line"></span>Lookup管理</a></dd>
                 </dl>
             </li>
         </ul>

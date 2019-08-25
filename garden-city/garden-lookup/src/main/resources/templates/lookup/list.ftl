@@ -1,4 +1,4 @@
-<#import "../../spring.ftl" as spring />
+<#import "../spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 
@@ -71,18 +71,18 @@
             <div class="tool-btn">
                 <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="add"
-                        data-url="/system/lookup/toEdit">添加</button>
+                        data-url="/lookup/lookup/toEdit">添加</button>
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
-                        data-url="/system/lookup/delete">删除</button>
+                        data-url="/lookup/lookup/delete">删除</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
                    lay-event="edit"
-                   data-url="/system/lookup/toEdit">编辑</a>
+                   data-url="/lookup/lookup/toEdit">编辑</a>
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
                    lay-event="del"
-                   data-url="/system/lookup/delete">删除</a>
+                   data-url="/lookup/lookup/delete">删除</a>
             </script>
             <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
@@ -99,7 +99,7 @@
 
         table.render({
             elem: '#tableData'
-            ,url:'/system/lookup/pageList'
+            ,url:'/lookup/lookup/pageList'
             ,method: 'post'
             ,page: {
                 limit: 20

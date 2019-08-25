@@ -50,12 +50,14 @@ spring:
       - classpath:/templates/
     check-template-location: true
     expose-request-attributes: true
+    # 当templates需要从多个jar里面获取的时候，设置为false
+    prefer-file-system-access: false
 
 # mybatis
 mybatis:
   typeAliasesPackage: com.stream.garden.*.*.dao
   mapperLocations:
-    - classpath*:com/stream/garden/*/*/mapper/*.xml
+    - classpath*:com/stream/garden/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
   # id自动生成
