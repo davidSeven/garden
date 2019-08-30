@@ -1,10 +1,13 @@
 package com.stream.garden.system.login.service.impl;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.util.Md5SaltUtil;
 import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.login.service.ILoginService;
 import com.stream.garden.system.user.model.User;
+import com.stream.garden.system.user.model.UserRole;
+import com.stream.garden.system.user.service.IUserRoleService;
 import com.stream.garden.system.user.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author garden
@@ -24,6 +28,8 @@ public class LoginServiceImpl implements ILoginService {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IUserRoleService userRoleService;
 
     @Override
     public User login(String username, String password) throws ApplicationException {
@@ -36,6 +42,14 @@ public class LoginServiceImpl implements ILoginService {
             }
             // 验证密码
             if (Md5SaltUtil.validPassword(password, user.getPassword())) {
+                // 查询角色信息
+                UserRole userRoleParams = new UserRole();
+                userRoleParams.setUserId(user.getId());
+                List<UserRole> userRoleList = userRoleService.list(userRoleParams);
+                if (CollectionUtil.isNotEmpty(userRoleList)) {
+                    user.setCurrentRoleId(userRoleList.get(0).getRoleId());
+                }
+                // 成功
                 return user;
             }
             // 用户被锁定

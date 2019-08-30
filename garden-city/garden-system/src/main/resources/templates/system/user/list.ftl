@@ -75,6 +75,9 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/system/user/delete">删除</button>
+                <button id="setRoleBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="setRole"
+                        data-url="/system/user/toSetRole">设置角色</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -173,7 +176,7 @@
         // 新增
         $("#addBtn").click(function () {
             var url = $(this).attr('data-url');
-            //将iframeObj传递给父级窗口,执行操作完成刷新
+            // 将iframeObj传递给父级窗口,执行操作完成刷新
             parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
             return false;
         });
@@ -202,6 +205,21 @@
             return false;
         });
 
+        // 设置角色
+        $("#setRoleBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var url = $(this).attr('data-url');
+                // 将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("设置角色", url, iframeObj, w = "850px", h = "550px", data[0]);
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
         //监听行工具事件
         table.on('tool(tableData)', function(obj){
             var url = $(this).attr('data-url');
@@ -222,6 +240,22 @@
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
             }
+        });
+
+        // 点击行选中
+        $(document).on("click", ".layui-table-body table.layui-table tbody tr", function(){
+            var obj = event ? event.target : event.srcElement;
+            var tag = obj.tagName;
+            var checkbox = $(this).find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+            if(checkbox.length !== 0){
+                if(tag === 'DIV') {
+                    checkbox.click();
+                }
+            }
+        });
+
+        $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function(e){
+            e.stopPropagation();
         });
 
     });

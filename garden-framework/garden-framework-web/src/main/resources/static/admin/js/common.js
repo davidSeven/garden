@@ -550,7 +550,13 @@ $(".search-form .search-btn").click(function (e) {
     });
 });
 $(".search-form .reset-btn").click(function (e) {
-    layui.table.reload("tableData", { where: null });
+    var where = jsonData(".search-form");
+    if ($.isEmptyObject(where)) {
+        where = null;
+    }
+    layui.table.reload("tableData", {
+        where: where
+    });
 });
 $(".close-btn").click(function (e) {
     var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引

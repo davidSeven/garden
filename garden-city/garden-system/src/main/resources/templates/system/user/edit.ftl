@@ -66,7 +66,7 @@
             }
         };
 
-        //监听提交
+        // 监听提交
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
             var id = data.field.id;

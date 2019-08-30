@@ -92,7 +92,7 @@
                     check: {
                         enable: true,
                         chkStyle: "checkbox",
-                        chkboxType: { "Y": "p", "N": "ps" }
+                        chkboxType: { "Y": "ps", "N": "ps" }
                     },
                     callback: {
                         onClick: function (event, treeId, treeNode) {

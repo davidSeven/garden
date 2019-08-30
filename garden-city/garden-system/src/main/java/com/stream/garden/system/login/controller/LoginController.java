@@ -112,7 +112,7 @@ public class LoginController {
             loginService.updateLastLogin(user.getId(), IPUtil.getIpAddress(request), new Date());
 
             // 测试
-            user.setCurrentRoleId("308560784638578688");
+            // user.setCurrentRoleId("308560784638578688");
 
             String token = JwtHelper.createJWT(user.getName(), user.getId(), user.getCurrentRoleId(), globalConfig.getJwt());
             token = GlobalConstant.HEADER_AUTHORIZATION_BEARER + token;

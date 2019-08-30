@@ -196,7 +196,7 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="com.stream.garden.framework.jdbc" level="info"/>
+        <logger name="com.stream.garden.framework.jdbc" level="debug"/>
         <logger name="org.mybatis" level="debug"/>
         <logger name="com.stream.garden" level="debug"/>
         <!-- spring视图的日志级别 -->

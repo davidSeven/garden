@@ -7,6 +7,8 @@ import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.user.model.User;
+import com.stream.garden.system.user.model.UserRole;
+import com.stream.garden.system.user.service.IUserRoleService;
 import com.stream.garden.system.user.service.IUserService;
 import com.stream.garden.system.user.vo.UserVO;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IUserRoleService userRoleService;
 
     /**
      * 跳转列表页面
@@ -53,6 +57,16 @@ public class UserController {
     public String toEdit() {
         logger.debug(">>>页面跳转：{}", "system/user/edit");
         return "system/user/edit";
+    }
+
+    /**
+     * 跳转设置角色页面
+     *
+     * @return 页面路径
+     */
+    @GetMapping(value = "/toSetRole")
+    public String toSetRole() {
+        return "system/user/setRole";
     }
 
     @PostMapping(value = "/pageList")
@@ -105,4 +119,14 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/setRole")
+    @ResponseBody
+    public Result<Integer> setRole(UserRole userRole) {
+        try {
+            return new Result<Integer>().ok().setData(userRoleService.setRole(userRole));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
 }
