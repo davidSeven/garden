@@ -15,6 +15,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -28,11 +29,11 @@ public class GlobalApplicationRunner implements ApplicationRunner {
     private GlobalConfig globalConfig;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
 
         line();
         logger.debug(">>>path:{}", globalConfig.getPath());
-        logger.debug(">>>path:{}", globalConfig.path);
+        logger.debug(">>>path:{}", GlobalConfig.path);
         logger.debug(">>>path:{}", GlobalConfig.path);
         logger.debug(">>>uploadPath:{}", GlobalConfig.uploadPath);
         logger.debug(">>>UPLOAD_DIR:{}", GlobalConfig.UPLOAD_DIR);
@@ -40,6 +41,22 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         runCompleted();
         printServiceInfo();
         line();
+
+        // 测试全路径访问Service
+        try {
+
+            Class<?> clazz = Class.forName("com.stream.garden.system.user.service.IUserService");
+
+            Object object = ApplicationUtil.getBeans(clazz);
+
+            Method getByCode = clazz.getMethod("getByCode", String.class);
+
+            Object value = getByCode.invoke(object, "0000000001");
+
+            System.out.println(object);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     private void printController() {
