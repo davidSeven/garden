@@ -26,6 +26,12 @@
         .layuiadmin-card-header-auto .layui-form-item {
             margin-bottom: 0;
         }
+        /* tab页高度 */
+        .layui-tab-content .layui-tab-item {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+        }
     </style>
 </head>
 
@@ -115,8 +121,8 @@
                 limit: 20
                 ,limits: [10, 20, 50, 200]
             }
-            //,height: '350'
-            ,height: 'full-200'
+            ,height: 'full'
+            // ,height: 'full-200'
             ,done: function (response, curr, count) {
                 //$(".layui-card-body").resetTableHeight();
             }
@@ -185,7 +191,8 @@
                 var iframeId = new Date().getTime();
                 element.tabAdd('lookupTab', {
                     title: '新增'
-                    , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%"></iframe>'
+                    // , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%"></iframe>'
+                    , content: url
                     , id: layId
                 });
                 // 添加关闭按钮
