@@ -32,6 +32,9 @@
             font-size: 18px;
             padding-right: 10px;
         }
+        .layui-this {
+            user-select: none;
+        }
     </style>
 </head>
 <body>

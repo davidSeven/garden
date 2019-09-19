@@ -32,59 +32,68 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-card">
-        <form class="layui-form layui-card-header layuiadmin-card-header-auto search-form">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">编号</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="data.code" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-inline">
-                        <select name="data.state">
-                            <option value="">请选择</option>
-                            <option value="1">启用</option>
-                            <option value="0">禁用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn layuiadmin-btn-list search-btn">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
-                    <button type="reset" class="layui-btn reset-btn">
-                        <i class="layui-icon layui-icon-refresh"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+        <div class="layui-tab layui-tab-card" lay-filter="lookupTab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">Look管理</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 0;">
+                <div class="layui-tab-item layui-show">
+                    <form class="layui-form layui-card-header layuiadmin-card-header-auto search-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">编号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="data.code" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="data.state">
+                                        <option value="">请选择</option>
+                                        <option value="1">启用</option>
+                                        <option value="0">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn layuiadmin-btn-list search-btn">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                </button>
+                                <button type="reset" class="layui-btn reset-btn">
+                                    <i class="layui-icon layui-icon-refresh"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
-        <div class="layui-card-body">
-            <div class="tool-btn">
-                <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
-                        data-type="add"
-                        data-url="/lookup/lookup/toEdit">添加</button>
-                <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
-                        data-type="batchdel"
-                        data-url="/lookup/lookup/delete">删除</button>
+                    <div class="layui-card-body">
+                        <div class="tool-btn">
+                            <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                                    data-type="add"
+                                    data-url="/lookup/lookup/toEdit">添加</button>
+                            <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                                    data-type="batchdel"
+                                    data-url="/lookup/lookup/delete">删除</button>
+                        </div>
+                        <script type="text/html" id="tableDataToolbar">
+                            <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
+                               lay-event="edit"
+                               data-url="/lookup/lookup/toEdit">编辑</a>
+                            <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
+                               lay-event="del"
+                               data-url="/lookup/lookup/delete">删除</a>
+                        </script>
+                        <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
+                    </div>
+                </div>
             </div>
-            <script type="text/html" id="tableDataToolbar">
-                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
-                   lay-event="edit"
-                   data-url="/lookup/lookup/toEdit">编辑</a>
-                <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
-                   lay-event="del"
-                   data-url="/lookup/lookup/delete">删除</a>
-            </script>
-            <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
     </div>
 </div>
@@ -92,9 +101,10 @@
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-    layui.use(['jquery', 'table', 'layer', 'form'], function () {
+    layui.use(['jquery', 'table', 'layer', 'form', 'element'], function () {
         var table = layui.table,
                 form = layui.form,
+                element = layui.element,
                 iframeObj = $(window.frameElement).attr('name');
 
         table.render({
@@ -165,7 +175,27 @@
         $("#addBtn").click(function () {
             var url = $(this).attr('data-url');
             //将iframeObj传递给父级窗口,执行操作完成刷新
-            parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
+            // parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
+            // 新增一个Tab项
+            // 判断是否存在，存在就切换过去，不存在就新增
+            var layId = "lookupTab_add";
+
+            var length = $("li[lay-id=" + layId + "]").length;
+            if (length === 0) {
+                var iframeId = new Date().getTime();
+                element.tabAdd('lookupTab', {
+                    title: '新增'
+                    , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%"></iframe>'
+                    , id: layId
+                });
+                // 添加关闭按钮
+                var i = $('<i class="layui-icon layui-unselect layui-tab-close">&#x1006;</i>');
+                i.on('click', function (e) {
+                    element.tabDelete('lookupTab', layId);
+                });
+                $("li[lay-id=" + layId + "]").append(i);
+            }
+            element.tabChange('lookupTab', layId);
             return false;
         });
 
