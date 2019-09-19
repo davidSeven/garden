@@ -40,7 +40,7 @@
     <div class="main-layout-side">
         <div class="m-logo">
         </div>
-        <ul class="layui-nav layui-nav-tree" lay-filter="leftNav">
+        <ul class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="leftNav">
 
             <#list menuList as menu>
             <li class="layui-nav-item">

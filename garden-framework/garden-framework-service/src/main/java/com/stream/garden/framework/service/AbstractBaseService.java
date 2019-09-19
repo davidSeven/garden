@@ -3,6 +3,7 @@ package com.stream.garden.framework.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.model.BaseModel;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.PageSize;
 import com.stream.garden.framework.api.vo.BasePageVO;
@@ -12,12 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @author garden
- * @param <T> 实体对象
+ * @param <T>  实体对象
  * @param <ID> id类型
+ * @author garden
  */
 @Transactional(rollbackFor = Exception.class)
 public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> {
@@ -102,7 +104,6 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
     public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException {
         // 设置PageHelper参数信息
         PageSize pageSize = pageVO.getPageSize();
-        // T t = pageVO.getData();
         PageHelper.startPage(pageSize.getPage(), pageSize.getPageSize(), pageSize.isCount());
 
         // 查询分页信息
@@ -119,8 +120,13 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
 
     @Override
     public boolean exists(T t) throws ApplicationException {
-        int exists = baseMapper.exists(t);
-        return exists != 0;
+        try {
+            int exists = baseMapper.exists(t);
+            return exists != 0;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e.getMessage());
+        }
     }
 
     /**
@@ -130,6 +136,15 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
      * @param isInsert 是否新增
      */
     private void setDefault(T t, boolean isInsert) {
-
+        if (null == t) {
+            return;
+        }
+        BaseModel baseModel = (BaseModel) t;
+        if (isInsert) {
+            baseModel.setCreationDate(new Timestamp(System.currentTimeMillis()));
+            baseModel.setUpdationDate(baseModel.getCreationDate());
+        } else {
+            baseModel.setUpdationDate(new Timestamp(System.currentTimeMillis()));
+        }
     }
 }
