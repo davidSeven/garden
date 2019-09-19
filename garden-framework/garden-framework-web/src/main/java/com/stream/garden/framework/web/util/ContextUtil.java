@@ -10,11 +10,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ContextUtil {
     private static Logger logger = LoggerFactory.getLogger(ContextUtil.class);
-
     private static ThreadLocal<Context> threadLocal = new ThreadLocal<>();
 
+    private ContextUtil() {
+    }
+
     public static Context getContext() {
-        return threadLocal.get();
+        try {
+            return threadLocal.get();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public static void setContext(Context context) {
@@ -26,10 +33,18 @@ public class ContextUtil {
     }
 
     public static String getUserId() {
-        return getContext().getUserId();
+        Context context = getContext();
+        if (null != context) {
+            return context.getUserId();
+        }
+        return null;
     }
 
     public static String getRoleId() {
-        return getContext().getRoleId();
+        Context context = getContext();
+        if (null != context) {
+            return context.getRoleId();
+        }
+        return null;
     }
 }

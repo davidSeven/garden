@@ -1,9 +1,6 @@
 layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function () {
-    var layer = layui.layer;
     var element = layui.element;
-    var form = layui.form;
     var $ = layui.jquery;
-    var dialog = layui.dialog;
     var hideBtn = $('#hideBtn');
     var mainLayout = $('#main-layout');
     var mainMask = $('.main-mask');

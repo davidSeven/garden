@@ -100,7 +100,7 @@ public class CommonTable {
     }
 
     public List<CommonTableColumn> getAllColumnList() {
-        List<CommonTableColumn> allColumnList = new ArrayList<CommonTableColumn>();
+        List<CommonTableColumn> allColumnList = new ArrayList<>();
         allColumnList.add(idColumn);
         allColumnList.addAll(columnList);
 

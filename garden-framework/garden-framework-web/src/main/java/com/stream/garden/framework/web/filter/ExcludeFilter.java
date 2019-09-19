@@ -8,6 +8,7 @@ import com.stream.garden.framework.web.config.GlobalConfig;
  */
 public class ExcludeFilter extends StaticExcludeFilter {
 
+    @Override
     public void init(GlobalConfig globalConfig) {
         super.init(globalConfig);
         super.addExcludePath(globalConfig.getLoginPath());

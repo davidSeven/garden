@@ -49,7 +49,7 @@ public class CookieUtil {
      * @return
      */
     public static String getUid(HttpServletRequest request, String cookieName) {
-        Cookie cookies[] = request.getCookies();
+        Cookie[] cookies = request.getCookies();
         if (null == cookies) {
             return null;
         }

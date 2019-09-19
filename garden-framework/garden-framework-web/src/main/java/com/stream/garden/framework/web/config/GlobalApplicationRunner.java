@@ -34,7 +34,6 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         line();
         logger.debug(">>>path:{}", globalConfig.getPath());
         logger.debug(">>>path:{}", GlobalConfig.path);
-        logger.debug(">>>path:{}", GlobalConfig.path);
         logger.debug(">>>uploadPath:{}", GlobalConfig.uploadPath);
         logger.debug(">>>UPLOAD_DIR:{}", GlobalConfig.UPLOAD_DIR);
         printController();
@@ -53,7 +52,7 @@ public class GlobalApplicationRunner implements ApplicationRunner {
 
             Object value = getByCode.invoke(object, "0000000001");
 
-            System.out.println(object);
+            logger.debug("value: {}", value);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -64,12 +63,11 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(Controller.class);
         if (null != beans) {
             beans.forEach((key, value) -> {
-                logger.debug("--- {}", key);
-                // logger.debug("--- {}", value);
+                logger.debug("------ {}", key);
                 RequestMapping requestMapping = value.getClass().getAnnotation(RequestMapping.class);
                 if (null != requestMapping) {
                     String[] objects = requestMapping.value();
-                    logger.debug("--- {}", JSONObject.toJSONString(objects));
+                    logger.debug("------ {}", JSONObject.toJSONString(objects));
                 }
             });
         }
@@ -77,9 +75,8 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         RequestMappingHandlerMapping handlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         if (null != handlerMapping) {
             Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
-            logger.debug("--- {}");
             handlerMethods.forEach((key, value) -> {
-                logger.debug("--- {}", key.toString());
+                logger.debug("--- {}", key);
                 logger.debug("--- {}", value.getMethod().getName());
             });
         }

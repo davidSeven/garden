@@ -1,10 +1,13 @@
 package com.stream.garden.framework.api.model;
 
+import java.io.Serializable;
+
 /**
  * 分页
  * @author garden
  */
-public class PageSize {
+public class PageSize implements Serializable {
+    private static final long serialVersionUID = 1536869730417328357L;
 
     /** 默认每页页数 */
     public static final int DEFAULT_PAGESIZE = 10;

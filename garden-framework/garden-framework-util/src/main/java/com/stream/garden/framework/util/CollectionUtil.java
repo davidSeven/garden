@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public class CollectionUtil {
 
+    private CollectionUtil() {
+    }
+
     /**
      * 判断集合是否为空
      *
@@ -17,7 +20,7 @@ public class CollectionUtil {
      * @return 为空
      */
     public static boolean isEmpty(Collection<?> collection) {
-        return (collection == null) || (collection.size() == 0);
+        return (collection == null || collection.isEmpty());
     }
 
     /**
@@ -32,6 +35,7 @@ public class CollectionUtil {
 
     /**
      * 判断map是否为空
+     *
      * @param map map
      * @return 为空
      */
