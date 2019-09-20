@@ -109,7 +109,7 @@
                 ,limits: [10, 20, 50, 200]
             }
             //,height: '350'
-            ,height: 'full-200'
+            ,height: 'full-156'
             ,done: function (response, curr, count) {
                 //$(".layui-card-body").resetTableHeight();
             }

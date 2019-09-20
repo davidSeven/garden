@@ -139,12 +139,14 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
         if (null == t) {
             return;
         }
-        BaseModel baseModel = (BaseModel) t;
-        if (isInsert) {
-            baseModel.setCreationDate(new Timestamp(System.currentTimeMillis()));
-            baseModel.setUpdationDate(baseModel.getCreationDate());
-        } else {
-            baseModel.setUpdationDate(new Timestamp(System.currentTimeMillis()));
+        if (t instanceof BaseModel) {
+            BaseModel baseModel = (BaseModel) t;
+            if (isInsert) {
+                baseModel.setCreationDate(new Timestamp(System.currentTimeMillis()));
+                baseModel.setUpdationDate(baseModel.getCreationDate());
+            } else {
+                baseModel.setUpdationDate(new Timestamp(System.currentTimeMillis()));
+            }
         }
     }
 }

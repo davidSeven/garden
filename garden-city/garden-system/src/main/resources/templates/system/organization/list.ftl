@@ -19,7 +19,7 @@
 
 <body>
 <div class="page-content-wrap">
-    <div class="layui-col-md3">
+    <div class="layui-col-md4">
         <form class="layui-form" action="">
             <div class="layui-form-item">
                 <div class="layui-inline tool-btn" style="margin-right: 0;">
@@ -36,7 +36,7 @@
         </form>
         <ul id="organizationTree" class="ztree"></ul>
     </div>
-    <div id="viewForm" class="layui-form layui-col-md9">
+    <div id="viewForm" class="layui-form layui-col-md8">
         <div class="layui-form-item">
             <label class="layui-form-label">上级</label>
             <div class="layui-input-block">

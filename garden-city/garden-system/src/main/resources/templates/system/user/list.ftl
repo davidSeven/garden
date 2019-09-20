@@ -109,7 +109,7 @@
                 ,limits: [10, 20, 50, 200]
             }
             //,height: '350'
-            ,height: 'full-200'
+            ,height: 'full-156'
             ,done: function (response, curr, count) {
                 //$(".layui-card-body").resetTableHeight();
             }
@@ -132,7 +132,7 @@
                 ,{type:'checkbox'}
                 ,{field:'code', width:120, title: '用户编号'}
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
-                ,{field:'state', width:120, title: '状态', align: 'center', templet: function (row) {
+                ,{field:'state', width:80, title: '状态', align: 'center', templet: function (row) {
                     if ("0" === row.state) {
                         return '<span class="layui-badge layui-bg-gray">禁用</span>';
                     } else if ("1" === row.state) {
@@ -142,8 +142,7 @@
                     }
                     return row.state;
                 }}
-                ,{field:'password', width:120, title: '密码'}
-                ,{field:'lastLoginIp', width:120, title: '最后登录IP'}
+                ,{field:'lastLoginIp', width:130, title: '最后登录IP'}
                 ,{field:'lastLoginDate', width:160, title: '最后登录时间', templet: function (row) {
                         return formatDate(row.lastLoginDate);
                     }
@@ -158,7 +157,7 @@
                         return formatDate(row.updationDate);
                     }
                 }
-                ,{fixed: 'right', title:'操作', toolbar: '#tableDataToolbar', width:150}
+                ,{fixed: 'right', title:'操作', toolbar: '#tableDataToolbar', width:120}
             ]]
         });
 
