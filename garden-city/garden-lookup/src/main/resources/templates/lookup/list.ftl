@@ -189,10 +189,20 @@
             var length = $("li[lay-id=" + layId + "]").length;
             if (length === 0) {
                 var iframeId = new Date().getTime();
+                function getClientHeight() {
+                    var clientHeight = 0;
+                    if(document.body.clientHeight&&document.documentElement.clientHeight) {
+                        clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+                    } else {
+                        clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+                    }
+                    return clientHeight;
+                }
+                var height = getClientHeight() - 56;
                 element.tabAdd('lookupTab', {
                     title: '新增'
-                    // , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%"></iframe>'
-                    , content: url
+                    , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%" style="height:'+height+'px;"></iframe>'
+                    // , content: url
                     , id: layId
                 });
                 // 添加关闭按钮
