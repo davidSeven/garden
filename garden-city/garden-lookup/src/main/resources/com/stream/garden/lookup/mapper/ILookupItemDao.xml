@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.lookup.dao.ILookupItemDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.lookup.model.LookupItem">
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="CODE" jdbcType="VARCHAR" property="code" />
+        <result column="STATE" jdbcType="VARCHAR" property="state" />
+        <result column="PARENT_CODE" jdbcType="VARCHAR" property="parentCode" />
+        <result column="PARENT_NAME" jdbcType="VARCHAR" property="parentName" />
+        <result column="EXTEND_FIELD1" jdbcType="VARCHAR" property="extendField1" />
+        <result column="EXTEND_FIELD2" jdbcType="VARCHAR" property="extendField2" />
+        <result column="EXTEND_FIELD3" jdbcType="VARCHAR" property="extendField3" />
+        <result column="EXTEND_FIELD4" jdbcType="VARCHAR" property="extendField4" />
+        <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+        <result column="CREATION_DATE" jdbcType="VARCHAR" property="creationDate" />
+        <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />
+        <result column="UPDATION_DATE" jdbcType="VARCHAR" property="updationDate" />
+        <result column="ENABLED_FLAG" jdbcType="VARCHAR" property="enabledFlag" />
+        <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_LOOKUP_ITEM_T
+    </sql>
+</mapper>

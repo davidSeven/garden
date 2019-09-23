@@ -32,6 +32,11 @@
             height: 100%;
             background: #fff;
         }
+
+        .text-btn:hover {
+            color: #0000FF;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -143,7 +148,9 @@
             ,cols: [[
                 {type:'numbers'}
                 ,{type:'checkbox'}
-                ,{field:'code', width:200, title: '编号'}
+                ,{field:'code', width:200, title: '编号', templet: function (row) {
+                    return '<a href="javascript:void(0);" class="text-btn" lay-event="itemList">' + row.code + '</a>';
+                }}
                 ,{field:'name', width:200, title: '名称', sort: false}
                 ,{field:'state', width:120, title: '状态', align: 'center', templet: function (row) {
                     if ("1" === row.state) {
@@ -181,38 +188,7 @@
         $("#addBtn").click(function () {
             var url = $(this).attr('data-url');
             //将iframeObj传递给父级窗口,执行操作完成刷新
-            // parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
-            // 新增一个Tab项
-            // 判断是否存在，存在就切换过去，不存在就新增
-            var layId = "lookupTab_add";
-
-            var length = $("li[lay-id=" + layId + "]").length;
-            if (length === 0) {
-                var iframeId = new Date().getTime();
-                function getClientHeight() {
-                    var clientHeight = 0;
-                    if(document.body.clientHeight&&document.documentElement.clientHeight) {
-                        clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-                    } else {
-                        clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-                    }
-                    return clientHeight;
-                }
-                var height = getClientHeight() - 56;
-                element.tabAdd('lookupTab', {
-                    title: '新增'
-                    , content: '<iframe src="' + url + '" name="iframe' + iframeId + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%" style="height:'+height+'px;"></iframe>'
-                    // , content: url
-                    , id: layId
-                });
-                // 添加关闭按钮
-                var i = $('<i class="layui-icon layui-unselect layui-tab-close">&#x1006;</i>');
-                i.on('click', function (e) {
-                    element.tabDelete('lookupTab', layId);
-                });
-                $("li[lay-id=" + layId + "]").append(i);
-            }
-            element.tabChange('lookupTab', layId);
+            parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
             return false;
         });
 
@@ -256,9 +232,60 @@
                     });
                     // layer.close(index);
                 });
-            } else if(obj.event === 'edit'){
+            } else if(obj.event === 'edit') {
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
+            } else if (obj.event === 'itemList') {
+                url = "/lookup/lookupItem/toList";
+                // 新增一个Tab项
+                // 判断是否存在，存在就切换过去，不存在就新增
+                var layId = "lookupTab_add";
+
+                var params = data;
+
+                var length = $("li[lay-id=" + layId + "]").length;
+                if (length === 0) {
+                    var iframeId = new Date().getTime();
+
+                    function getClientHeight() {
+                        var clientHeight = 0;
+                        if (document.body.clientHeight && document.documentElement.clientHeight) {
+                            clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+                        } else {
+                            clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+                        }
+                        return clientHeight;
+                    }
+                    var height = getClientHeight() - 56;
+                    function tabAdd(content) {
+                        var iframeName = "iframe" + iframeId;
+                        element.tabAdd('lookupTab', {
+                            title: '详情'
+                            , content: '<iframe src="' + url + '" name="' + iframeName + '" class="iframe" framborder="0" data-id="' + iframeId + '" scrolling="auto" width="100%"  height="100%" style="height:'+height+'px;"></iframe>'
+                            , id: layId
+                        });
+                        // 添加关闭按钮
+                        var i = $('<i class="layui-icon layui-unselect layui-tab-close">&#x1006;</i>');
+                        i.on('click', function (e) {
+                            // 关闭事件
+                            element.tabDelete('lookupTab', layId);
+
+                        });
+                        $("li[lay-id=" + layId + "]").append(i);
+                        // 添加打开窗口事件
+                        $(".layui-tab-item iframe[name=" + iframeName + "]").on("load", function () {
+                            setTimeout(function () {
+                                var iframe = window[iframeName];
+                                if (iframe && iframe.layui && iframe.layui.init) {
+                                    iframe.layui.init(params);
+                                }
+                            }, 10);
+                        });
+                    }
+                    tabAdd(url);
+                }
+                element.tabChange('lookupTab', layId);
+                return false;
             }
         });
     });

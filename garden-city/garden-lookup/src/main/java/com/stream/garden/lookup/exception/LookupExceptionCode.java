@@ -25,9 +25,11 @@ public enum LookupExceptionCode implements AppCode {
     /*---------------------------LOOKUP------------------------------*/
     LOOKUP_ADD_EXCEPTION(25000, "新增Lookup异常"),
     LOOKUP_EDIT_EXCEPTION(25001, "修改Lookup异常"),
+    LOOKUP_ADD_REPEAT(25002, "编码[{0}]已存在"),
 
     LOOKUP_ITEM_ADD_EXCEPTION(25500, "新增Lookup子项异常"),
     LOOKUP_ITEM_EDIT_EXCEPTION(25501, "修改Lookup子项异常"),
+    LOOKUP_ITEM_ADD_REPEAT(25502, "编码[{0}]已存在"),
     /*---------------------------LOOKUP------------------------------*/
 
     ;
