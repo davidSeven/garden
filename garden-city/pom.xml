@@ -22,6 +22,8 @@
         <module>garden-system</module>
         <module>garden-lookup-api</module>
         <module>garden-lookup</module>
+        <module>garden-file</module>
+        <module>garden-file-api</module>
     </modules>
 
     <properties>
@@ -30,6 +32,7 @@
         <java.version>1.8</java.version>
         <apache.commons.version>3.7</apache.commons.version>
         <spring.boot.starter.web.version>2.0.2.RELEASE</spring.boot.starter.web.version>
+        <lobmok.version>1.18.8</lobmok.version>
     </properties>
 
     <dependencyManagement>
@@ -45,6 +48,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.boot.starter.web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lobmok.version}</version>
             </dependency>
 
             <dependency>
@@ -106,6 +115,16 @@
             <dependency>
                 <groupId>org.stream</groupId>
                 <artifactId>garden-lookup</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-file-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-file</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
