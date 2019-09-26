@@ -22,15 +22,43 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function () {
             var src = $layuiShow.find("iframe").attr("src");
             $layuiShow.find("iframe").attr("src", src);
         } else {
+            // 添加一个新的页签
             element.tabAdd('tab', {
                 title: text,
                 content: '<iframe src="' + url + '" name="iframe' + id + '" class="iframe" framborder="0" data-id="' + id + '" scrolling="auto" width="100%"  height="100%"></iframe>',
                 id: id
             });
             element.tabChange('tab', id);
+            // 更新url
+            var href = location.href;
+            var indexOf;
+            if ((indexOf = href.indexOf("#!")) !== -1) {
+                href = href.substr(0, indexOf - 1);
+            }
+            location.href = href + "#!" + url;
         }
         mainLayout.removeClass('hide-side');
     });
+
+    // 页面加载完成
+    (function () {
+        var href = location.href;
+        var indexOf;
+        if ((indexOf = href.indexOf("#!")) !== -1) {
+            var url = href.substr(indexOf + 2);
+            // 找到对应的菜单标签
+            var $a = $(".main-layout-side .layui-nav-item a[data-url='" + url + "']");
+            if ($a.length) {
+                // 展开父级
+                $a.parents(".layui-nav-child").prev().click();
+                // 加载
+                $a.click();
+            } else {
+                console.log("the url not find:" + url);
+            }
+        }
+    })();
+
     // 监听导航点击
     element.on('nav(rightNav)', function (elem) {
         // var navA = $(elem).find('a');

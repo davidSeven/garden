@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.file.dao.IFileInfoDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.file.model.FileInfo">
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+        <result column="FILE_MANAGE_ID" jdbcType="VARCHAR" property="fileManageId" />
+        <result column="BIZ_ID" jdbcType="VARCHAR" property="bizId" />
+        <result column="BIZ_CODE" jdbcType="VARCHAR" property="bizCode" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="ORIGINAL_NAME" jdbcType="VARCHAR" property="originalName" />
+        <result column="EXTEND_NAME" jdbcType="VARCHAR" property="extendName" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="PHYSICAL_PATH" jdbcType="VARCHAR" property="physicalPath" />
+        <result column="VISIT_PATH" jdbcType="VARCHAR" property="visitPath" />
+        <result column="SIZE" jdbcType="INTEGER" property="size" />
+        <result column="CONTENT_TYPE" jdbcType="VARCHAR" property="contentType" />
+        <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+        <result column="CREATION_DATE" jdbcType="VARCHAR" property="creationDate" />
+        <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />
+        <result column="UPDATION_DATE" jdbcType="VARCHAR" property="updationDate" />
+        <result column="ENABLED_FLAG" jdbcType="VARCHAR" property="enabledFlag" />
+        <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_FILE_INFO_T
+    </sql>
+</mapper>

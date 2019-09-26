@@ -36,6 +36,16 @@
             <artifactId>garden-lookup</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-file-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-file</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
