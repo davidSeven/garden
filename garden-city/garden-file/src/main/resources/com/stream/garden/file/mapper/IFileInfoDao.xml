@@ -24,4 +24,10 @@
     <sql id="BaseTable">
         SYS_FILE_INFO_T
     </sql>
+
+    <select id="getFileInfo" resultMap="BaseResultMap">
+        SELECT t.* FROM SYS_FILE_INFO_T t
+        WHERE t.BIZ_CODE = #{bizCode}
+          AND t.BIZ_ID = #{bizId}
+    </select>
 </mapper>

@@ -17,6 +17,11 @@
             <groupId>org.stream</groupId>
             <artifactId>garden-file-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-framework-web</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

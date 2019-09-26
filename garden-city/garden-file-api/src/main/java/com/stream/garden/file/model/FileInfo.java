@@ -52,9 +52,18 @@ public class FileInfo extends BaseModel<String> {
     /**
      * 文件大小（单件byte）
      */
-    private int size;
+    private Long size;
     /**
      * 文件头类型
      */
     private String contentType;
+    /**
+     * 文件显示顺序
+     */
+    private Integer displayIndex;
+
+    /**
+     * 文件流
+     */
+    private byte[] bytes;
 }

@@ -3,6 +3,7 @@ package com.stream.garden.file.dao;
 import com.stream.garden.file.model.FileInfo;
 import com.stream.garden.framework.jdbc.mapper.IBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author garden
@@ -10,4 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IFileInfoDao extends IBaseMapper<FileInfo, String> {
+
+    FileInfo getFileInfo(@Param("bizCode") String bizCode, @Param("bizId") String bizId);
 }
