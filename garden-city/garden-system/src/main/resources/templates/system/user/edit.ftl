@@ -9,6 +9,14 @@
     <title>编辑</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css" />
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css" />
+    <style type="text/css">
+        .layui-upload-img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
 <div class="wrap-container">
@@ -16,21 +24,30 @@
         <div class="layui-form-item">
             <label class="layui-form-label lay-required">用户编码</label>
             <div class="layui-input-block">
-                <input type="hidden" name="id">
-                <input type="text" name="code" required lay-verify="required" placeholder="请输入用户编码" autocomplete="off" class="layui-input">
+                <input type="hidden" name="id"/>
+                <input type="text" name="code" required lay-verify="required" placeholder="请输入用户编码" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label lay-required">用户姓名</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <img class="layui-upload-img" id="uploadImg" src=""/>
+                <input type="hidden" name="bizCode"/>
+                <input type="hidden" name="bizId"/>
+                <button type="button" class="layui-btn" id="uploadImgBtn">上传图片</button>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="radio" name="state" value="1" title="启用" checked>
-                <input type="radio" name="state" value="0" title="禁用">
+                <input type="radio" name="state" value="1" title="启用" checked/>
+                <input type="radio" name="state" value="0" title="禁用"/>
             </div>
         </div>
         <div class="layui-form-item">
@@ -46,9 +63,10 @@
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     // edit
-    layui.use(['form', 'jquery'], function() {
+    layui.use(['form', 'jquery', 'upload'], function() {
         console.log('layui init');
         var form = layui.form,
+                upload = layui.upload,
                 $ = layui.jquery;
 
         var index = parent.layer.getFrameIndex(window.name);
@@ -63,8 +81,39 @@
                 // 修改
                 jsonData("editForm", params.data);
                 form.render();
+
+                // 判断是否有头像
+                if (params.data.bizCode && params.data.bizId) {
+                    showUploadImg(params.data.bizCode, params.data.bizId);
+                }
             }
         };
+        
+        function showUploadImg(bizCode, bizId) {
+            // 显示图片
+            $("#uploadImg").attr("src", "/file/fileInfo/download/" + bizCode + "/" + bizId);
+        }
+
+        // 图片上传
+        upload.render({
+            elem: '#uploadImgBtn',
+            url: '/file/fileInfo/upload',
+            data: {
+                bizCode: 'user-img',
+                bizId: (new Date().getTime())
+            },
+            done: function (data) {
+                if (data.success) {
+                    var file = data.data[0];
+                    $("input[name='bizCode']").val(file.bizCode);
+                    $("input[name='bizId']").val(file.bizId);
+                    showUploadImg(file.bizCode, file.bizId);
+                }
+            },
+            error: function () {
+                layer.msg('上传失败', {icon: 2});
+            }
+        });
 
         // 监听提交
         form.on('submit(editForm)', function(data) {

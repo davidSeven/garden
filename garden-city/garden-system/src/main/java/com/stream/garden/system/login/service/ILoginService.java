@@ -30,4 +30,12 @@ public interface ILoginService {
      * @throws ApplicationException e
      */
     public void updateLastLogin(String userCode, String ip, Date date) throws ApplicationException;
+
+    /**
+     * 查询用户信息
+     * @param userId userId
+     * @return User
+     * @throws ApplicationException e
+     */
+    User getByUserId(String userId) throws ApplicationException;
 }

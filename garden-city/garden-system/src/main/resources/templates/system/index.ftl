@@ -111,12 +111,16 @@
             <ul class="layui-nav" lay-filter="rightNav">
                 <li class="layui-nav-item"><a href="javascript:;" data-url="email.html" data-id='4' data-text="邮件系统"><i class="iconfont">&#xe603;</i></a></li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;" data-url="admin-info.html" data-id='5' data-text="个人信息">超级管理员</a>
+                    <a href="javascript:;" data-url="admin-info.html" data-id='5' data-text="个人信息">${roleName!'loading...'}</a>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
-                        贤心
+                        <#if Request.user ??>
+                            <img src="/file/fileInfo/download/${Request.user.bizCode}/${Request.user.bizId}" class="layui-nav-img">
+                        <#else>
+                            <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                        </#if>
+                        ${(Request.user.name)! 'loading...'}
                         </a>
                         <#--<span class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">

@@ -13,7 +13,7 @@ public class Context {
     private String userId;
     private String roleId;
 
-    private Serializable user;
+    private Object user;
 
     public String getUserName() {
         return userName;
@@ -47,11 +47,11 @@ public class Context {
         this.roleId = roleId;
     }
 
-    public Serializable getUser() {
+    public Object getUser() {
         return user;
     }
 
-    public void setUser(Serializable user) {
+    public void setUser(Object user) {
         this.user = user;
     }
 }

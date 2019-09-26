@@ -12,6 +12,8 @@ import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.login.service.ILoginService;
 import com.stream.garden.system.menu.service.IMenuService;
 import com.stream.garden.system.menu.vo.MenuVO;
+import com.stream.garden.system.role.model.Role;
+import com.stream.garden.system.role.service.IRoleService;
 import com.stream.garden.system.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -41,14 +44,31 @@ public class LoginController {
     private ILoginService loginService;
     @Autowired
     private IMenuService menuService;
+    @Autowired
+    private IRoleService roleService;
 
     @GetMapping(value = "/")
     public String index(HttpServletRequest request) {
         try {
-            // 加载菜单
-            List<MenuVO> menuList = this.menuService.getRoleMenu(ContextUtil.getRoleId());
-            request.setAttribute("menuList", menuList);
-            // 加载权限
+            // 加载用户信息
+            Context context = ContextUtil.getContext();
+            if (null != context) {
+                User user = (User) context.getUser();
+                if (null == user) {
+                    // 查询用户信息
+                    user = loginService.getByUserId(context.getUserId());
+                }
+                request.setAttribute("user", user);
+
+                // 查询角色名称
+                Role role = roleService.get(context.getRoleId());
+                request.setAttribute("roleName", role.getName());
+
+                // 加载菜单
+                List<MenuVO> menuList = this.menuService.getRoleMenu(context.getRoleId());
+                request.setAttribute("menuList", menuList);
+                // 加载权限
+            }
         } catch (ApplicationException e) {
             e.printStackTrace();
         }
@@ -124,6 +144,7 @@ public class LoginController {
 
             // 设置上下文信息
             Context context = new Context();
+            context.setUser(user);
             context.setUserId(user.getId());
             context.setRoleId(user.getCurrentRoleId());
             ContextUtil.setContext(context);

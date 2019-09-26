@@ -61,4 +61,14 @@ public class User extends BaseModel<String> {
      * LAST_LOGIN_DATE
      */
     private Timestamp lastLoginDate;
+
+    /**
+     * 文件业务编码-头像
+     */
+    private String bizCode;
+
+    /**
+     * 文件业务ID-头像
+     */
+    private String bizId;
 }

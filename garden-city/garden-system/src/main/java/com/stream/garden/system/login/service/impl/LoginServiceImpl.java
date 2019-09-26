@@ -1,6 +1,7 @@
 package com.stream.garden.system.login.service.impl;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.util.Md5SaltUtil;
 import com.stream.garden.system.constant.SystemConstant;
@@ -89,6 +90,16 @@ public class LoginServiceImpl implements ILoginService {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(e.getMessage());
+        }
+    }
+
+    @Override
+    public User getByUserId(String userId) throws ApplicationException {
+        try {
+            return userService.get(userId);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
 

@@ -8,6 +8,7 @@ import com.stream.garden.file.util.FileUtil;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.util.CollectionUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -48,7 +49,17 @@ public class FileInfoController {
                 throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
             }
 
-            FileInfo fileInfo = fileInfoService.getFileInfo(bizCode, bizId);
+            // 查询文件信息
+            FileInfo paramFileInfo = new FileInfo();
+            paramFileInfo.setBizCode(bizCode);
+            paramFileInfo.setBizId(bizId);
+            List<FileInfo> fileInfoList = fileInfoService.list(paramFileInfo);
+            // 有时候上传了多个，这里会报错
+            // FileInfo fileInfo = fileInfoService.getFileInfo(bizCode, bizId);
+            FileInfo fileInfo = null;
+            if (CollectionUtil.isNotEmpty(fileInfoList)) {
+                fileInfo = fileInfoList.get(0);
+            }
             if (null == fileInfo) {
                 throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
             }
@@ -59,7 +70,7 @@ public class FileInfoController {
                 if (null != downFileData && downFileData.length > 2) {
                     String resultFileName = fileInfo.getOriginalName();
                     response.setContentType("application/x-download");
-                    response.addHeader("Content-Disposition", "attachment;filename=" + resultFileName);
+                    response.addHeader("Content-Disposition", "attachment;filename=\"" + resultFileName + "\"");
                     response.addHeader("Content-Length", "" + downFileData.length);
                     stream.write(downFileData);
                 }
@@ -93,7 +104,7 @@ public class FileInfoController {
     public Result<List<FileInfo>> upload(HttpServletRequest request) {
         try {
             FileParameter fileParameter = FileUtil.convertFileParameter((MultipartHttpServletRequest) request);
-            return new Result<List<FileInfo>>().setData(this.uploadLocal(fileParameter));
+            return new Result<List<FileInfo>>().ok().setData(this.uploadLocal(fileParameter));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
