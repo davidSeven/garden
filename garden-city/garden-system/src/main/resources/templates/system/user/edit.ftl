@@ -106,7 +106,13 @@
         $("#uploadImgBtn").click(function () {
             var url = $(this).attr('data-url');
             //将iframeObj传递给父级窗口,执行操作完成刷新
-            parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", {isInsert: true, iframeObj: iframeObj});
+            var params = {
+                iframeObj: iframeObj,
+                bizCode: 'user_head',
+                bizId: new Date().getTime(),
+                fileCode: 'garden_user_head'
+            };
+            parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", params);
             return false;
         });
 

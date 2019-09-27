@@ -69,6 +69,9 @@
         console.log('current page index:' + index);
 
         var iframeObj = null;
+        var fileCode = null;
+        var bizCode = null;
+        var bizId = null;
         // 初始化方法
         layui.init = function (params) {
             console.log("chooseImg init");
@@ -76,6 +79,9 @@
             // 父窗口对象名称
             if (params) {
                 iframeObj = params.iframeObj;
+                fileCode = params.fileCode;
+                bizCode = params.bizCode;
+                bizId = params.bizId;
             }
         };
 
@@ -126,8 +132,9 @@
                         var filesize = (blob["size"] / 1024).toFixed(2);
                         if (filesize < uploadImageMaxSize) {
                             var formData = new FormData();
-                            formData.append('bizCode', 'test-img');
-                            formData.append('bizId', new Date().getTime());
+                            formData.append('bizCode', bizCode);
+                            formData.append('bizId', bizId);
+                            formData.append('fileCode', fileCode);
                             // 获取到文件名
                             formData.append('file', blob, changeFileName);
                             $.ajax({
