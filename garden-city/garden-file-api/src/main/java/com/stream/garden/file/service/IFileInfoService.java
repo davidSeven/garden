@@ -16,4 +16,6 @@ public interface IFileInfoService extends IBaseService<FileInfo, String> {
     List<FileInfo> update(List<FileInfo> files) throws ApplicationException;
 
     FileInfo getFileInfo(String bizCode, String bizId) throws ApplicationException;
+
+    int deleteByBiz(FileInfo fileInfo) throws ApplicationException;
 }

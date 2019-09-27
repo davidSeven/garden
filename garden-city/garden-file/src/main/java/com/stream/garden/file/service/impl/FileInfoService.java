@@ -6,6 +6,7 @@ import com.stream.garden.file.service.IFileInfoService;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.service.AbstractBaseService;
+import com.stream.garden.framework.util.CollectionUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -38,6 +39,24 @@ public class FileInfoService extends AbstractBaseService<FileInfo, String> imple
     public FileInfo getFileInfo(String bizCode, String bizId) throws ApplicationException {
         try {
             return this.getDao().getFileInfo(bizCode, bizId);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @Override
+    public int deleteByBiz(FileInfo fileInfo) throws ApplicationException {
+        try {
+            FileInfo paramFileInfo = new FileInfo();
+            paramFileInfo.setBizCode(fileInfo.getBizCode());
+            paramFileInfo.setBizId(fileInfo.getBizId());
+            List<FileInfo> fileInfoList = super.list(paramFileInfo);
+            if (CollectionUtil.isNotEmpty(fileInfoList)) {
+                String[] ids = fileInfoList.stream().map(FileInfo::getId).toArray(String[]::new);
+                return super.delete(ids);
+            }
+            return 0;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);

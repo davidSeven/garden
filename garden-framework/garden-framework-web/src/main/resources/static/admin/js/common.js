@@ -169,14 +169,27 @@ function page(title, url, obj, w, h, params) {
     function end() {
         console.log("--- end function start ---");
         try {
-            if (window.frames[obj]) {
-                var refresh = window.frames[obj].layui.refresh,
-                    _refresh = window.frames[obj].layui._refresh;
+            // 执行页面刷新
+            function doRefresh(frame) {
+                var refresh = frame.layui.refresh,
+                    _refresh = frame.layui._refresh;
                 if (_refresh && refresh) {
                     console.log("--- 存在refresh方法，执行refresh方法 ---");
                     refresh();
                 }
-                window.frames[obj].layui._refresh = false;
+                frame.layui._refresh = false;
+            }
+            if (window.frames[obj]) {
+                doRefresh(window.frames[obj]);
+            } else {
+                // 对子窗体进行二次检索
+                var length = window.frames.length;
+                for (var i = 0; i < length; i++) {
+                    if (window.frames[i].frames && window.frames[i].frames[obj]) {
+                        doRefresh(window.frames[i].frames[obj]);
+                        break;
+                    }
+                }
             }
         } catch (e) {
             console.error(e);
@@ -220,8 +233,19 @@ function closePage() {
 }
 
 function setRefresh() {
-    if (parent.window.frames[parent.iframeObjName]) {
-        parent.window.frames[parent.iframeObjName].layui._refresh = true;
+    var parentObjName = parent.iframeObjName;
+    var parentWindow = parent.window;
+    if (parentWindow.frames[parentObjName]) {
+        parentWindow.frames[parentObjName].layui._refresh = true;
+    } else {
+        // 对子窗体进行二次检索
+        var length = parentWindow.frames.length;
+        for (var i = 0; i < length; i++) {
+            if (parentWindow.frames[i].frames && parentWindow.frames[i].frames[parentObjName]) {
+                parentWindow.frames[i].frames[parentObjName].layui._refresh = true;
+                break;
+            }
+        }
     }
 }
 

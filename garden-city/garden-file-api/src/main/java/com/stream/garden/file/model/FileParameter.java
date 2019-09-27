@@ -25,4 +25,13 @@ public class FileParameter {
      * 上传的文件
      */
     private FileInfo[] files;
+
+    /**
+     * 文件码
+     */
+    private String fileManageCode;
+    /**
+     * 文件ID
+     */
+    private String fileManageId;
 }

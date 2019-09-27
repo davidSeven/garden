@@ -1,9 +1,12 @@
 package com.stream.garden.file.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stream.garden.file.exception.FileExceptionCode;
 import com.stream.garden.file.model.FileInfo;
+import com.stream.garden.file.model.FileManage;
 import com.stream.garden.file.model.FileParameter;
 import com.stream.garden.file.service.IFileInfoService;
+import com.stream.garden.file.service.IFileManageService;
 import com.stream.garden.file.util.FileUtil;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
@@ -11,6 +14,7 @@ import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,9 @@ public class FileInfoController {
     private IFileInfoService fileInfoService;
 
     @Autowired
+    private IFileManageService fileManageService;
+
+    @Autowired
     private GlobalConfig globalConfig;
 
     @RequestMapping(value = "/download/{bizCode}/{bizId}")
@@ -56,8 +63,6 @@ public class FileInfoController {
             paramFileInfo.setBizCode(bizCode);
             paramFileInfo.setBizId(bizId);
             List<FileInfo> fileInfoList = fileInfoService.list(paramFileInfo);
-            // 有时候上传了多个，这里会报错
-            // FileInfo fileInfo = fileInfoService.getFileInfo(bizCode, bizId);
             FileInfo fileInfo = null;
             if (CollectionUtil.isNotEmpty(fileInfoList)) {
                 fileInfo = fileInfoList.get(0);
@@ -101,79 +106,149 @@ public class FileInfoController {
         }
     }
 
+    @PostMapping(value = "/delete")
+    @ResponseBody
+    public Result<Integer> delete(@RequestBody FileInfo fileInfo) {
+        try {
+            // bizCode必填，如果没有bizId，就删除所有的bizCode一样的
+            if (StringUtils.isEmpty(fileInfo.getBizCode())) {
+                throw new ApplicationException(FileExceptionCode.FILE_INFO_BIZ_CODE_NOT_NULL);
+            }
+            return new Result<Integer>().ok().setData(this.fileInfoService.deleteByBiz(fileInfo));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(e);
+        }
+    }
+
     @PostMapping(value = "/upload")
     @ResponseBody
     public Result<List<FileInfo>> upload(HttpServletRequest request) {
         try {
             FileParameter fileParameter = FileUtil.convertFileParameter((MultipartHttpServletRequest) request);
+            // 验证code是否注册
+            String fileManageCode = request.getParameter("fileCode");
+            if (StringUtils.isEmpty(fileManageCode)) {
+                throw new ApplicationException(FileExceptionCode.FILE_MANAGE_CODE_NOT_NULL);
+            }
+            String fileManageId = this.getFileManageId(fileManageCode);
+            if (StringUtils.isEmpty(fileManageId)) {
+                throw new ApplicationException(FileExceptionCode.FILE_MANAGE_UNREGISTERED, fileManageCode);
+            }
+            fileParameter.setFileManageCode(fileManageCode);
+            fileParameter.setFileManageId(fileManageId);
             return new Result<List<FileInfo>>().ok().setData(this.uploadLocal(fileParameter));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+            return new Result<>(e, ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    /**
+     * 获取文件注册的id
+     *
+     * @param fileManageCode 文件码
+     * @return id
+     * @throws ApplicationException e
+     */
+    private String getFileManageId(String fileManageCode) throws ApplicationException {
+        try {
+            FileManage paramFileManage = new FileManage();
+            paramFileManage.setCode(fileManageCode);
+            List<FileManage> fileManageList = this.fileManageService.list(paramFileManage);
+            if (CollectionUtil.isNotEmpty(fileManageList)) {
+                return fileManageList.get(0).getId();
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e.getMessage());
         }
     }
 
     private List<FileInfo> uploadLocal(FileParameter fileParameter) throws ApplicationException {
         Map<String, List<FileInfo>> fileMap = localParse(fileParameter);
         List<FileInfo> newFiles = fileMap.get(MAP_KEY_ADD);
-        List<FileInfo> result = fileInfoService.update(newFiles);
-        for (FileInfo file : result) {
-            file.setBytes(null);
-            file.setPhysicalPath(null);
+        if (CollectionUtil.isNotEmpty(newFiles)) {
+            List<FileInfo> result = fileInfoService.update(newFiles);
+            for (FileInfo file : result) {
+                file.setBytes(null);
+                file.setPhysicalPath(null);
+            }
+            return result;
         }
-        return result;
+        return new ArrayList<>();
     }
 
     private Map<String, List<FileInfo>> localParse(FileParameter fileParameter) throws ApplicationException {
-        return localParse(fileParameter.getBizCode(), fileParameter.getBizId(), fileParameter.getFiles());
+        return localParse(fileParameter.getBizCode(), fileParameter.getBizId(), fileParameter.getFileManageId(), fileParameter.getFiles());
     }
 
-    private Map<String, List<FileInfo>> localParse(String bizCode, String bizId, FileInfo... files) throws ApplicationException {
+    private Map<String, List<FileInfo>> localParse(String bizCode, String bizId, String fileManageId, FileInfo... files) throws ApplicationException {
         Map<String, List<FileInfo>> fileMap = new HashMap<>();
+        if (StringUtils.isEmpty(bizCode) || StringUtils.isEmpty(bizId)) {
+            return fileMap;
+        }
+        if (ArrayUtils.isEmpty(files)) {
+            return fileMap;
+        }
         List<FileInfo> addFiles = new ArrayList<>();
         fileMap.put(MAP_KEY_ADD, addFiles);
-        if (StringUtils.isNotEmpty(bizCode) && StringUtils.isNotEmpty(bizId)
-                && (files != null && files.length > 0)) {
-            for (int i = 0, len = files.length; i < len; i++) {
-                FileInfo file = files[i];
-                if (file != null) {
-                    file.setBizCode(bizCode);
-                    file.setBizId(bizId);
-                    if (StringUtils.isEmpty(file.getId())) {//新增
-                        if (file.getDisplayIndex() == null) {
-                            file.setDisplayIndex(10 * (i + 1));
-                        }
-                        file.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-                        addFiles.add(file);
-                    }
-                    if (file.getBytes() != null) {
-                        String file_root_path = globalConfig.getUploadPath();
-                        String file_name = "/" + UUID.randomUUID().toString().replaceAll("-", "");
-                        BufferedOutputStream stream = null;
-                        try {
-                            java.io.File dir = new java.io.File(file_root_path + file_name);
-                            if (!dir.exists()) {
-                                dir.mkdirs();
-                            }
-                            file_name = file_name + "/" + file.getId();
-                            file_name += "." + file.getExtendName();
-                            stream = new BufferedOutputStream(new FileOutputStream(new java.io.File(file_root_path + file_name)));
-                            stream.write(file.getBytes());
-                        } catch (Exception e) {
-                            logger.error("上传文件失败！[" + file.getBizCode() + ", " + file.getBizId() + ", " + file.getName() + "]", e);
-                            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
-                        } finally {
-                            close(stream);
-                        }
-                        file.setPhysicalPath(file_root_path + file_name);
-                        file.setVisitPath(file_name);
-                    }
+        for (int i = 0, len = files.length; i < len; i++) {
+            FileInfo file = files[i];
+            if (file == null) {
+                continue;
+            }
+            file.setFileManageId(fileManageId);
+            file.setBizCode(bizCode);
+            file.setBizId(bizId);
+            file.setDisplayIndex(10 * (i + 1));
+            file.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            addFiles.add(file);
+            if (file.getBytes() != null) {
+                String fileRootPath = globalConfig.getUploadPath();
+                StringBuilder fileName = new StringBuilder();
+                fileName.append(File.separatorChar)
+                        .append(UUID.randomUUID().toString().replaceAll("-", ""));
+                BufferedOutputStream stream = null;
+                try {
+                    mkdirs(fileRootPath + fileName.toString());
+                    fileName.append(File.separatorChar)
+                            .append(file.getId())
+                            .append(".")
+                            .append(file.getExtendName());
+                    stream = new BufferedOutputStream(new FileOutputStream(new java.io.File(fileRootPath + fileName.toString())));
+                    stream.write(file.getBytes());
+                } catch (Exception e) {
+                    logger.error("上传文件失败！[" + file.getBizCode() + ", " + file.getBizId() + ", " + file.getName() + "]", e);
+                    throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+                } finally {
+                    close(stream);
                 }
+                file.setPhysicalPath(fileRootPath + fileName.toString());
+                file.setVisitPath(fileName.toString());
             }
         }
         return fileMap;
     }
 
+    /**
+     * 创建目录
+     *
+     * @param dirPath 目录路径
+     */
+    private void mkdirs(String dirPath) {
+        java.io.File dir = new java.io.File(dirPath);
+        if (!dir.exists() && !dir.mkdirs()) {
+            logger.error("创建目录失败：{}", dirPath);
+        }
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param stream 文件流
+     */
     private void close(OutputStream stream) {
         if (null != stream) {
             try {

@@ -19,6 +19,9 @@ import java.util.List;
 public class FileUtil {
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
+    private FileUtil() {
+    }
+
     public static FileParameter convertFileParameter(MultipartHttpServletRequest multipartHttpServletRequest) {
         FileParameter fileParameter = new FileParameter();
         fileParameter.setBizCode(multipartHttpServletRequest.getParameter("bizCode"));

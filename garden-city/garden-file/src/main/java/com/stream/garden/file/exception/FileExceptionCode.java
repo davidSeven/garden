@@ -29,7 +29,10 @@ public enum FileExceptionCode implements AppCode {
     FILE_MANAGE_EDIT_EXCEPTION(29001, "修改异常"),
     FILE_MANAGE_ADD_REPEAT(29002, "编码[{0}]已存在"),
 
+    FILE_MANAGE_CODE_NOT_NULL(29010, "文件码不能为空"),
+    FILE_MANAGE_UNREGISTERED(29011, "文件码未[{0}]注册"),
 
+    FILE_INFO_BIZ_CODE_NOT_NULL(29012, "业务编码不能为空"),
     /*---------------------------FILE------------------------------*/
 
     ;

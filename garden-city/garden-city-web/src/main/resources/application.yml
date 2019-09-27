@@ -30,6 +30,14 @@ spring:
     serialization:
       write-dates-as-timestamps: true
 
+  servlet:
+    # 文件上传大小配置
+    multipart:
+      # 最大请求大小
+      max-request-size: 100MB
+      # 最大文件大小
+      max-file-size: 50MB
+
 # nacos
 #nacos:
 #  config:
