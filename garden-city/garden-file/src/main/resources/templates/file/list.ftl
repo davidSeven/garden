@@ -86,6 +86,9 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/file/fileManage/delete">删除</button>
+                <button id="chooseImgBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="batchdel"
+                        data-url="/file/fileManage/toChooseImg">选择图片</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -204,6 +207,14 @@
             } else {
                 layer.msg('请选择一条记录', {icon: 7});
             }
+            return false;
+        });
+
+        // 选择图片
+        $("#chooseImgBtn").click(function () {
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", {isInsert: true});
             return false;
         });
 

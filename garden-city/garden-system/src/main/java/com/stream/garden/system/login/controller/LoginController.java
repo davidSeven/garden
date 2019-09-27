@@ -1,5 +1,6 @@
 package com.stream.garden.system.login.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author garden
@@ -46,6 +49,8 @@ public class LoginController {
     private IMenuService menuService;
     @Autowired
     private IRoleService roleService;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @GetMapping(value = "/")
     public String index(HttpServletRequest request) {
@@ -55,8 +60,14 @@ public class LoginController {
             if (null != context) {
                 User user = (User) context.getUser();
                 if (null == user) {
-                    // 查询用户信息
-                    user = loginService.getByUserId(context.getUserId());
+                    Object object = redisTemplate.opsForValue().get("garden:user:" + context.getUserId());
+                    if (null != object) {
+                        user = JSONObject.parseObject(object.toString(), User.class);
+                    } else {
+                        // 查询用户信息
+                        user = loginService.getByUserId(context.getUserId());
+                        redisTemplate.opsForValue().set("garden:user:" + user.getId(), JSONObject.toJSONString(user), 24 * 60 * 60, TimeUnit.SECONDS);
+                    }
                 }
                 request.setAttribute("user", user);
 
@@ -72,7 +83,6 @@ public class LoginController {
         } catch (ApplicationException e) {
             e.printStackTrace();
         }
-
 
         return "system/index";
     }
@@ -144,10 +154,12 @@ public class LoginController {
 
             // 设置上下文信息
             Context context = new Context();
-            context.setUser(user);
             context.setUserId(user.getId());
             context.setRoleId(user.getCurrentRoleId());
             ContextUtil.setContext(context);
+
+            // redisTemplate
+            redisTemplate.opsForValue().set("garden:user:" + user.getId(), JSONObject.toJSONString(user), 24 * 60 * 60, TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.error("login exception", e);
             request.setAttribute("login_error_msg", "login exception");

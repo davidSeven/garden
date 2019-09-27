@@ -115,8 +115,8 @@
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <#if Request.user ??>
-                            <img src="/file/fileInfo/download/${Request.user.bizCode}/${Request.user.bizId}" class="layui-nav-img">
+                        <#if (Request.user ??) && (Request.user.bizHeadPath ??)>
+                            <img src="/images${Request.user.bizHeadPath}" class="layui-nav-img">
                         <#else>
                             <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
                         </#if>

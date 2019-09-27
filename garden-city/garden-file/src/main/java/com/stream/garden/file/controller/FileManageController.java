@@ -49,6 +49,11 @@ public class FileManageController {
         return "file/edit";
     }
 
+    @GetMapping(value = "/toChooseImg")
+    public String toChooseImg() {
+        return "file/chooseImg";
+    }
+
     @PostMapping(value = "/pageList")
     @ResponseBody
     public Result<PageInfo<FileManage>> pageList(FileManageVO vo) {

@@ -9,6 +9,7 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.util.CollectionUtil;
+import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,8 @@ public class FileInfoController {
     @Autowired
     private IFileInfoService fileInfoService;
 
-    private String uploadPath = "/www/garden";
+    @Autowired
+    private GlobalConfig globalConfig;
 
     @RequestMapping(value = "/download/{bizCode}/{bizId}")
     public void download(@PathVariable("bizCode") String bizCode, @PathVariable("bizId") String bizId, HttpServletResponse response) {
@@ -145,7 +147,7 @@ public class FileInfoController {
                         addFiles.add(file);
                     }
                     if (file.getBytes() != null) {
-                        String file_root_path = uploadPath;
+                        String file_root_path = globalConfig.getUploadPath();
                         String file_name = "/" + UUID.randomUUID().toString().replaceAll("-", "");
                         BufferedOutputStream stream = null;
                         try {

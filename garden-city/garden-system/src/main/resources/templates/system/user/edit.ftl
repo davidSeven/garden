@@ -40,7 +40,10 @@
                 <img class="layui-upload-img" id="uploadImg" src=""/>
                 <input type="hidden" name="bizCode"/>
                 <input type="hidden" name="bizId"/>
-                <button type="button" class="layui-btn" id="uploadImgBtn">上传图片</button>
+                <input type="hidden" name="bizHeadPath"/>
+                <#--<button type="button" class="layui-btn" id="uploadImgBtn">上传图片</button>-->
+                <button id="uploadImgBtn" type="button" class="layui-btn"
+                        data-url="/file/fileManage/toChooseImg">选择图片</button>
             </div>
         </div>
         <div class="layui-form-item">
@@ -67,7 +70,8 @@
         console.log('layui init');
         var form = layui.form,
                 upload = layui.upload,
-                $ = layui.jquery;
+                $ = layui.jquery,
+                iframeObj = $(window.frameElement).attr('name');
 
         var index = parent.layer.getFrameIndex(window.name);
         console.log('current page index:' + index);
@@ -84,18 +88,42 @@
 
                 // 判断是否有头像
                 if (params.data.bizCode && params.data.bizId) {
-                    showUploadImg(params.data.bizCode, params.data.bizId);
+                    showUploadImg(params.data.bizCode, params.data.bizId, params.data.bizHeadPath);
                 }
             }
         };
         
-        function showUploadImg(bizCode, bizId) {
+        function showUploadImg(bizCode, bizId, visitPath) {
             // 显示图片
-            $("#uploadImg").attr("src", "/file/fileInfo/download/" + bizCode + "/" + bizId);
+            if (visitPath) {
+                $("#uploadImg").attr("src", "/images" + visitPath);
+            } else {
+                $("#uploadImg").attr("src", "/file/fileInfo/download/" + bizCode + "/" + bizId);
+            }
         }
 
+        // 选择图片
+        $("#uploadImgBtn").click(function () {
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", {isInsert: true, iframeObj: iframeObj});
+            return false;
+        });
+
+        layui.refresh = function() {
+            console.log("user edit refresh");
+        };
+
+        layui.cropperCallback = function(data) {
+            var file = data[0];
+            $("input[name='bizCode']").val(file.bizCode);
+            $("input[name='bizId']").val(file.bizId);
+            $("input[name='bizHeadPath']").val(file.visitPath);
+            showUploadImg(file.bizCode, file.bizId, file.visitPath);
+        };
+
         // 图片上传
-        upload.render({
+        /*upload.render({
             elem: '#uploadImgBtn',
             url: '/file/fileInfo/upload',
             data: {
@@ -113,7 +141,7 @@
             error: function () {
                 layer.msg('上传失败', {icon: 2});
             }
-        });
+        });*/
 
         // 监听提交
         form.on('submit(editForm)', function(data) {

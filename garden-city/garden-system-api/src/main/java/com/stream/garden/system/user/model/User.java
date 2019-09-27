@@ -71,4 +71,9 @@ public class User extends BaseModel<String> {
      * 文件业务ID-头像
      */
     private String bizId;
+
+    /**
+     * 头像地址
+     */
+    private String bizHeadPath;
 }

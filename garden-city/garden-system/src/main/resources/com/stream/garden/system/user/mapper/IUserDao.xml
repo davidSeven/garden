@@ -13,6 +13,7 @@
         <result column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP" property="lastLoginDate" />
         <result column="BIZ_CODE" jdbcType="VARCHAR" property="bizCode" />
         <result column="BIZ_ID" jdbcType="VARCHAR" property="bizId" />
+        <result column="BIZ_HEAD_PATH" jdbcType="VARCHAR" property="bizHeadPath" />
         <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
         <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
         <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />

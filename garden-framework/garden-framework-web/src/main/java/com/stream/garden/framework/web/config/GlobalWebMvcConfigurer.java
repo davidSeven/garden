@@ -94,6 +94,23 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         logger.debug("---------------------------------------------");
         logger.debug("---------------------------------------------");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/images/**").addResourceLocations("file:D:/images/");
+        // registry.addResourceHandler("/images2/**").addResourceLocations("file:D:/images/");
+        String os = System.getProperty("os.name");
+        String uploadPath = globalConfig.getUploadPath();
+        if (os.toLowerCase().startsWith("win")) {
+            // 判断有没有盘符
+            if (!uploadPath.contains(":")) {
+                // 添加路径
+                if (!uploadPath.startsWith("/")) {
+                    uploadPath = "/" + uploadPath;
+                }
+                if (!uploadPath.endsWith("/")) {
+                    uploadPath = uploadPath + "/";
+                }
+                // 默认C盘
+                uploadPath = "C:" + uploadPath;
+            }
+        }
+        registry.addResourceHandler("/images/**").addResourceLocations("file:" + uploadPath);
     }
 }
