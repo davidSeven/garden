@@ -3,6 +3,7 @@ package com.stream.garden.system.login.service.impl;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.util.CollectionUtil;
+import com.stream.garden.framework.util.EncryptUtils;
 import com.stream.garden.framework.util.Md5SaltUtil;
 import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.login.service.ILoginService;
@@ -41,8 +42,11 @@ public class LoginServiceImpl implements ILoginService {
             if (null == user) {
                 return null;
             }
+            // 密码解析
+            String privateKey = EncryptUtils.readPrivateKey("/rsakey/privateKey.rsa");
+            String decryptPassword = EncryptUtils.decryptRSA(password, privateKey);
             // 验证密码
-            if (Md5SaltUtil.validPassword(password, user.getPassword())) {
+            if (Md5SaltUtil.validPassword(decryptPassword, user.getPassword())) {
                 // 查询角色信息
                 UserRole userRoleParams = new UserRole();
                 userRoleParams.setUserId(user.getId());

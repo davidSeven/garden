@@ -20,7 +20,7 @@
 							<input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-form-item">
-							<input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+							<input type="password" name="password" required lay-verify="required|jse" placeholder="密码" autocomplete="off" class="layui-input">
 						</div>
 						<#--<div class="layui-form-item">
 							<div class="layui-inline">
@@ -49,6 +49,8 @@
 			</div>
 		</div>
 		<script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="<@spring.url''/>/static/jsencrypt/jsencrypt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="<@spring.url''/>/static/login/public-key.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
             // 处理子页面里出现登录页面的问题
             if (window.top !== window) {
@@ -57,10 +59,16 @@
 			layui.use(['form'], function() {
 				var form = layui.form;
 
+                var jse = new JSEncrypt();
+                jse.setPublicKey(publicKey);
+
 				//自定义验证规则
-				/*form.verify({
-				});*/
-				
+				form.verify({
+                    jse: function (value, element) {
+                        element.value = jse.encrypt(value);
+                    }
+				});
+
 				//监听提交
 				form.on('submit(login)', function(data) {
 				});
