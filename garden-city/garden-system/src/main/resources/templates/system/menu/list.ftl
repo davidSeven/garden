@@ -1,13 +1,11 @@
 <#import "../../spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
     <title>菜单列表</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
@@ -16,7 +14,6 @@
 
     </style>
 </head>
-
 <body>
 <div class="page-content-wrap">
     <div class="layui-col-md3">
@@ -24,16 +21,16 @@
             <div class="layui-form-item">
                 <div class="layui-inline tool-btn" style="margin-right: 0;">
                     <button id="addBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
-                            permission="system.menu.add"
+                            permission="system:menu:add"
                             data-url="/system/menu/toEdit"><i class="layui-icon">&#xe654;</i></button>
                     <button id="editBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
-                            permission="system.menu.update"
+                            permission="system:menu:update"
                             data-url="/system/menu/toEdit"><i class="layui-icon">&#xe642;</i></button>
                     <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
-                            permission="system.menu.delete"
+                            permission="system:menu:del"
                             data-url="/system/menu/delete"><i class="layui-icon layui-icon-delete"></i></button>
                     <button id="refreshBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
-                            permission="system.menu.refresh"
+                            permission="system:menu:list"
                             ><i class="layui-icon layui-icon-refresh"></i></button>
                 </div>
             </div>
@@ -113,14 +110,17 @@
                 ,shade: 0.2
                 ,time: 0
             });*/
-
-            ajaxPost('/system/menu/list', null, function (data) {
-                if (data.success) {
-                    callback && callback(data.data);
-                } else {
-                    parent.layer.msg(data.msg, {icon: 2});
-                }
-            });
+            if (hasPermissions("system:menu:list")) {
+                ajaxPost('/system/menu/list', null, function (data) {
+                    if (data.success) {
+                        callback && callback(data.data);
+                    } else {
+                        parent.layer.msg(data.msg, {icon: 2});
+                    }
+                });
+            } else {
+                callback([]);
+            }
 
             // 成功后的回调
             function callback(datas) {

@@ -1,9 +1,11 @@
 package com.stream.garden.system.login.service;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
-import com.stream.garden.system.user.model.User;
+import com.stream.garden.system.user.bo.PermissionBO;
+import com.stream.garden.system.user.bo.UserBO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author garden
@@ -16,10 +18,10 @@ public interface ILoginService {
      *
      * @param username 用户名
      * @param password 密码
-     * @return User
+     * @return UserBO
      * @throws ApplicationException e
      */
-    public User login(String username, String password) throws ApplicationException;
+    UserBO login(String username, String password) throws ApplicationException;
 
     /**
      * 修改最后登录信息
@@ -29,13 +31,23 @@ public interface ILoginService {
      * @param date     date
      * @throws ApplicationException e
      */
-    public void updateLastLogin(String userCode, String ip, Date date) throws ApplicationException;
+    void updateLastLogin(String userCode, String ip, Date date) throws ApplicationException;
 
     /**
      * 查询用户信息
+     *
      * @param userId userId
      * @return User
      * @throws ApplicationException e
      */
-    User getByUserId(String userId) throws ApplicationException;
+    UserBO getByUserId(String userId) throws ApplicationException;
+
+    /**
+     * 根据角色ID查询权限信息
+     *
+     * @param roleId roleId
+     * @return list
+     * @throws ApplicationException e
+     */
+    List<PermissionBO> getPermissionByRoleId(String roleId) throws ApplicationException;
 }

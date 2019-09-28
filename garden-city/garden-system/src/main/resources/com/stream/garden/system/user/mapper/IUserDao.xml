@@ -21,14 +21,47 @@
         <result column="ENABLED_FLAG" jdbcType="INTEGER" property="enabledFlag" />
         <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId" />
     </resultMap>
+
+    <resultMap id="UserBOResultMap" type="com.stream.garden.system.user.bo.UserBO" extends="BaseResultMap">
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+        <result column="ROLE_STATE" jdbcType="VARCHAR" property="roleState" />
+    </resultMap>
+
+    <resultMap id="PermissionBOResultMap" type="com.stream.garden.system.user.bo.PermissionBO">
+        <result column="VALUE" jdbcType="VARCHAR" property="value" />
+    </resultMap>
+
     <sql id="BaseTable">
         SYS_USER_T
     </sql>
 
-    <select id="getByCode" resultMap="BaseResultMap">
-        SELECT * FROM <include refid="BaseTable"/>
+    <select id="getByCode" resultMap="UserBOResultMap">
+        SELECT
+          t.*,
+          rt.NAME AS "ROLE_NAME",
+          rt.STATE AS "ROLE_STATE"
+        FROM SYS_USER_T t
+        LEFT JOIN SYS_ROLE_T rt ON t.CURRENT_ROLE_ID = rt.ID
         <where>
-            CODE = #{code,jdbcType=VARCHAR}
+            t.CODE = #{code,jdbcType=VARCHAR}
         </where>
+    </select>
+
+    <select id="getById" resultMap="UserBOResultMap">
+        SELECT
+        t.*,
+        rt.NAME AS "ROLE_NAME",
+        rt.STATE AS "ROLE_STATE"
+        FROM SYS_USER_T t
+        LEFT JOIN SYS_ROLE_T rt ON t.CURRENT_ROLE_ID = rt.ID
+        WHERE t.ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getPermissionByRoleId" resultMap="PermissionBOResultMap">
+        SELECT
+          ft.`CODE` AS "VALUE"
+        FROM SYS_ROLE_FUNCTION_T t
+        LEFT JOIN SYS_FUNCTION_T ft ON t.FUNCTION_ID = ft.ID
+        WHERE t.ROLE_ID = #{roleId,jdbcType=VARCHAR}
     </select>
 </mapper>

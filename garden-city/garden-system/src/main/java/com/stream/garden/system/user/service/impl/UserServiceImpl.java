@@ -3,10 +3,14 @@ package com.stream.garden.system.user.service.impl;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.system.exception.SystemExceptionCode;
+import com.stream.garden.system.user.bo.PermissionBO;
+import com.stream.garden.system.user.bo.UserBO;
 import com.stream.garden.system.user.dao.IUserDao;
 import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author garden
@@ -47,7 +51,17 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
     }
 
     @Override
-    public User getByCode(String code) {
+    public UserBO getByCode(String code) {
         return this.getDao().getByCode(code);
+    }
+
+    @Override
+    public UserBO getById(String id) {
+        return this.getDao().getById(id);
+    }
+
+    @Override
+    public List<PermissionBO> getPermissionByRoleId(String roleId) {
+        return this.getDao().getPermissionByRoleId(roleId);
     }
 }

@@ -44,7 +44,6 @@
         <div class="m-logo">
         </div>
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="leftNav">
-
             <#list menuList as menu>
             <li class="layui-nav-item">
                 <a href="javascript:;" data-url="${menu.path!""}" data-id='${menu.id}' data-text="${menu.name}"><i class="layui-icon layui-icon-menu">${menu.icon!""}</i>${menu.name}</a>
@@ -111,7 +110,7 @@
             <ul class="layui-nav" lay-filter="rightNav">
                 <li class="layui-nav-item"><a href="javascript:;" data-url="email.html" data-id='4' data-text="邮件系统"><i class="iconfont">&#xe603;</i></a></li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;" data-url="admin-info.html" data-id='5' data-text="个人信息">${roleName!'loading...'}</a>
+                    <a href="javascript:;" data-url="admin-info.html" data-id='5' data-text="个人信息">${user.roleName!'loading...'}</a>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
@@ -150,18 +149,17 @@
     </div>
     <!--遮罩-->
     <div class="main-mask">
-
     </div>
 </div>
 <script type="text/javascript">
-    var scope={
-        link:'./welcome.html'
-    }
+    var scope = {
+        link: './welcome.html'
+    };
+    var _permissions = {<#list permissionList as permission>'${permission.value}': 0x1<#if permission_has_next>,</#if></#list>}
 </script>
 <script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/js/main.js" type="text/javascript" charset="utf-8"></script>
-
 </body>
 </html>
