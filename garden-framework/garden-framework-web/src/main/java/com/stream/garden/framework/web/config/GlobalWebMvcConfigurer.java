@@ -1,26 +1,23 @@
 package com.stream.garden.framework.web.config;
 
 import com.stream.garden.framework.web.filter.ContextFilter;
+import com.stream.garden.framework.web.filter.PermissionFilter;
 import com.stream.garden.framework.web.filter.RequestFilter;
 import com.stream.garden.framework.web.interceptor.ContextInterceptor;
+import com.stream.garden.framework.web.permission.IPermissionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author garden
@@ -29,11 +26,13 @@ import java.io.IOException;
 @Configuration
 public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBean {
     private final GlobalConfig globalConfig;
+    private ApplicationContext applicationContext;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public GlobalWebMvcConfigurer(GlobalConfig globalConfig) {
+    public GlobalWebMvcConfigurer(GlobalConfig globalConfig, ApplicationContext applicationContext) {
         this.globalConfig = globalConfig;
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -57,6 +56,28 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
     }
 
     @Bean
+    public FilterRegistrationBean<PermissionFilter> getPermissionFilter() {
+        final FilterRegistrationBean<PermissionFilter> filter = new FilterRegistrationBean<>();
+        IPermissionData permissionData = null;
+        if (null != applicationContext) {
+            Map<String, IPermissionData> permissionDataMap = applicationContext.getBeansOfType(IPermissionData.class);
+            if (null != permissionDataMap) {
+                for (Map.Entry<String, IPermissionData> entry : permissionDataMap.entrySet()) {
+                    permissionData = entry.getValue();
+                    if (null != permissionData) {
+                        break;
+                    }
+                }
+            }
+        }
+        filter.setFilter(new PermissionFilter(globalConfig, permissionData));
+        filter.setName("permissionFilter");
+        filter.addUrlPatterns("/*");
+        filter.setOrder(10);
+        return filter;
+    }
+
+    @Bean
     public FilterRegistrationBean<RequestFilter> getRequestFilter() {
         final FilterRegistrationBean<RequestFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new RequestFilter(globalConfig));
@@ -68,6 +89,7 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
 
     /**
      * https://blog.csdn.net/kanaiji123/article/details/88695332
+     *
      * @return OrderedHiddenHttpMethodFilter
      */
     /*@Bean
@@ -81,7 +103,6 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
             }
         };
     }*/
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ContextInterceptor())

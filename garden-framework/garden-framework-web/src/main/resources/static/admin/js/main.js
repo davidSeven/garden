@@ -122,4 +122,15 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function () {
 //		    });
 //		  }
 //		});
+
+    $(function () {
+        // 加载权限数据
+        ajaxPost('/getPermissionSet', null, function (response) {
+            if (response.success) {
+                $.each(response.data, function (i, v) {
+                    permissions[v] = 0x1;
+                });
+            }
+        });
+    });
 });

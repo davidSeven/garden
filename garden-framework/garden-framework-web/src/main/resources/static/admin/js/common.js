@@ -509,9 +509,6 @@ var permissions = {
 function initPermissions() {
     if (window.top === window) {
         // 加载权限数据
-        if (_permissions) {
-            permissions = _permissions;
-        }
     } else {
         // 获取顶级页面已经获取到的数据
         permissions = window.top.permissions;

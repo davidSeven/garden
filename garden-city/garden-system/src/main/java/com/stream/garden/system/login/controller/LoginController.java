@@ -2,6 +2,7 @@ package com.stream.garden.system.login.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.model.Context;
@@ -23,12 +24,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,6 +37,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Controller
 public class LoginController {
+    /**
+     * 用户权限缓存key
+     */
+    public static final String USER_CACHE_PERMISSION_KEY = "garden:user:permission:";
     /**
      * 登录错误信息key
      */
@@ -49,10 +53,6 @@ public class LoginController {
      * 用户菜单缓存key
      */
     private static final String USER_CACHE_MENU_KEY = "garden:user:menu:";
-    /**
-     * 用户权限缓存key
-     */
-    private static final String USER_CACHE_PERMISSION_KEY = "garden:user:permission:";
     /**
      * 重定向到首页
      */
@@ -87,7 +87,6 @@ public class LoginController {
             if (null != context) {
                 UserBO userBO = (UserBO) context.getUser();
                 List<MenuVO> menuList = getMenuList(context.getUserId(), context.getRoleId());
-                List<PermissionBO> permissionList = getPermissionList(context.getUserId(), context.getRoleId());
                 if (null == userBO) {
                     userBO = getUser(context.getUserId());
                 }
@@ -97,9 +96,6 @@ public class LoginController {
                 }
                 if (null != menuList) {
                     request.setAttribute("menuList", menuList);
-                }
-                if (null != permissionList) {
-                    request.setAttribute("permissionList", permissionList);
                 }
             }
         } catch (Exception e) {
@@ -177,13 +173,30 @@ public class LoginController {
             // 加载用户菜单信息
             reloadMenuList(userBO.getId(), userBO.getCurrentRoleId());
             // 加载用户权限信息
-            reloadPermissionList(userBO.getId(), userBO.getCurrentRoleId());
+            reloadPermissionSet(userBO.getId(), userBO.getCurrentRoleId());
         } catch (Exception e) {
             logger.error("login exception", e);
             request.setAttribute(LOGIN_ERROR_MSG_KEY, "login exception");
             return TO_SYSTEM_LOGIN_KEY;
         }
         return REDIRECT_TO_INDEX_KEY;
+    }
+
+    @PostMapping(value = "/getPermissionSet")
+    @ResponseBody
+    public Result<Set<String>> getPermissionSet() {
+        try {
+            String userId = ContextUtil.getUserId();
+            String roleId = ContextUtil.getRoleId();
+            Set<String> permissionSet = null;
+            if (StringUtils.isNotEmpty(userId) && StringUtils.isNotEmpty(roleId)) {
+                permissionSet = getPermissionSet(userId, roleId);
+            }
+            return new Result<Set<String>>().ok().setData(permissionSet);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>();
+        }
     }
 
     /**
@@ -282,20 +295,25 @@ public class LoginController {
      *
      * @param userId userId
      * @param roleId roleId
-     * @return list
+     * @return set
      */
-    private List<PermissionBO> reloadPermissionList(String userId, String roleId) {
+    private Set<String> reloadPermissionSet(String userId, String roleId) {
         try {
             // 加载权限
             List<PermissionBO> permissionList = loginService.getPermissionByRoleId(roleId);
+            // 改成set
+            Set<String> permissionSet = new HashSet<>();
             if (null != permissionList) {
+                for (PermissionBO bo : permissionList) {
+                    permissionSet.add(bo.getValue());
+                }
                 // 放入到缓存中
-                redisTemplate.opsForValue().set(USER_CACHE_PERMISSION_KEY + userId, JSONObject.toJSONString(permissionList), USER_CACHE_TIME, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(USER_CACHE_PERMISSION_KEY + userId, JSONObject.toJSONString(permissionSet), USER_CACHE_TIME, TimeUnit.SECONDS);
             }
-            return permissionList;
+            return permissionSet;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new ArrayList<>();
+            return new HashSet<>();
         }
     }
 
@@ -304,23 +322,23 @@ public class LoginController {
      *
      * @param userId userId
      * @param roleId roleId
-     * @return list
+     * @return set
      */
-    private List<PermissionBO> getPermissionList(String userId, String roleId) {
+    private Set<String> getPermissionSet(String userId, String roleId) {
         try {
-            List<PermissionBO> permissionList;
+            Set<String> permissionSet;
             Object object = redisTemplate.opsForValue().get(USER_CACHE_PERMISSION_KEY + userId);
             if (null != object) {
-                permissionList = JSONObject.parseObject(object.toString(), new TypeReference<List<PermissionBO>>() {
+                permissionSet = JSONObject.parseObject(object.toString(), new TypeReference<Set<String>>() {
                 });
             } else {
                 // 重新加载
-                permissionList = reloadPermissionList(userId, roleId);
+                permissionSet = reloadPermissionSet(userId, roleId);
             }
-            return permissionList;
+            return permissionSet;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new ArrayList<>();
+            return new HashSet<>();
         }
     }
 

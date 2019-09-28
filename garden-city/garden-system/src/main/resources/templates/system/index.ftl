@@ -155,7 +155,6 @@
     var scope = {
         link: './welcome.html'
     };
-    var _permissions = {<#list permissionList as permission>'${permission.value}': 0x1<#if permission_has_next>,</#if></#list>};
     (function () {
         var userId = '${user.code}';
         var userHead = '${(user.bizHeadPath!'')? replace("\\", "/")}';
