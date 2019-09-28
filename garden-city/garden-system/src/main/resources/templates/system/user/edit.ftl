@@ -42,7 +42,7 @@
                 <input type="hidden" name="bizId"/>
                 <input type="hidden" name="bizHeadPath"/>
                 <#--<button type="button" class="layui-btn" id="uploadImgBtn">上传图片</button>-->
-                <button id="uploadImgBtn" type="button" class="layui-btn"
+                <button id="uploadImgBtn" type="button" class="layui-btn layui-btn-primary"
                         data-url="/file/fileManage/toChooseImg">选择图片</button>
             </div>
         </div>
@@ -106,7 +106,7 @@
         function showUploadImg(bizCode, bizId, visitPath) {
             // 显示图片
             if (visitPath) {
-                $("#uploadImg").attr("src", "/images" + visitPath);
+                $("#uploadImg").attr("src", "/static/images" + visitPath);
             } else {
                 $("#uploadImg").attr("src", "/file/fileInfo/download/" + bizCode + "/" + bizId);
             }

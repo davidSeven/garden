@@ -111,6 +111,6 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
                 uploadPath = "C:" + uploadPath;
             }
         }
-        registry.addResourceHandler("/images/**").addResourceLocations("file:" + uploadPath);
+        registry.addResourceHandler("/static/images/**").addResourceLocations("file:" + uploadPath);
     }
 }

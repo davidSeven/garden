@@ -31,7 +31,7 @@
     <div class="layui-row" style="margin-bottom:20px; ">
         <input type="file" id="cropper_imgUpload" name="file" style="display:none" accept="image/*">
         <button type="button" onclick="javascript:$('#cropper_imgUpload').click();" class="layui-btn layui-icon layui-icon-upload-drag">选择图片</button>
-        <button id="closeBtn" type="button" class="layui-btn layui-icon layui-icon-close">取消上传</button>
+        <button id="closeBtn" type="button" class="layui-btn layui-btn-primary layui-icon layui-icon-close">取消上传</button>
     </div>
     <div class="layui-row layui-hide oper-btn">
         <div class="layui-col-xs9">

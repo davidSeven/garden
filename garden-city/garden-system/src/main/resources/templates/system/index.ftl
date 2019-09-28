@@ -115,7 +115,7 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <#if (Request.user ??) && (Request.user.bizHeadPath ??)>
-                            <img src="/images${Request.user.bizHeadPath}" class="layui-nav-img">
+                            <img src="/static/images${Request.user.bizHeadPath}" class="layui-nav-img">
                         <#else>
                             <img src="/static/user/images/default_head.png" class="layui-nav-img">
                         </#if>
@@ -160,7 +160,7 @@
         var userId = '${user.code}';
         var userHead = '${(user.bizHeadPath!'')? replace("\\", "/")}';
         if (userId && userHead) {
-            localStorage.setItem("user_head_" + userId, "/images" + userHead);
+            localStorage.setItem("user_head_" + userId, "/static/images" + userHead);
         }
     })();
 </script>

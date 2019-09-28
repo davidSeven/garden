@@ -134,7 +134,7 @@
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
                 ,{field:'bizHeadPath', width:70, title: '头像', sort: false, templet: function (row) {
                     if (row.bizHeadPath) {
-                        return '<img src="/images' + row.bizHeadPath + '" class="layui-nav-img" style="height:28px; width: 28px;">';
+                        return '<img src="/static/images' + row.bizHeadPath + '" class="layui-nav-img" style="height:28px; width: 28px;">';
                     }
                     return '';
                 }}
