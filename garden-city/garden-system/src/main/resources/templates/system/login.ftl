@@ -18,10 +18,12 @@
 				<div class="m-login-warp">
 					<form class="layui-form" method="post" action="<@spring.url''/>/login">
 						<div class="layui-form-item">
-							<input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+                            <img id="userHeadImg" src="/static/user/images/default_head.png" class="layui-nav-img" style="position: absolute; margin-top: 8px; margin-left: 8px; height: 25px; width: 25px;">
+							<input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input" style="padding-left: 45px;" onblur="layui.loadHead(this)">
 						</div>
 						<div class="layui-form-item">
-							<input type="password" name="password" required lay-verify="required|jse" placeholder="密码" autocomplete="off" class="layui-input">
+                            <i class="layui-icon layui-icon-password" style="position: absolute; margin-top: 6px; margin-left: 8px; font-size: 25px;"></i>
+							<input type="password" name="password" required lay-verify="required|jse" placeholder="密码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
 						</div>
 						<#--<div class="layui-form-item">
 							<div class="layui-inline">
@@ -33,7 +35,7 @@
 						</div>-->
                         <#if Request.login_error_msg??>
                             <div class="layui-form-item">
-                                <div class="layui-form-mid layui-word-aux" style="color: #dd0000;">${Request.login_error_msg}</div>
+                                <div class="layui-form-mid layui-word-aux" style="color: #dd0000 !important;">${Request.login_error_msg}</div>
                             </div>
                         </#if>
 						<div class="layui-form-item m-login-btn">
@@ -73,6 +75,25 @@
 				//监听提交
 				form.on('submit(login)', function(data) {
 				});
+
+				layui.loadHead = function (input) {
+				    console.log('layui loadHead');
+                    loadHead(input.value);
+                };
+
+                function loadHead(value) {
+                    console.log('function loadHead');
+                    var img = document.getElementById("userHeadImg");
+				    if (value) {
+                        var userHead = localStorage.getItem("user_head_" + value);
+                        if (userHead) {
+                            img.src = userHead;
+                            return true;
+                        }
+                    }
+                    img.src = "/static/user/images/default_head.png";
+				    return false;
+                }
 			});
 		</script>
 	</body>

@@ -132,6 +132,12 @@
                 ,{type:'checkbox'}
                 ,{field:'code', width:120, title: '用户编号'}
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
+                ,{field:'bizHeadPath', width:70, title: '头像', sort: false, templet: function (row) {
+                    if (row.bizHeadPath) {
+                        return '<img src="/images' + row.bizHeadPath + '" class="layui-nav-img" style="height:28px; width: 28px;">';
+                    }
+                    return '';
+                }}
                 ,{field:'state', width:80, title: '状态', align: 'center', templet: function (row) {
                     if ("0" === row.state) {
                         return '<span class="layui-badge layui-bg-gray">禁用</span>';

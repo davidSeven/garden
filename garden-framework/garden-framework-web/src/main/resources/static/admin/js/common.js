@@ -128,9 +128,35 @@ Date.prototype.format = function(fmt) {
 };
 
 /**
+ * 获取父级窗口
+ * @param iframeName 父级窗口名称
+ * @param window 窗口对象，默认当前窗口对象
+ */
+function getParentWindow(iframeName, window) {
+    if (!window) {
+        // 默认当前窗口对象
+        window = this.window;
+    }
+    if (window.frames[iframeName]) {
+        return window.frames[iframeName];
+    } else {
+        // 对子窗体进行二次检索
+        var length = window.frames.length;
+        for (var i = 0; i < length; i++) {
+            if (window.frames[i].frames && window.frames[i].frames[iframeName]) {
+                return window.frames[i].frames[iframeName];
+            }
+        }
+    }
+    // 没找到
+    return null;
+}
+
+/**
  * 控制iframe窗口的刷新操作
  */
 var iframeObjName;
+var iframeObjMap = {};
 
 //父级弹出页面
 function page(title, url, obj, w, h, params) {
@@ -152,12 +178,25 @@ function page(title, url, obj, w, h, params) {
         console.log("--- success function start ---");
         try {
             var iframe = window['layui-layer-iframe' + index];
+            iframeObjMap['layui-layer-iframe' + index] = parent.iframeObjName;
             // 延迟10ms，等待页面加载完成
             setTimeout(function () {
                 // 调用layui.init
                 if (iframe && iframe.layui && iframe.layui.init) {
                     console.log("--- 存在layui.init方法，执行layui.init方法 ---");
                     iframe.layui.init(params);
+                } else {
+                    if (iframe) {
+                        // 窗口已经加载出来了,layui还没加载完
+                        console.log("--- 不存在layui.init方法");
+                        // 创建callback方法
+                        iframe['_initCallback'] = function (layui) {
+                            console.log("--- 执行_initCallback方法");
+                            layui.init(params);
+                        };
+                    } else {
+                        console.log("--- 不存在iframe");
+                    }
                 }
             }, 10);
         } catch (e) {
@@ -179,17 +218,12 @@ function page(title, url, obj, w, h, params) {
                 }
                 frame.layui._refresh = false;
             }
-            if (window.frames[obj]) {
-                doRefresh(window.frames[obj]);
+            // 获取到父级窗口
+            var parentWindow = getParentWindow(obj);
+            if (parentWindow) {
+                doRefresh(parentWindow);
             } else {
-                // 对子窗体进行二次检索
-                var length = window.frames.length;
-                for (var i = 0; i < length; i++) {
-                    if (window.frames[i].frames && window.frames[i].frames[obj]) {
-                        doRefresh(window.frames[i].frames[obj]);
-                        break;
-                    }
-                }
+                console.log('未获取到parentWindow');
             }
         } catch (e) {
             console.error(e);
@@ -198,6 +232,7 @@ function page(title, url, obj, w, h, params) {
     }
 
     iframeObjName = obj;
+
     //如果手机端，全屏显示
     if (window.innerWidth <= 768) {
         var index = layer.open({
@@ -232,34 +267,23 @@ function closePage() {
     parent.layer.close(index); // 再执行关闭
 }
 
-function setRefresh() {
-    var parentObjName = parent.iframeObjName;
-    var parentWindow = parent.window;
-    if (parentWindow.frames[parentObjName]) {
-        parentWindow.frames[parentObjName].layui._refresh = true;
-    } else {
-        // 对子窗体进行二次检索
-        var length = parentWindow.frames.length;
-        for (var i = 0; i < length; i++) {
-            if (parentWindow.frames[i].frames && parentWindow.frames[i].frames[parentObjName]) {
-                parentWindow.frames[i].frames[parentObjName].layui._refresh = true;
-                break;
-            }
-        }
-    }
+/**
+ * 关闭子页面，但不刷新
+ */
+function closePageNoRefresh() {
+    var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
+    parent.layer.close(index); // 再执行关闭
 }
 
-/**
- * 刷新子页,关闭弹窗
- */
-function refresh() {
-    //根据传递的name值，获取子iframe窗口，执行刷新
-    if (window.frames[iframeObjName]) {
-        window.frames[iframeObjName].location.reload();
+function setRefresh() {
+    // 设置父级窗口是否刷新
+    var iframeObjName = parent.iframeObjMap[window.name];
+    var parentWindow = getParentWindow(iframeObjName, parent.window);
+    if (parentWindow) {
+        parentWindow.layui._refresh = true;
     } else {
-        window.location.reload();
+        console.log('未获取到parentWindow');
     }
-    layer.closeAll();
 }
 
 /**
@@ -299,8 +323,9 @@ function setSelectValue(field, value) {
  * 序列化表单
  * @param formId
  * @param data
+ * @param isDebug 开启调试模式
  */
-function jsonData(formId, data) {
+function jsonData(formId, data, isDebug) {
     var form;
     if (formId.startsWith(".")) {
         form = document.getElementsByClassName(formId.substr(1))[0];
@@ -312,7 +337,9 @@ function jsonData(formId, data) {
         return;
     }
 
-    var isDebug = false;
+    if (!isDebug) {
+        isDebug = false;
+    }
 
     // 递归查找
     function getChildren(element) {
@@ -447,7 +474,7 @@ function jsonData(formId, data) {
     return data;
 }
 
-function ajaxPost(url, params, successFn, errorFn) {
+function ajaxPost(url, params, successFn, errorFn, completeFn) {
     // loading
     var loadingIndex = parent.layer.msg('加载中', {
         icon: 16
@@ -465,12 +492,13 @@ function ajaxPost(url, params, successFn, errorFn) {
             successFn && successFn(data);
         },
         error: function () {
-            console.log(arguments);
+            // console.log(arguments);
             errorFn && errorFn();
         },
         complete: function () {
-            console.log(arguments);
+            // console.log(arguments);
             parent.layer.close(loadingIndex);
+            completeFn && completeFn();
         }
     });
 }

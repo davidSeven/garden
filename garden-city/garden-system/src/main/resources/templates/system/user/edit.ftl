@@ -55,8 +55,9 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">立即提交</button>
+                <#--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                <button id="closeBtn" type="button" class="layui-btn layui-btn-primary">关闭</button>
             </div>
         </div>
     </form>
@@ -81,6 +82,8 @@
             // 处理初始值
             if (params.isInsert) {
                 // 新增
+                // 显示默认头像
+                $("#uploadImg").attr("src", "/static/user/images/default_head.png");
             } else {
                 // 修改
                 jsonData("editForm", params.data);
@@ -89,9 +92,16 @@
                 // 判断是否有头像
                 if (params.data.bizCode && params.data.bizId) {
                     showUploadImg(params.data.bizCode, params.data.bizId, params.data.bizHeadPath);
+                } else {
+                    // 显示默认头像
+                    $("#uploadImg").attr("src", "/static/user/images/default_head.png");
                 }
             }
         };
+
+        if (window['_initCallback']) {
+            window['_initCallback'](layui);
+        }
         
         function showUploadImg(bizCode, bizId, visitPath) {
             // 显示图片
@@ -151,7 +161,7 @@
 
         // 监听提交
         form.on('submit(editForm)', function(data) {
-            console.log(data.field);
+            // console.log(data.field);
             var id = data.field.id;
             var url = '/system/user/add';
             if (id) {
@@ -166,6 +176,10 @@
                 }
             });
             return false;
+        });
+
+        $("#closeBtn").click(function () {
+            closePageNoRefresh();
         });
     });
 </script>

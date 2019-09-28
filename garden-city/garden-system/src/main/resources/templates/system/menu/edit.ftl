@@ -98,14 +98,12 @@
                 jsonData("editForm", nodes[0]);
                 form.render();
             }
-
             // 父级有icon
             if (!parentId) {
                 $("#item-icon").show();
             } else {
                 $("#item-icon").hide();
             }
-
         };
 
         // 表单验证
@@ -118,31 +116,34 @@
                     return "请输入整数数字";
                 }
             }
-            //sorts: [/^[0-9]+$/, "请输入整数数字"]
         });
 
         //监听提交
         form.on('submit(editForm)', function(data) {
-            console.log(data.field);
+            // console.log(data.field);
             // layer.msg(JSON.stringify(data.field));
-
             var id = data.field.id;
             var url = '/system/menu/add';
             if (id) {
                 url = '/system/menu/edit';
             }
-
-            ajaxPost(url, data.field, function (data) {
-                if (data.success) {
+            ajaxPost(url, data.field, function (response) {
+                if (response.success) {
                     layer.msg('操作成功', {icon: 1});
-                    closePage();
+                    // 执行父级回调
+                    var parentWindow = getParentWindow(parent.iframeObjName, parent.window);
+                    if (parentWindow) {
+                        closePageNoRefresh();
+                        parentWindow.layui.editCallback(id);
+                    } else {
+                        closePage();
+                    }
                 } else {
-                    layer.msg(data.msg, {icon: 2});
+                    layer.msg(response.msg, {icon: 2});
                 }
             });
             return false;
         });
-
     });
 </script>
 </body>

@@ -117,7 +117,7 @@
                         <#if (Request.user ??) && (Request.user.bizHeadPath ??)>
                             <img src="/images${Request.user.bizHeadPath}" class="layui-nav-img">
                         <#else>
-                            <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                            <img src="/static/user/images/default_head.png" class="layui-nav-img">
                         </#if>
                         ${(Request.user.name)! 'loading...'}
                         </a>
@@ -155,7 +155,14 @@
     var scope = {
         link: './welcome.html'
     };
-    var _permissions = {<#list permissionList as permission>'${permission.value}': 0x1<#if permission_has_next>,</#if></#list>}
+    var _permissions = {<#list permissionList as permission>'${permission.value}': 0x1<#if permission_has_next>,</#if></#list>};
+    (function () {
+        var userId = '${user.code}';
+        var userHead = '${(user.bizHeadPath!'')? replace("\\", "/")}';
+        if (userId && userHead) {
+            localStorage.setItem("user_head_" + userId, "/images" + userHead);
+        }
+    })();
 </script>
 <script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>

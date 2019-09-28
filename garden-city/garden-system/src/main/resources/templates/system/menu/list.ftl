@@ -24,7 +24,7 @@
                             permission="system:menu:add"
                             data-url="/system/menu/toEdit"><i class="layui-icon">&#xe654;</i></button>
                     <button id="editBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
-                            permission="system:menu:update"
+                            permission="system:menu:edit"
                             data-url="/system/menu/toEdit"><i class="layui-icon">&#xe642;</i></button>
                     <button id="deleteBtn" class="layui-btn layui-btn-small layui-btn-primary hidden-xs has-permission"
                             permission="system:menu:del"
@@ -37,7 +37,7 @@
         </form>
         <ul id="menuTree" class="ztree"></ul>
     </div>
-    <div id="viewForm" class="layui-form layui-col-md9">
+    <form id="viewForm" class="layui-form layui-col-md9">
         <div class="layui-form-item">
             <label class="layui-form-label">上级</label>
             <div class="layui-input-block">
@@ -81,7 +81,7 @@
                 <textarea name="remark" class="layui-textarea" disabled="disabled"></textarea>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
@@ -103,7 +103,11 @@
             showDisabled: true
         };
 
-        function getTree() {
+        // 当前选中菜单id
+        var currentSelectMenuId = null;
+
+        // 查询树信息
+        function getTree(callback) {
 
             /*var loadingIndex = parent.layer.msg('加载中', {
                 icon: 16
@@ -113,17 +117,17 @@
             if (hasPermissions("system:menu:list")) {
                 ajaxPost('/system/menu/list', null, function (data) {
                     if (data.success) {
-                        callback && callback(data.data);
+                        initTree && initTree(data.data);
                     } else {
                         parent.layer.msg(data.msg, {icon: 2});
                     }
                 });
             } else {
-                callback([]);
+                initTree([]);
             }
 
             // 成功后的回调
-            function callback(datas) {
+            function initTree(datas) {
                 if (datas && datas.length) {
                     $.each(datas, function (i, v) {
                         var ns = [v.name];
@@ -163,32 +167,57 @@
                     },
                     callback: {
                         onClick: function (event, treeId, treeNode) {
-                            console.log(treeNode);
-                            if (!treeNode["parentId"]) {
-                                $("#item-icon").show();
-                            } else {
-                                $("#item-icon").hide();
-                            }
-                            // 获取到父级名称
-                            var parentNode = treeNode.getParentNode();
-                            if (parentNode) {
-                                treeNode.parentName = parentNode.name;
-                            }
-                            // 设置表单数据
-                            jsonData("viewForm", treeNode);
-                            form.render();
+                            // console.log(treeNode);
+                            currentSelectMenuId = treeNode.id;
+                            // 加载右侧表单信息
+                            renderTreeNodeViewForm(treeNode);
                         }
                     }
                 };
-
+                // 加载树
                 var treeObj = $.fn.zTree.init($("#menuTree"), setting, datas);
                 treeObj.expandAll(true);
+                // 树加载完成回调
+                callback && callback(treeObj);
+                // 重新选中
+                if (currentSelectMenuId) {
+                    var treeNode = treeObj.getNodeByParam("id", currentSelectMenuId, null);
+                    if (treeNode) {
+                        treeObj.selectNode(treeNode);
+                        renderTreeNodeViewForm(treeNode);
+                    }
+                }
             }
         }
-        layui.refresh = function() {
-            getTree();
+        // 刷新树
+        layui.refresh = function(callback) {
+            // 清空表单数据
+            $("#viewForm")[0].reset();
+            getTree(callback);
         };
         layui.refresh();
+
+        function renderTreeNodeViewForm(treeNode) {
+            if (!treeNode["parentId"]) {
+                $("#item-icon").show();
+            } else {
+                $("#item-icon").hide();
+            }
+            // 获取到父级名称
+            var parentNode = treeNode.getParentNode();
+            if (parentNode) {
+                treeNode.parentName = parentNode.name;
+            }
+            // 设置表单数据
+            jsonData("viewForm", treeNode);
+            form.render();
+        }
+
+        // 编辑回调
+        layui.editCallback = function(id) {
+            currentSelectMenuId = id;
+            layui.refresh();
+        };
 
         $("#addBtn").click(function () {
             // 获取选中的数据
