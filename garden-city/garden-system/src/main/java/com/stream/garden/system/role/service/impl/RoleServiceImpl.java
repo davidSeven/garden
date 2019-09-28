@@ -44,13 +44,9 @@ public class RoleServiceImpl extends AbstractBaseService<Role, String> implement
 
     @Override
     public int delete(String... ids) throws ApplicationException {
-
         // 1.删除与用户的关系
-
         // 2.删除与群组的关系
-
         // 3.删除权限的关系
-
         return super.delete(ids);
     }
 }

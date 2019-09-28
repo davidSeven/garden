@@ -13,5 +13,5 @@ public enum StorageConfig {
     /**
      * FastDFS文件存储
      */
-    FastDFS
+    FAST_DFS
 }

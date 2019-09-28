@@ -1,6 +1,5 @@
 package com.stream.garden.system.role.vo;
 
-import com.stream.garden.system.role.model.Role;
 import com.stream.garden.system.role.model.RoleFunction;
 
 import java.io.Serializable;

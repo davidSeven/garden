@@ -4,7 +4,6 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.IBaseService;
 import com.stream.garden.system.role.model.RoleFunction;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
-import com.stream.garden.system.role.vo.RoleFunctionVO;
 import com.stream.garden.system.role.vo.RoleMenuVO;
 
 import java.util.List;

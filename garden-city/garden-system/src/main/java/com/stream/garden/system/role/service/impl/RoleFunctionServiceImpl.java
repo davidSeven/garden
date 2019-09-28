@@ -14,7 +14,6 @@ import com.stream.garden.system.role.model.RoleMenu;
 import com.stream.garden.system.role.service.IRoleFunctionService;
 import com.stream.garden.system.role.service.IRoleMenuService;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
-import com.stream.garden.system.role.vo.RoleFunctionVO;
 import com.stream.garden.system.role.vo.RoleMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author garden
@@ -31,6 +31,13 @@ import java.util.Set;
 @Service
 public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, String> implements IRoleFunctionService {
 
+    @Autowired
+    private IMenuService menuService;
+    @Autowired
+    private IFunctionService functionService;
+    @Autowired
+    private IRoleMenuService roleMenuService;
+
     public RoleFunctionServiceImpl(IRoleFunctionDao iRoleFunctionDao) {
         super(iRoleFunctionDao);
     }
@@ -38,13 +45,6 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
     public IRoleFunctionDao getMapper() {
         return (IRoleFunctionDao) super.baseMapper;
     }
-
-    @Autowired
-    private IMenuService menuService;
-    @Autowired
-    private IFunctionService functionService;
-    @Autowired
-    private IRoleMenuService roleMenuService;
 
     @Override
     public int deleteByRoleId(String roleId) throws ApplicationException {
@@ -62,7 +62,7 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
             List<RoleMenu> roleMenuList = new ArrayList<>();
             // 角色功能集合
             List<RoleFunction> roleFunctionList = new ArrayList<>();
-            for (MenuFunctionVO item :voList){
+            for (MenuFunctionVO item : voList) {
                 if (MenuFunctionVO.TYPE_MENU == item.getType()) {
                     roleMenuList.add(new RoleMenu(roleId, item.getId()));
                 } else if (MenuFunctionVO.TYPE_FUNCTION == item.getType()) {
@@ -94,19 +94,18 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
         List<RoleMenu> roleMenuList = this.roleMenuService.list(new RoleMenu(roleId));
         Set<String> roleMenuSet = new HashSet<>();
         if (CollectionUtil.isNotEmpty(roleMenuList)) {
-            for (RoleMenu roleMenu : roleMenuList) {
-                roleMenuSet.add(roleMenu.getMenuId());
-            }
+            roleMenuSet = roleMenuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toSet());
         }
         // 查询当前角色已经设置的功能信息
         List<RoleFunction> roleFunctionList = this.list(new RoleFunction(roleId));
         Set<String> roleFunctionSet = new HashSet<>();
         if (CollectionUtil.isNotEmpty(roleFunctionList)) {
-            for (RoleFunction roleFunction : roleFunctionList) {
-                roleFunctionSet.add(roleFunction.getFunctionId());
-            }
+            roleFunctionSet = roleFunctionList.stream().map(RoleFunction::getFunctionId).collect(Collectors.toSet());
         }
+        return getMenuFunction(menuList, functionList, roleMenuSet, roleFunctionSet);
+    }
 
+    private List<MenuFunctionVO> getMenuFunction(List<Menu> menuList, List<Function> functionList, Set<String> roleMenuSet, Set<String> roleFunctionSet) {
         List<MenuFunctionVO> menuFunctionVOList = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(menuList)) {
             for (Menu menu : menuList) {
@@ -126,7 +125,6 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
                 }
             }
         }
-
         return menuFunctionVOList;
     }
 }

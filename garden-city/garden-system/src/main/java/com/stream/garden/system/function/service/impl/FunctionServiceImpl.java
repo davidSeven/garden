@@ -7,6 +7,7 @@ import com.stream.garden.system.function.model.Function;
 import com.stream.garden.system.function.service.IFunctionService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,6 @@ public class FunctionServiceImpl extends AbstractBaseService<Function, String> i
 
     @Override
     public List<Function> getRoleFunction() throws ApplicationException {
-        return null;
+        return new ArrayList<>();
     }
 }

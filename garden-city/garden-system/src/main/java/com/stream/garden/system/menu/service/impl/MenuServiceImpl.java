@@ -93,7 +93,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
     @Override
     public List<MenuVO> getUserMenu(String userId) throws ApplicationException {
 
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

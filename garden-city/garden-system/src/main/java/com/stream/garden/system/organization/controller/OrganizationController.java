@@ -86,7 +86,6 @@ public class OrganizationController {
     @ResponseBody
     public Result<List<Organization>> list(Organization organization) {
         try {
-            // Thread.sleep(300);
             organization.asOrderBy("SORTS", OrderByObj.ASC);
             return new Result<List<Organization>>().ok().setData(organizationService.list(organization));
         } catch (Exception e) {

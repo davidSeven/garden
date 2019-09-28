@@ -15,21 +15,21 @@ import java.util.Map;
  */
 public class EncryptCacheUtil {
     private static Logger logger = LoggerFactory.getLogger(EncryptCacheUtil.class);
-
     /**
      * 缓存map
      */
-    private static Map<String, String> CACHE_MAP = new HashMap<>();
-
+    private static Map<String, String> cacheMap = new HashMap<>();
     /**
      * 登录密码rsa私钥
      */
-    private static String LOGIN_PASSWORD_RSA_PRIVATE_KEY = "LOGIN_PASSWORD_RSA_PRIVATE_KEY";
-
+    private static String loginRsaPrivateKey = "loginRsaPrivateKey";
     /**
      * 登录密码rsa公钥
      */
-    private static String LOGIN_PASSWORD_RSA_PUBLIC_KEY = "LOGIN_PASSWORD_RSA_PUBLIC_KEY";
+    private static String loginRsaPublicKey = "loginRsaPublicKey";
+
+    private EncryptCacheUtil() {
+    }
 
     /**
      * 获取rsa私钥
@@ -38,20 +38,50 @@ public class EncryptCacheUtil {
      */
     public static String getRsaPrivateKey() {
         // 判断私钥是否在缓存中
-        if (!CACHE_MAP.containsKey(LOGIN_PASSWORD_RSA_PRIVATE_KEY)) {
+        if (!cacheMap.containsKey(loginRsaPrivateKey)) {
             reloadRsaPrivateKey();
         }
-        return CACHE_MAP.get(LOGIN_PASSWORD_RSA_PRIVATE_KEY);
+        return cacheMap.get(loginRsaPrivateKey);
+    }
+
+    /**
+     * 获取rsa公钥
+     *
+     * @return string
+     */
+    public static String getRsaPublicKey() {
+        // 判断公钥是否在缓存中
+        if (!cacheMap.containsKey(loginRsaPublicKey)) {
+            reloadRsaPublicKey();
+        }
+        return cacheMap.get(loginRsaPublicKey);
     }
 
     /**
      * 重新加载rsa私钥
      */
     private static void reloadRsaPrivateKey() {
+        reloadRsaKey(loginRsaPrivateKey, "/rsakey/privateKey.rsa");
+    }
+
+    /**
+     * 重新加载rsa公钥
+     */
+    private static void reloadRsaPublicKey() {
+        reloadRsaKey(loginRsaPublicKey, "/rsakey/publicKey.rsa");
+    }
+
+    /**
+     * 重新加载rsa
+     *
+     * @param key     key
+     * @param keyPath key地址
+     */
+    private static void reloadRsaKey(String key, String keyPath) {
         // 加载私钥文件
-        String privateKey = EncryptUtils.readPrivateKey("/rsakey/privateKey.rsa");
+        String privateKey = EncryptUtils.readPrivateKey(keyPath);
         // 放到缓存中
-        CACHE_MAP.put(LOGIN_PASSWORD_RSA_PRIVATE_KEY, privateKey);
+        cacheMap.put(key, privateKey);
     }
 
     /**
