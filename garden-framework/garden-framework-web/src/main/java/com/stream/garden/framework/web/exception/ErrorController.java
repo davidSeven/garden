@@ -18,4 +18,10 @@ public class ErrorController {
         logger.error("error 404");
         return "error/404";
     }
+
+    @RequestMapping(value = "/error/500")
+    public String error500() {
+        logger.error("error 500");
+        return "error/500";
+    }
 }
