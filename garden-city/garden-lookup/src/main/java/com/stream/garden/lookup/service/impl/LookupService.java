@@ -17,10 +17,6 @@ public class LookupService extends AbstractBaseService<Lookup, String> implement
         super(iLookupDao);
     }
 
-    private ILookupDao getDao() {
-        return (ILookupDao) super.baseMapper;
-    }
-
     @Override
     public int insert(Lookup lookup) throws ApplicationException {
         Lookup paramLookup = new Lookup();

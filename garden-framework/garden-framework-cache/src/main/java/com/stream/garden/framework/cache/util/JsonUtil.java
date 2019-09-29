@@ -13,6 +13,9 @@ public class JsonUtil {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
 
+    private JsonUtil() {
+    }
+
     public static String objectToJson(Object data) {
         try {
             return MAPPER.writeValueAsString(data);

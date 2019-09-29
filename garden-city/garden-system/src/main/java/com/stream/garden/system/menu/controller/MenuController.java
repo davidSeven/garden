@@ -97,7 +97,6 @@ public class MenuController {
 //    @Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<List<Menu>> list(Menu menu) {
         try {
-            // Thread.sleep(300);
             menu.asOrderBy("SORTS", OrderByObj.ASC);
             return new Result<List<Menu>>().ok().setData(menuService.list(menu));
         } catch (Exception e) {

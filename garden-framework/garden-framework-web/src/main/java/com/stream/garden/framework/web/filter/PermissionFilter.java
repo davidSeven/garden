@@ -56,11 +56,9 @@ public class PermissionFilter extends ExcludeFilter implements Filter {
             } else {
                 // 判断是否要验证
                 String urlCode = PermissionContext.getUrlCode(uri);
-                if (null != urlCode) {
-                    // 判断是否有权限
-                    if (null != permissionData && !permissionData.validPermission(urlCode)) {
-                        throw new ServletException("无权访问");
-                    }
+                // 判断是否有权限
+                if (null != urlCode && null != permissionData && !permissionData.validPermission(urlCode)) {
+                    throw new ServletException("无权访问");
                 }
             }
         }

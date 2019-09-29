@@ -17,7 +17,10 @@ public class PermissionContext {
     /**
      * 权限map
      */
-    private static Map<String, String> PERMISSION_URL_MAP = new HashMap<>();
+    private static Map<String, String> permissionUrlMap = new HashMap<>();
+
+    private PermissionContext() {
+    }
 
     /**
      * 加载权限url
@@ -27,7 +30,7 @@ public class PermissionContext {
     public static void reloadPermissionUrl(List<Permission> list) {
         if (CollectionUtil.isNotEmpty(list)) {
             for (Permission permission : list) {
-                PERMISSION_URL_MAP.put(permission.getUrl(), permission.getCode());
+                permissionUrlMap.put(permission.getUrl(), permission.getCode());
             }
         }
     }
@@ -36,7 +39,7 @@ public class PermissionContext {
      * 清除权限url
      */
     public static void clear() {
-        PERMISSION_URL_MAP.clear();
+        permissionUrlMap.clear();
     }
 
     /**
@@ -46,6 +49,6 @@ public class PermissionContext {
      * @return String
      */
     public static String getUrlCode(String url) {
-        return PERMISSION_URL_MAP.get(url);
+        return permissionUrlMap.get(url);
     }
 }
