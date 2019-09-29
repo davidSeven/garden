@@ -1,6 +1,7 @@
 package com.stream.garden.framework.web.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stream.garden.framework.api.interfaces.IApplicationRunner;
 import com.stream.garden.framework.web.util.ApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,23 @@ public class GlobalApplicationRunner implements ApplicationRunner {
 
     @Autowired
     private GlobalConfig globalConfig;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public void run(ApplicationArguments args) {
 
+        // 处理加载完成接口
+        if (null != applicationContext) {
+            Map<String, IApplicationRunner> applicationRunnerMap = applicationContext.getBeansOfType(IApplicationRunner.class);
+            if (null != applicationRunnerMap) {
+                for (Map.Entry<String, IApplicationRunner> entry : applicationRunnerMap.entrySet()) {
+                    entry.getValue().run();
+                }
+            }
+        }
+
+        // 日志打印相关
         line();
         logger.debug(">>>path:{}", globalConfig.getPath());
         logger.debug(">>>path:{}", GlobalConfig.path);

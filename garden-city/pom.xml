@@ -26,6 +26,8 @@
         <module>garden-file-api</module>
         <module>garden-job-api</module>
         <module>garden-job</module>
+        <module>garden-dictionary-api</module>
+        <module>garden-dictionary</module>
     </modules>
 
     <properties>
@@ -137,6 +139,16 @@
             <dependency>
                 <groupId>org.stream</groupId>
                 <artifactId>garden-job</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-dictionary-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-dictionary</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 

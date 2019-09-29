@@ -9,6 +9,7 @@ import com.stream.garden.framework.limit.enums.LimitRule;
 import com.stream.garden.framework.limit.exception.LimitExceptionCode;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.filter.ExcludeFilter;
+import com.stream.garden.framework.web.filter.RequestFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,12 +57,15 @@ public class LimitFilter extends ExcludeFilter implements Filter {
             HandlerLimit handlerLimit = HandlerLimitFactory.getInstance().builder(LimitRule.APPLICATION);
             if (null != handlerLimit && !handlerLimit.handle(null)) {
                 logger.error("---{}", LimitExceptionCode.SYSTEM_BUSY.getMessage());
-                // throw new ServletException(LimitExceptionCode.SYSTEM_BUSY.getMessage());
-                HttpServletResponse response = (HttpServletResponse) res;
-                response.setHeader("Content-Type", "application/json;charset=UTF-8");
-                Result<String> result = new Result<>(LimitExceptionCode.SYSTEM_BUSY);
-                response.getWriter().append(JSONObject.toJSONString(result));
-                return;
+                if (RequestFilterUtils.isJsonRequest(request)) {
+                    HttpServletResponse response = (HttpServletResponse) res;
+                    response.setHeader("Content-Type", "application/json;charset=UTF-8");
+                    Result<String> result = new Result<>(LimitExceptionCode.SYSTEM_BUSY);
+                    response.getWriter().append(JSONObject.toJSONString(result));
+                    return;
+                } else {
+                    throw new ServletException(LimitExceptionCode.SYSTEM_BUSY.getMessage());
+                }
             }
         }
         chain.doFilter(req, res);

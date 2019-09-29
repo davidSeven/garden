@@ -18,17 +18,7 @@
 
         <dependency>
             <groupId>org.stream</groupId>
-            <artifactId>garden-system-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.stream</groupId>
             <artifactId>garden-system</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.stream</groupId>
-            <artifactId>garden-lookup-api</artifactId>
         </dependency>
 
         <dependency>
@@ -38,12 +28,12 @@
 
         <dependency>
             <groupId>org.stream</groupId>
-            <artifactId>garden-file-api</artifactId>
+            <artifactId>garden-file</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.stream</groupId>
-            <artifactId>garden-file</artifactId>
+            <artifactId>garden-dictionary</artifactId>
         </dependency>
 
     </dependencies>

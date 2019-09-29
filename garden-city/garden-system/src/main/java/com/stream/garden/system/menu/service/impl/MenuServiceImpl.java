@@ -82,7 +82,7 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String > implemen
         for (String id : strings) {
             Menu paramMenu = new Menu();
             paramMenu.setParentId(id);
-            // 根据parentId查询记录，如果存在，则存在自己，则不能删除
+            // 根据parentId查询记录，如果存在，则存在子级，则不能删除
             if (super.exists(paramMenu)) {
                 throw new ApplicationException(SystemExceptionCode.MENU_EXISTS_CHILDREN_DELETE_EXCEPTION);
             }
