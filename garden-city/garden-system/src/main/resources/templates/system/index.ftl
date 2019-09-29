@@ -114,7 +114,7 @@
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <#if (Request.user ??) && (Request.user.bizHeadPath ??)>
+                        <#if (Request.user ??) && (Request.user.bizHeadPath ?? && Request.user.bizHeadPath != "")>
                             <img src="/static/images${Request.user.bizHeadPath}" class="layui-nav-img">
                         <#else>
                             <img src="/static/user/images/default_head.png" class="layui-nav-img">

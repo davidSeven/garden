@@ -64,4 +64,125 @@
         LEFT JOIN SYS_FUNCTION_T ft ON t.FUNCTION_ID = ft.ID
         WHERE t.ROLE_ID = #{roleId,jdbcType=VARCHAR}
     </select>
+
+    <select id="pageList" resultMap="UserBOResultMap" >
+        select
+          t.ID,
+          t.NAME,
+          t.CODE,
+          t.STATE,
+          t.CURRENT_ROLE_ID,
+          t.LOGIN_FAIL_COUNT,
+          t.LAST_LOGIN_IP,
+          t.LAST_LOGIN_DATE,
+          t.BIZ_CODE,
+          t.BIZ_ID,
+          t.BIZ_HEAD_PATH,
+          t.CREATED_BY,
+          t.CREATION_DATE,
+          t.UPDATED_BY,
+          t.UPDATION_DATE,
+          t.ENABLED_FLAG,
+          t.TRACE_ID,
+          rt.NAME AS "ROLE_NAME"
+        FROM SYS_USER_T t
+        LEFT JOIN SYS_ROLE_T rt ON t.CURRENT_ROLE_ID = rt.ID
+        <if test="criteria != null and criteria.vo != null" >
+            <trim prefix="WHERE"  prefixOverrides="AND | OR" >
+                <if test="criteria.vo.id != null and criteria.vo.id!=''" >
+                    AND t.ID = #{criteria.vo.id, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.name != null and criteria.vo.name!=''" >
+                    AND t.NAME = #{criteria.vo.name, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.code != null and criteria.vo.code!=''" >
+                    AND t.CODE = #{criteria.vo.code, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.state != null and criteria.vo.state!=''" >
+                    AND t.STATE = #{criteria.vo.state, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.currentRoleId != null and criteria.vo.currentRoleId!=''" >
+                    AND t.CURRENT_ROLE_ID = #{criteria.vo.currentRoleId, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.loginFailCount != null" >
+                    AND t.LOGIN_FAIL_COUNT = #{criteria.vo.loginFailCount, jdbcType=INTEGER}
+                </if>
+                <if test="criteria.vo.lastLoginIp != null and criteria.vo.lastLoginIp!=''" >
+                    AND t.LAST_LOGIN_IP = #{criteria.vo.lastLoginIp, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.lastLoginDate != null" >
+                    AND t.LAST_LOGIN_DATE = #{criteria.vo.lastLoginDate, jdbcType=TIMESTAMP}
+                </if>
+                <if test="criteria.vo.bizCode != null and criteria.vo.bizCode!=''" >
+                    AND t.BIZ_CODE = #{criteria.vo.bizCode, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.bizId != null and criteria.vo.bizId!=''" >
+                    AND t.BIZ_ID = #{criteria.vo.bizId, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.bizHeadPath != null and criteria.vo.bizHeadPath!=''" >
+                    AND t.BIZ_HEAD_PATH = #{criteria.vo.bizHeadPath, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.createdBy != null and criteria.vo.createdBy!=''" >
+                    AND t.CREATED_BY = #{criteria.vo.createdBy, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.creationDate != null" >
+                    AND t.CREATION_DATE = #{criteria.vo.creationDate, jdbcType=TIMESTAMP}
+                </if>
+                <if test="criteria.vo.updatedBy != null and criteria.vo.updatedBy!=''" >
+                    AND t.UPDATED_BY = #{criteria.vo.updatedBy, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.vo.updationDate != null" >
+                    AND t.UPDATION_DATE = #{criteria.vo.updationDate, jdbcType=TIMESTAMP}
+                </if>
+                <if test="criteria.vo.enabledFlag != null" >
+                    AND t.ENABLED_FLAG = #{criteria.vo.enabledFlag, jdbcType=INTEGER}
+                </if>
+                <if test="criteria.vo.traceId != null and criteria.vo.traceId!=''" >
+                    AND t.TRACE_ID = #{criteria.vo.traceId, jdbcType=VARCHAR}
+                </if>
+                <if test="criteria.generic != null">
+                    <trim prefix=" and (" prefixOverrides="" suffix=")">
+                        <foreach collection="criteria.generic.genericCriteria" item="criteriachild" separator="or">
+                            <if test="criteriachild.valid">
+                                <trim prefix="(" prefixOverrides="and" suffix=")">
+                                    <foreach collection="criteriachild.criteria" item="criterion">
+                                        <if test="criterion.frontBrackets != null and criterion.frontBrackets != ''" >
+                                            ${criterion.frontBrackets}
+                                        </if>
+                                        <choose>
+                                            <when test="criterion.noValue">
+                                                ${criterion.condition}
+                                            </when>
+                                            <when test="criterion.singleValue">
+                                                ${criterion.condition} #{criterion.value}
+                                            </when>
+                                            <when test="criterion.betweenValue">
+                                                ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                            </when>
+                                            <when test="criterion.listValue">
+                                                ${criterion.condition}
+                                                <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                                    #{listItem}
+                                                </foreach>
+                                            </when>
+                                        </choose>
+                                        <if test="criterion.postBrackets != null and criterion.postBrackets != ''" >
+                                            ${criterion.postBrackets}
+                                        </if>
+                                        <if test="criterion.conditionOperation != null and criterion.conditionOperation != ''" >
+                                            ${criterion.conditionOperation}
+                                        </if>
+                                    </foreach>
+                                </trim>
+                            </if>
+                        </foreach>
+                    </trim>
+                </if>
+            </trim>
+        </if>
+        <if test="criteria != null and criteria.orderByClauses != null " >
+            <include refid="orderByClause" />
+        </if>
+    </select>
+
 </mapper>

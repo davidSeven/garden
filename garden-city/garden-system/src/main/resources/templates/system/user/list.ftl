@@ -132,7 +132,7 @@
                 ,{type:'checkbox'}
                 ,{field:'code', width:120, title: '用户编号'}
                 ,{field:'name', width:120, title: '用户姓名', sort: true}
-                ,{field:'bizHeadPath', width:70, title: '头像', sort: false, templet: function (row) {
+                ,{field:'bizHeadPath', width:70, title: '头像', align: 'center', templet: function (row) {
                     if (row.bizHeadPath) {
                         return '<img src="/static/images' + row.bizHeadPath + '" class="layui-nav-img" style="height:28px; width: 28px;">';
                     }
@@ -148,7 +148,9 @@
                     }
                     return row.state;
                 }}
+                ,{field:'roleName', width:100, title: '角色名称'}
                 ,{field:'lastLoginIp', width:130, title: '最后登录IP'}
+                ,{field:'loginFailCount', width:130, title: '登录失败次数'}
                 ,{field:'lastLoginDate', width:160, title: '最后登录时间', templet: function (row) {
                         return formatDate(row.lastLoginDate);
                     }
@@ -182,7 +184,7 @@
         $("#addBtn").click(function () {
             var url = $(this).attr('data-url');
             // 将iframeObj传递给父级窗口,执行操作完成刷新
-            parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: true});
+            parent.page("编辑", url, iframeObj, w = "650px", h = "450px", {isInsert: true});
             return false;
         });
 
@@ -243,7 +245,7 @@
                 });
             } else if(obj.event === 'edit'){
                 //将iframeObj传递给父级窗口,执行操作完成刷新
-                parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
+                parent.page("编辑", url, iframeObj, w = "650px", h = "450px", {isInsert: false, data: data});
             }
         });
 

@@ -76,6 +76,8 @@ public class LoginServiceImpl implements ILoginService {
                         updateUser.setId(userBO.getId());
                         updateUser.setCurrentRoleId(currentUserRole.getId());
                         userService.updateSelective(updateUser);
+                        // 设置当前角色id
+                        userBO.setCurrentRoleId(currentUserRole.getId());
                     }
                 } else {
                     // 判断当前角色是否可用
