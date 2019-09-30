@@ -19,7 +19,7 @@ public class FreeMarkerViewCache {
                 "\t<head>\n" +
                 "\t\t<meta charset=\"UTF-8\">\n" +
                 "\t\t<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no\" />\n" +
-                "\t\t<title>后台登录</title>\n" +
+                "\t\t<title><@spring.message code=\"message.login.topTitle\"/></title>\n" +
                 "        <link rel=\"icon\" type=\"image/x-icon\" href=\"<@spring.url''/>/static/favicon.ico\">\n" +
                 "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"<@spring.url''/>/static/admin/layui/css/layui.css\" />\n" +
                 "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"<@spring.url''/>/static/admin/css/login.css\" />\n" +
@@ -28,7 +28,7 @@ public class FreeMarkerViewCache {
                 "\t<body>\n" +
                 "\t\t<div class=\"m-login-bg\">\n" +
                 "\t\t\t<div class=\"m-login\">\n" +
-                "\t\t\t\t<h3>后台系统登录xxx</h3>\n" +
+                "\t\t\t\t<h3><@spring.message code=\"message.login.loginTitle\"/></h3>\n" +
                 "\t\t\t\t<div class=\"m-login-warp\">\n" +
                 "\t\t\t\t\t<form class=\"layui-form\" method=\"post\" action=\"<@spring.url''/>/login\">\n" +
                 "\t\t\t\t\t\t<div class=\"layui-form-item\">\n" +

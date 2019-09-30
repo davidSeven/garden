@@ -31,6 +31,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +73,9 @@ import java.util.Map;
  * @see #setConfiguration
  * @see FreeMarkerConfig
  * @see FreeMarkerConfigurer
+ *
+ * 改造自 {@link FreeMarkerView}
+ * @see FreeMarkerView
  */
 public class FreeMarkerView2 extends AbstractTemplateView {
 

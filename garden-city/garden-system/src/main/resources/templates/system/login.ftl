@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>后台登录</title>
+		<title><@spring.message code="message.login.topTitle"/></title>
         <link rel="icon" type="image/x-icon" href="<@spring.url''/>/static/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css" />
 		<link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/login.css" />
@@ -14,7 +14,7 @@
 	<body>
 		<div class="m-login-bg">
 			<div class="m-login">
-				<h3>后台系统登录</h3>
+				<h3><@spring.message code="message.login.loginTitle"/></h3>
 				<div class="m-login-warp">
 					<form class="layui-form" method="post" action="<@spring.url''/>/login">
 						<div class="layui-form-item">
