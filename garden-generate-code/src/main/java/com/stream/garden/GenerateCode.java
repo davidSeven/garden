@@ -7,17 +7,11 @@ package com.stream.garden;
 public class GenerateCode {
 
     public static void main(String[] args) {
-
-        JdbcConfig jdbcConfig = new JdbcConfig()
-                .setDriver("com.mysql.jdbc.Driver")
-                .setUrl("jdbc:mysql://localhost:3306/garden?useUnicode=true&characterEncoding=utf-8&useSSL=true")
-                .setUsername("garden")
-                .setPassword("123456");
-
-        TableConfig tableConfig = new TableConfig();
-        tableConfig.setTableName("");
-        tableConfig.setJavaClassName("");
-
+        // jdbc配置
+        JdbcConfig jdbcConfig = JdbcConfig.readProperties("jdbc.properties");
+        // table配置
+        TableConfig tableConfig = new TableConfig("", "");
+        // 调用
         CodeBuilder.run(jdbcConfig, tableConfig);
     }
 }

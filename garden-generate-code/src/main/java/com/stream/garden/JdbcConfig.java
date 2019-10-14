@@ -1,5 +1,9 @@
 package com.stream.garden;
 
+import com.stream.garden.util.PropertiesUtil;
+
+import java.util.Properties;
+
 /**
  * @author garden
  * @date 2019-06-22 9:09
@@ -10,6 +14,21 @@ public class JdbcConfig {
     private String url;
     private String username;
     private String password;
+
+    public static JdbcConfig readProperties(String path) {
+        JdbcConfig jdbcConfig = null;
+        try {
+            Properties properties = PropertiesUtil.readProperties(path);
+            jdbcConfig = new JdbcConfig();
+            jdbcConfig.setDriver(properties.getProperty("jdbc.driver"));
+            jdbcConfig.setUrl(properties.getProperty("jdbc.url"));
+            jdbcConfig.setUsername(properties.getProperty("jdbc.username"));
+            jdbcConfig.setPassword(properties.getProperty("jdbc.password"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jdbcConfig;
+    }
 
     public String getDriver() {
         return driver;

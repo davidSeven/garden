@@ -9,6 +9,13 @@ public class TableConfig {
     private String tableName;
     private String javaClassName;
 
+    public TableConfig() {}
+
+    public TableConfig(String tableName, String javaClassName) {
+        this.tableName = tableName;
+        this.javaClassName = javaClassName;
+    }
+
     public String getTableName() {
         return tableName;
     }
