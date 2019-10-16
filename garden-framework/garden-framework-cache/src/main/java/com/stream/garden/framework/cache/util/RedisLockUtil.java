@@ -31,11 +31,11 @@ public class RedisLockUtil implements ApplicationContextAware {
     /**
      * 获取锁脚本
      */
-    private static String GET_LOCK_SCRIPTS = "";
+    private static String getLockScripts = "";
     /**
      * 释放锁脚本
      */
-    private static String RELEASE_LOCK_SCRIPTS = "";
+    private static String releaseLockScripts = "";
     private static Logger logger = LoggerFactory.getLogger(RedisLockUtil.class);
     private static RedisTemplate<String, Object> stringObjectRedisTemplate;
 
@@ -50,7 +50,7 @@ public class RedisLockUtil implements ApplicationContextAware {
     public static boolean getLock(String key, String value, int expireTime) {
         boolean lock = false;
         try {
-            RedisScript<String> redisScript = new DefaultRedisScript<>(GET_LOCK_SCRIPTS, String.class);
+            RedisScript<String> redisScript = new DefaultRedisScript<>(getLockScripts, String.class);
             Object result = stringObjectRedisTemplate.execute(redisScript, Collections.singletonList(key), value, expireTime);
             if (SUCCESS.equals(result)) {
                 lock = true;
@@ -69,7 +69,7 @@ public class RedisLockUtil implements ApplicationContextAware {
      * @return boolean
      */
     public static boolean releaseLock(String key, String value) {
-        RedisScript<String> redisScript = new DefaultRedisScript<>(RELEASE_LOCK_SCRIPTS, String.class);
+        RedisScript<String> redisScript = new DefaultRedisScript<>(releaseLockScripts, String.class);
         Object result = stringObjectRedisTemplate.execute(redisScript, Collections.singletonList(key), value);
         return SUCCESS.equals(result);
     }
@@ -132,8 +132,8 @@ public class RedisLockUtil implements ApplicationContextAware {
         if (null == readProperties) {
             throw new NullPointerException("redis lock scripts is null, redis properties path:" + REDIS_LOCK_PROPERTIES);
         } else {
-            RedisLockUtil.GET_LOCK_SCRIPTS = readProperties.getProperty("scripts.getLock");
-            RedisLockUtil.RELEASE_LOCK_SCRIPTS = readProperties.getProperty("scripts.releaseLock");
+            RedisLockUtil.getLockScripts = readProperties.getProperty("scripts.getLock");
+            RedisLockUtil.releaseLockScripts = readProperties.getProperty("scripts.releaseLock");
         }
     }
 }
