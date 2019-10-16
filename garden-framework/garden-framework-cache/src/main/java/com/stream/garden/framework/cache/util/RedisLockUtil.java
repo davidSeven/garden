@@ -3,6 +3,7 @@ package com.stream.garden.framework.cache.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -121,19 +122,34 @@ public class RedisLockUtil implements ApplicationContextAware {
         return lock;
     }
 
-
     @SuppressWarnings({"unchecked"})
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        // redis init
-        RedisLockUtil.stringObjectRedisTemplate = (RedisTemplate<String, Object>) applicationContext.getBean("stringObjectRedisTemplate");
-        // redis lock scripts init
-        Properties readProperties = PropertiesUtil.readProperties(REDIS_LOCK_PROPERTIES);
-        if (null == readProperties) {
-            throw new NullPointerException("redis lock scripts is null, redis properties path:" + REDIS_LOCK_PROPERTIES);
-        } else {
-            RedisLockUtil.getLockScripts = readProperties.getProperty("scripts.getLock");
-            RedisLockUtil.releaseLockScripts = readProperties.getProperty("scripts.releaseLock");
+        try {
+            // redis init
+            setStringObjectRedisTemplate((RedisTemplate<String, Object>) applicationContext.getBean("stringObjectRedisTemplate"));
+            // redis lock scripts init
+            Properties readProperties = PropertiesUtil.readProperties(REDIS_LOCK_PROPERTIES);
+            if (null == readProperties) {
+                throw new NullPointerException("redis lock scripts is null, redis properties path:" + REDIS_LOCK_PROPERTIES);
+            } else {
+                setGetLockScripts(readProperties.getProperty("scripts.getLock"));
+                setReleaseLockScripts(readProperties.getProperty("scripts.releaseLock"));
+            }
+        } catch (Exception e) {
+            throw new BeanInitializationException(e.getMessage(), e);
         }
+    }
+
+    private static void setStringObjectRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        RedisLockUtil.stringObjectRedisTemplate = redisTemplate;
+    }
+
+    private static void setGetLockScripts(String scripts) {
+        RedisLockUtil.getLockScripts = scripts;
+    }
+
+    private static void setReleaseLockScripts(String scripts) {
+        RedisLockUtil.releaseLockScripts = scripts;
     }
 }
