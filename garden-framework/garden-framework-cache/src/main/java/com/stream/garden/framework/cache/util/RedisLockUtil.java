@@ -77,18 +77,19 @@ public class RedisLockUtil implements ApplicationContextAware {
     /**
      * 获取自旋锁
      *
-     * @param key      key
-     * @param value    value
-     * @param waitTime 等待时间-单位：毫秒
+     * @param key        key
+     * @param value      value
+     * @param expireTime 有效时间-单位：秒
+     * @param waitTime   等待时间-单位：毫秒
      * @return boolean
      */
-    public static boolean getSpinLock(String key, String value, int waitTime) {
+    public static boolean getSpinLock(String key, String value, int expireTime, int waitTime) {
         boolean lock = false;
         Timer waitTimer = null;
         try {
             if (-1 == waitTime) {
                 do {
-                    if (getLock(key, value, 10)) {
+                    if (getLock(key, value, expireTime)) {
                         return true;
                     }
                     Thread.sleep(1);
@@ -103,7 +104,7 @@ public class RedisLockUtil implements ApplicationContextAware {
                     }
                 }, waitTime);
                 do {
-                    if (getLock(key, value, 10)) {
+                    if (getLock(key, value, expireTime)) {
                         return true;
                     }
                     Thread.sleep(1);
@@ -119,7 +120,6 @@ public class RedisLockUtil implements ApplicationContextAware {
         }
         return lock;
     }
-
 
 
     @SuppressWarnings({"unchecked"})
