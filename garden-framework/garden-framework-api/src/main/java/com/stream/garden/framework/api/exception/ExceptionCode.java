@@ -9,7 +9,8 @@ public enum ExceptionCode implements AppCode {
     /** 请求失败 */
     UNKOWN_EXCEPTION(-1, "请求失败"),
     /** success */
-    SUCCESS(0, "success")
+    SUCCESS(0, "success"),
+    TIME_OUT(408, "请求超时"),
     ;
 
     private int code;

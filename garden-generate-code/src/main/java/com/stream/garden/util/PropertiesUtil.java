@@ -19,7 +19,7 @@ public class PropertiesUtil {
         Properties prop = null;
         try {
             prop = new Properties();
-            inputStream = PropertiesUtil.class.getResourceAsStream(propPath);
+            inputStream = PropertiesUtil.class.getClassLoader().getResourceAsStream(propPath);
             if (null != inputStream) {
                 inputStreamReader = new InputStreamReader(inputStream, DEFAULT_ENCODING);
                 prop.load(inputStreamReader);

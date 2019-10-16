@@ -3,9 +3,11 @@ package com.stream.garden.dictionary.controller;
 import com.stream.garden.dictionary.exception.DictionaryExceptionCode;
 import com.stream.garden.dictionary.model.Dictionary;
 import com.stream.garden.dictionary.service.IDictionaryService;
+import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.OrderByObj;
+import com.stream.garden.framework.cache.util.RedisLockUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author garden
@@ -90,11 +95,32 @@ public class DictionaryController {
     @ResponseBody
     public Result<List<Dictionary>> list(Dictionary dictionary) {
         try {
-            dictionary.asOrderBy("SORTS", OrderByObj.ASC);
-            return new Result<List<Dictionary>>().ok().setData(dictionaryService.list(dictionary));
+            String key = "test:1";
+            String value = "" + System.currentTimeMillis();
+            int expireTime = 5;
+            int waitTime = 3000;
+            if (RedisLockUtil.getSpinLock(key, value, expireTime, waitTime)) {
+                // 守护进程
+                Timer timer = new Timer();
+                // 每隔1秒，重新设置一次redid key的有效时间
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        RedisLockUtil.expire(key, 5, TimeUnit.SECONDS);
+                    }
+                }, 3000, 3000);
+                // 10s
+                Thread.sleep(10 * 1000);
+                dictionary.asOrderBy("SORTS", OrderByObj.ASC);
+                List<Dictionary> list = this.dictionaryService.list(dictionary);
+                timer.cancel();
+                RedisLockUtil.releaseLock(key, value);
+                return new Result<List<Dictionary>>().ok().setData(list);
+            }
+            throw new ApplicationException(ExceptionCode.TIME_OUT);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
         }
     }
 
