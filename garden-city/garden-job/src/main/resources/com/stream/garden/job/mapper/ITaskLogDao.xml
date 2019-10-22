@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.job.dao.ITaskLogDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.job.model.TaskLog">
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+        <result column="TASK_ID" jdbcType="VARCHAR" property="taskId" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="RESPONSE_CONTENT" jdbcType="VARCHAR" property="responseContent" />
+        <result column="BEGIN_DATE" jdbcType="TIMESTAMP" property="beginDate" />
+        <result column="END_DATE" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="CONSUME_TIME" jdbcType="INTEGER" property="consumeTime" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+        <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy" />
+        <result column="UPDATION_DATE" jdbcType="TIMESTAMP" property="updationDate" />
+        <result column="ENABLED_FLAG" jdbcType="INTEGER" property="enabledFlag" />
+        <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_TASK_LOG_T
+    </sql>
+
+</mapper>

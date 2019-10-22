@@ -1,0 +1,34 @@
+CREATE TABLE `sys_task_t` (
+  `ID` varchar(32) NOT NULL,
+  `NAME` varchar(64) DEFAULT '' COMMENT '名称',
+  `CRON` varchar(64) DEFAULT '' COMMENT 'cron表达式',
+  `URL` varchar(255) DEFAULT '' COMMENT '请求路径',
+  `STATE` varchar(2) DEFAULT '' COMMENT '状态',
+  `REMARK` varchar(255) DEFAULT '' COMMENT '备注',
+  `CREATED_BY` varchar(32) DEFAULT '' COMMENT '创建人',
+  `CREATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `UPDATED_BY` varchar(32) DEFAULT '' COMMENT '修改人',
+  `UPDATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ENABLED_FLAG` int(1) DEFAULT '1' COMMENT '是否禁用',
+  `TRACE_ID` varchar(16) DEFAULT '' COMMENT '日志ID',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务表';
+
+CREATE TABLE `sys_task_log_t` (
+  `ID` varchar(32) NOT NULL,
+  `TASK_ID` varchar(32) DEFAULT '' COMMENT '任务ID',
+  `TYPE` varchar(2) DEFAULT '' COMMENT '类型',
+  `RESPONSE_CONTENT` varchar(512) DEFAULT '' COMMENT '响应内容',
+  `BEGIN_DATE` timestamp NULL DEFAULT NULL COMMENT '任务开始执行时间',
+  `END_DATE` timestamp NULL DEFAULT NULL COMMENT '任务结束执行时间',
+  `CONSUME_TIME` int(11) DEFAULT '0' COMMENT '任务消耗的时间',
+  `REMARK` varchar(255) DEFAULT '' COMMENT '备注',
+  `CREATED_BY` varchar(32) DEFAULT '' COMMENT '创建人',
+  `CREATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `UPDATED_BY` varchar(32) DEFAULT '' COMMENT '修改人',
+  `UPDATION_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ENABLED_FLAG` int(1) DEFAULT '1' COMMENT '是否禁用',
+  `TRACE_ID` varchar(16) DEFAULT '' COMMENT '日志ID',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务日志表';
+
