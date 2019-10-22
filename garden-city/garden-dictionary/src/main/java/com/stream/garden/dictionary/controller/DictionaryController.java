@@ -110,7 +110,7 @@ public class DictionaryController {
                     }
                 }, 3000, 3000);
                 // 10s
-                Thread.sleep(10 * 1000);
+                // Thread.sleep(10 * 1000);
                 dictionary.asOrderBy("SORTS", OrderByObj.ASC);
                 List<Dictionary> list = this.dictionaryService.list(dictionary);
                 timer.cancel();

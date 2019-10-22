@@ -19,6 +19,12 @@
             <groupId>org.stream</groupId>
             <artifactId>garden-framework-log</artifactId>
         </dependency>
+
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
