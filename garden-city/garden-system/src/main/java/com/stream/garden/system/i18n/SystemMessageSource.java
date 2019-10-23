@@ -59,10 +59,11 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
      * 从缓存中取出国际化配置对应的数据 或者从父级获取
      *
      * @param code code
+     * @param args args
      * @param locale locale
      * @return string
      */
-    public String getSourceFromCache(String code, Locale locale) {
+    public String getSourceFromCache(String code, Object[] args, Locale locale) {
         String language = locale.getLanguage();
         Map<String, String> props = LOCAL_CACHE.get(language);
         if (null != props && props.containsKey(code)) {
@@ -70,7 +71,7 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
         } else {
             try {
                 if (null != this.getParentMessageSource()) {
-                    return this.getParentMessageSource().getMessage(code, null, locale);
+                    return this.getParentMessageSource().getMessage(code, args, locale);
                 }
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
@@ -87,12 +88,12 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
 
     @Override
     protected MessageFormat resolveCode(String code, Locale locale) {
-        String msg = getSourceFromCache(code, locale);
+        String msg = getSourceFromCache(code, null, locale);
         return new MessageFormat(msg, locale);
     }
 
     @Override
     protected String resolveCodeWithoutArguments(String code, Locale locale) {
-        return getSourceFromCache(code, locale);
+        return getSourceFromCache(code, null, locale);
     }
 }
