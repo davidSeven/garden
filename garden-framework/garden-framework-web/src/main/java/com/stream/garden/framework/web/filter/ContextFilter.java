@@ -50,6 +50,12 @@ public class ContextFilter extends ExcludeFilter implements Filter {
 
         boolean jump = super.exclude(uri);
 
+        // 跳过认证
+        boolean isRemoteAuthorization = super.isRemoteAuthorization(request);
+        if (isRemoteAuthorization) {
+            jump = true;
+        }
+
         if (!jump) {
             if (GlobalConstant.OPTIONS.equals(request.getMethod())) {
                 response.setStatus(HttpServletResponse.SC_OK);

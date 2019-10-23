@@ -7,6 +7,7 @@
         <result column="CRON" jdbcType="VARCHAR" property="cron" />
         <result column="URL" jdbcType="VARCHAR" property="url" />
         <result column="STATE" jdbcType="VARCHAR" property="state" />
+        <result column="PARAMS" jdbcType="VARCHAR" property="params" />
         <result column="REMARK" jdbcType="VARCHAR" property="remark" />
         <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
         <result column="CREATION_DATE" jdbcType="VARCHAR" property="creationDate" />

@@ -133,6 +133,22 @@ public class SnowflakeIdWorker {
         return id;
     }
 
+    public static String generateIdStr() {
+        return String.valueOf(generateId());
+    }
+
+    /**
+     * 获取id
+     * @param id id
+     * @return string
+     */
+    public static String generateId(String id) {
+        if (null == id) {
+            return String.valueOf(generateId());
+        }
+        return id;
+    }
+
     /**
      * 获得下一个ID (该方法是线程安全的)
      *

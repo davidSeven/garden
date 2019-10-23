@@ -50,6 +50,12 @@ public class PermissionFilter extends ExcludeFilter implements Filter {
         String uri = request.getRequestURI();
         boolean jump = super.exclude(uri);
 
+        // 跳过认证
+        boolean isRemoteAuthorization = super.isRemoteAuthorization(request);
+        if (isRemoteAuthorization) {
+            jump = true;
+        }
+
         if (!jump) {
             if (GlobalConstant.OPTIONS.equals(request.getMethod())) {
                 response.setStatus(HttpServletResponse.SC_OK);

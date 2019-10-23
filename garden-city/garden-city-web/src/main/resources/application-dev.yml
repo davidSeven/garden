@@ -104,3 +104,7 @@ garden:
     period: 1
     # 10次
     count: 10
+
+  # 任务调度
+  job:
+    enabled: true

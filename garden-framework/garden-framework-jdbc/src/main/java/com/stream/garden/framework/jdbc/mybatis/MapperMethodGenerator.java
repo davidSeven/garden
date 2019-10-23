@@ -369,7 +369,7 @@ public class MapperMethodGenerator {
             if (KeyGenMode.CUSTOM == keyGenMode) {
                 sb.append(">");
             } else {
-                sb.append("useGeneratedKeys=\"true\" keyProperty=\"" + table.getIdColumn().getProperty() + "\">");
+                sb.append("useGeneratedKeys=\"true\" keyProperty=\"" + table.getIdColumn().getProperty() + "\" keyColumn=\"" + table.getIdColumn().getProperty() + "\">");
                 if (KeyGenMode.DB_UUID == keyGenMode) {
                     sb.append("<selectKey keyProperty=\"" + table.getIdColumn().getProperty() + "\" resultType=\"" + idProertyClassType + "\" order=\"BEFORE\">");
                     sb.append(StringUtils.defaultString(keyGenMode.getValue(), "select replace(uuid(),'-','') from dual"));
@@ -383,7 +383,7 @@ public class MapperMethodGenerator {
                     sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@java.util.UUID@randomUUID().toString().replace(\"-\", \"\")") + "' />");
                 } else if (KeyGenMode.CUSTOM == keyGenMode) {
                 } else if (KeyGenMode.SNOW == keyGenMode) {
-                    sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@com.stream.garden.framework.jdbc.util.SnowflakeIdWorker@generateId().toString()") + "' />");
+                    sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@com.stream.garden.framework.jdbc.util.SnowflakeIdWorker@generateId(" + table.getIdColumn().getProperty() + ")") + "' />");
                 }
             }
         }

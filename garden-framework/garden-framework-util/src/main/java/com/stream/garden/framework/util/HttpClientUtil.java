@@ -98,6 +98,18 @@ public class HttpClientUtil {
         return getResult(httpPost);
     }
 
+    public static String httpPostRequest(String url, String json, Map<String, Object> headers) {
+        HttpPost httpPost = new HttpPost(url);
+        for (Map.Entry<String, Object> param : headers.entrySet()) {
+            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
+        }
+        StringEntity entity = new StringEntity(json, UTF_8);//解决中文乱码问题
+        entity.setContentEncoding(UTF_8);
+        entity.setContentType("application/json");
+        httpPost.setEntity(entity);
+        return getResult(httpPost);
+    }
+
     public static String httpPostRequest(String url, Map<String, Object> params) throws UnsupportedEncodingException {
         HttpPost httpPost = new HttpPost(url);
         ArrayList<NameValuePair> pairs = covertParams2NVPS(params);

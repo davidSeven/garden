@@ -28,6 +28,10 @@ public class Task extends BaseModel<String> {
      */
     private String url;
     /**
+     * 任务请求参数
+     */
+    private String params;
+    /**
      * 任务状态
      */
     private String state;
