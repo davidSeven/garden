@@ -28,6 +28,10 @@
         <module>garden-job</module>
         <module>garden-dictionary-api</module>
         <module>garden-dictionary</module>
+        <module>garden-i18n-api</module>
+        <module>garden-i18n</module>
+        <module>garden-content-api</module>
+        <module>garden-content</module>
     </modules>
 
     <properties>
@@ -149,6 +153,30 @@
             <dependency>
                 <groupId>org.stream</groupId>
                 <artifactId>garden-dictionary</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-i18n-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-i18n</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-content-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-content</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
