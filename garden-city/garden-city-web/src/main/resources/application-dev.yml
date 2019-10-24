@@ -86,6 +86,7 @@ garden:
   excludePath:
     - /favicon.ico
     - /static/**
+    - /verifyCode
   login-path: /login
   path: /adsfsdf/asdfas/asdf
   upload-path: /www/garden

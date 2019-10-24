@@ -29,6 +29,15 @@ public class VerifyCodeUtils {
     }
 
     /**
+     * 创建一个随机数
+     * @param size 范围
+     * @return int
+     */
+    public static int randomInt(int size) {
+        return random.nextInt(size);
+    }
+
+    /**
      * 使用指定源生成验证码
      *
      * @param verifySize 验证码长度
@@ -266,17 +275,21 @@ public class VerifyCodeUtils {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 50; i++) {
-            String verifyCode = VerifyCodeUtils.generateVerifyCode(5);
-            System.out.println(verifyCode);
-            File file = new File("F:\\verifyCodes\\" + i + ".jpg");
-            try {
-                VerifyCodeUtils.outputImage(200, 50, file, verifyCode);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//        for (int i = 0; i < 50; i++) {
+//            String verifyCode = VerifyCodeUtils.generateVerifyCode(5);
+//            System.out.println(verifyCode);
+//            File file = new File("F:\\verifyCodes\\" + i + ".jpg");
+//            try {
+//                VerifyCodeUtils.outputImage(200, 50, file, verifyCode);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println(randomInt(2) + 4);
         }
     }
 }

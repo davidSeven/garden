@@ -12,7 +12,7 @@ public class FreeMarkerViewCache {
     private static Map<String, String> viewCacheMap = new HashMap<>();
 
     static {
-        viewCacheMap.put("system/login.ftl", "<#import \"../spring.ftl\" as spring />\n" +
+        viewCacheMap.put("system/login2.ftl", "<#import \"../spring.ftl\" as spring />\n" +
                 "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "\n" +

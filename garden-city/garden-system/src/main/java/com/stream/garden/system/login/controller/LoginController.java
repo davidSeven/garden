@@ -3,6 +3,7 @@ package com.stream.garden.system.login.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.util.VerifyCodeUtils;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.model.Context;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -65,6 +68,16 @@ public class LoginController {
      * 跳转到登录页
      */
     private static final String TO_SYSTEM_LOGIN_KEY = "system/login";
+    /**
+     * 登录token
+     */
+    private static final String LOGIN_TOKEN = "login_token";
+    private static final String LOGIN_TOKEN_KEY = "garden:login:";
+    /**
+     * 登录验证码token
+     */
+    private static final String LOGIN_VERIFY_CODE_TOKEN = "login_verify_code_token";
+    private static final String LOGIN_VERIFY_CODE_TOKEN_KEY = "garden:login:verifyCode:";
     /**
      * 用户缓存时间，单位：秒
      */
@@ -110,11 +123,64 @@ public class LoginController {
     }
 
     @GetMapping(value = "/login")
-    public String login(HttpServletRequest request) {
+    public String loginPage(HttpServletRequest request, HttpServletResponse response) {
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {
             return REDIRECT_TO_INDEX_KEY;
         }
+        // 判断是否已经存在token
+        String loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
+        if (null != loginToken) {
+            // 判断redis中是否存在
+            Object loginTokenValue = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginToken);
+            if (null != loginTokenValue) {
+                // 进入登录页面
+                return TO_SYSTEM_LOGIN_KEY;
+            }
+        }
+        // 1.创建登录token
+        loginToken = UUID.randomUUID().toString();
+        CookieUtil.addCookie(response, LOGIN_TOKEN, loginToken, 3600);
+        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, "", 3600, TimeUnit.SECONDS);
+        // 进入登录页面
         return TO_SYSTEM_LOGIN_KEY;
+    }
+
+    @GetMapping(value = "/verifyCode")
+    public void verifyCode(HttpServletRequest request, HttpServletResponse response) {
+        OutputStream os = null;
+        try {
+            // 验证login token是否存在
+            String loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
+            if (StringUtils.isEmpty(loginToken)) {
+                // 跳转登录页面
+                response.sendRedirect("/login");
+                return;
+            }
+            Object loginTokenValue = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginToken);
+            if (null == loginTokenValue) {
+                // 跳转登录页面
+                response.sendRedirect("/login");
+                return;
+            }
+            os = response.getOutputStream();
+            // 1.获取验证码
+            int verifySize = 4 + VerifyCodeUtils.randomInt(2);
+            String verifyCode = VerifyCodeUtils.generateVerifyCode(verifySize);
+            // 2.验证码存入redis中
+            redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, verifyCode, 3600, TimeUnit.SECONDS);
+            // 3.返回验证码图片
+            VerifyCodeUtils.outputImage(100, 40, os, verifyCode);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (null != os) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
     }
 
     @PostMapping(value = "/login")
@@ -123,6 +189,30 @@ public class LoginController {
         if (JwtHelper.isLogin(request, globalConfig.getJwt().getBase64Secret())) {
             return REDIRECT_TO_INDEX_KEY;
         }
+
+        // 验证login token是否存在
+        String loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
+        if (StringUtils.isEmpty(loginToken)) {
+            return TO_SYSTEM_LOGIN_KEY;
+        }
+        Object loginTokenValue = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginToken);
+        if (null == loginTokenValue) {
+            return TO_SYSTEM_LOGIN_KEY;
+        }
+        // 如果不是空字符串，就需要验证码
+        if (!"".equals(loginTokenValue)) {
+            // 从参数中获取验证码
+            String verifyCode = request.getParameter("verifyCode");
+            if (null == verifyCode) {
+                request.setAttribute(LOGIN_ERROR_MSG_KEY, "wrong verify code");
+                return TO_SYSTEM_LOGIN_KEY;
+            }
+            if (!loginTokenValue.equals(verifyCode.toUpperCase())) {
+                request.setAttribute(LOGIN_ERROR_MSG_KEY, "wrong verify code");
+                return TO_SYSTEM_LOGIN_KEY;
+            }
+        }
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -153,6 +243,11 @@ public class LoginController {
                 request.setAttribute(LOGIN_ERROR_MSG_KEY, "user has been locked");
                 return TO_SYSTEM_LOGIN_KEY;
             }
+
+            // 删除登录cookie和redis
+            CookieUtil.removeCookie(response, LOGIN_TOKEN);
+            redisTemplate.delete(LOGIN_TOKEN_KEY + loginToken);
+
             // 登录成功，更新最后登录信息
             loginService.updateLastLogin(userBO.getId(), IPUtil.getIpAddress(request), new Date());
             // 创建登录token信息

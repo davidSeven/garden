@@ -25,14 +25,15 @@
                             <i class="layui-icon layui-icon-password" style="position: absolute; margin-top: 6px; margin-left: 8px; font-size: 25px;"></i>
 							<input type="password" name="password" required lay-verify="required|jse" placeholder="密码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
 						</div>
-						<#--<div class="layui-form-item">
+						<div class="layui-form-item">
 							<div class="layui-inline">
-								<input type="text" name="verity" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input">
+                                <i class="layui-icon layui-icon-vercode" style="position: absolute; margin-top: 6px; margin-left: 8px; font-size: 25px;"></i>
+								<input type="text" name="verifyCode" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
 							</div>
-							<div class="layui-inline">
-								<img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="../admin/images/login/yzm.jpg" />
+							<div class="layui-inline" style="margin-right: 0;">
+								<img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="/verifyCode" />
 							</div>
-						</div>-->
+						</div>
                         <#if Request.login_error_msg??>
                             <div class="layui-form-item">
                                 <div class="layui-form-mid layui-word-aux" style="color: #dd0000 !important;">${Request.login_error_msg}</div>

@@ -64,8 +64,9 @@ input:-webkit-autofill {
   width: 100%;
 }
 .m-login-warp .verifyImg {
-  width: 130px;
-  height: 42px;
+  width: 100px;
+  height: 40px;
+  border-bottom: 5px;
 }
 @media screen and (max-width: 450px) {
   .m-login {
