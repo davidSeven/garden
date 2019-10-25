@@ -14,9 +14,9 @@ public class I18n extends BaseModel<String> {
     private static final long serialVersionUID = 1046836225524045084L;
 
     /**
-     * 国际化KEY
+     * 国际化Code
      */
-    private String key;
+    private String code;
     /**
      * 国际化值
      */

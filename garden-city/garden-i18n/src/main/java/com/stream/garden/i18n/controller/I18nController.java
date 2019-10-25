@@ -1,10 +1,13 @@
 package com.stream.garden.i18n.controller;
 
 import com.stream.garden.framework.api.exception.ExceptionCode;
+import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.i18n.exception.I18nExceptionCode;
 import com.stream.garden.i18n.model.I18n;
 import com.stream.garden.i18n.service.II18nService;
+import com.stream.garden.i18n.vo.I18nVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +94,21 @@ public class I18nController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
+
+    @PostMapping(value = "/pageList")
+    @ResponseBody
+    public Result<PageInfo<I18n>> pageList(I18nVO vo) {
+        try {
+            if (null == vo.getCriteria()) {
+                vo.setCriteria(new Criteria<>());
+            }
+            vo.asOrderByUpdationDate();
+            return new Result<PageInfo<I18n>>().setData(i18nService.pageList(vo)).ok();
+        } catch (Exception e) {
+            logger.error(">>>" + e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
 }

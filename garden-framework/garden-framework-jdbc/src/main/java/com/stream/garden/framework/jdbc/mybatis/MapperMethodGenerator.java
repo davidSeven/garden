@@ -185,7 +185,7 @@ public class MapperMethodGenerator {
 
     private static String addInsertAndReturnId(CommonTable table, String idProertyClassType, KeyGenMode keyGenMode) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getInsertHeader(table, idProertyClassType, "insert", table.getClassType(), keyGenMode));
+        sb.append(getInsertHeader(table, idProertyClassType, "insert", table.getClassType(), keyGenMode, false));
         sb.append("\n insert into " + table.getTable());
         sb.append("(" + getColumns(table) + ")");
         sb.append("\n    values " + getValues(table.getAllColumnList()));
@@ -195,7 +195,7 @@ public class MapperMethodGenerator {
 
     private static String addInsertSelectiveAndReturnId(CommonTable table, String idProertyClassType, KeyGenMode keyGenMode) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getInsertHeader(table, idProertyClassType, "insertSelective", table.getClassType(), keyGenMode));
+        sb.append(getInsertHeader(table, idProertyClassType, "insertSelective", table.getClassType(), keyGenMode, false));
         sb.append("\n insert into " + table.getTable());
         sb.append(getIfColumns(table));
         sb.append("\n    values " + getIfValues(table.getAllColumnList()));
@@ -205,7 +205,7 @@ public class MapperMethodGenerator {
 
     private static String addInsertBatch(CommonTable table, String idProertyClassType, KeyGenMode keyGenMode) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getInsertHeader(table, idProertyClassType, "insertBatch", "java.util.List", keyGenMode));
+        sb.append(getInsertHeader(table, idProertyClassType, "insertBatch", "java.util.List", keyGenMode, true));
         sb.append("\n insert into " + table.getTable());
         sb.append("(" + getColumns(table) + ")");
         sb.append("\n    values " + getBatchValues(table.getAllColumnList()));
@@ -356,7 +356,7 @@ public class MapperMethodGenerator {
     }
 
 
-    private static String getInsertHeader(CommonTable table, String idProertyClassType, String method, String parameterType, KeyGenMode globalKeyGenMode) {
+    private static String getInsertHeader(CommonTable table, String idProertyClassType, String method, String parameterType, KeyGenMode globalKeyGenMode, boolean isBatch) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n<insert id=\"" + method + "\" parameterType=\"" + parameterType + "\" ");
 
@@ -383,7 +383,11 @@ public class MapperMethodGenerator {
                     sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@java.util.UUID@randomUUID().toString().replace(\"-\", \"\")") + "' />");
                 } else if (KeyGenMode.CUSTOM == keyGenMode) {
                 } else if (KeyGenMode.SNOW == keyGenMode) {
-                    sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@com.stream.garden.framework.jdbc.util.SnowflakeIdWorker@generateId(" + table.getIdColumn().getProperty() + ")") + "' />");
+                    if (isBatch) {
+                        sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@com.stream.garden.framework.jdbc.util.SnowflakeIdWorker@generateIdStr()") + "' />");
+                    } else {
+                        sb.append("<bind name=\"" + table.getIdColumn().getProperty() + "\" value='" + StringUtils.defaultString(keyGenMode.getValue(), "@com.stream.garden.framework.jdbc.util.SnowflakeIdWorker@generateId(" + table.getIdColumn().getProperty() + ")") + "' />");
+                    }
                 }
             }
         }

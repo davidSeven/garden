@@ -1,7 +1,10 @@
 package com.stream.garden.system.i18n;
 
+import com.stream.garden.framework.api.interfaces.ISystemMessage;
+import com.stream.garden.framework.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -19,13 +22,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SystemMessageSource extends AbstractMessageSource implements ResourceLoaderAware {
 
-    ResourceLoader resourceLoader;
-
     // 这个是用来缓存数据库中获取到的配置的 数据库配置更改的时候可以调用reload方法重新加载
     // 当然 实际使用者也可以不使用这种缓存的方式
     private static final Map<String, Map<String, String>> LOCAL_CACHE = new ConcurrentHashMap<>(256);
-
     private final Logger logger = LoggerFactory.getLogger(SystemMessageSource.class);
+    ResourceLoader resourceLoader;
+    private ApplicationContext applicationContext;
+
+    public SystemMessageSource(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     /**
      * 重新将数据库中的国际化配置加载
@@ -49,6 +55,25 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
         enUsMessageResources.put("message.login.topTitle", "Login2");
         enUsMessageResources.put("message.login.loginTitle", "System Login2");
 
+        // 加载ISystemMessage中实现的国际化内容
+        if (null != applicationContext) {
+            Map<String, ISystemMessage> systemMessageMap = applicationContext.getBeansOfType(ISystemMessage.class);
+            if (null != systemMessageMap) {
+                for (ISystemMessage systemMessage : systemMessageMap.values()) {
+
+                    Map<String, String> zhMessage = systemMessage.getMessage("zh");
+                    if (!CollectionUtil.isEmpty(zhMessage)) {
+                        zhCnMessageResources.putAll(zhMessage);
+                    }
+
+                    Map<String, String> enMessage = systemMessage.getMessage("en");
+                    if (!CollectionUtil.isEmpty(enMessage)) {
+                        enUsMessageResources.putAll(enMessage);
+                    }
+                }
+            }
+        }
+
         LOCAL_CACHE.put("zh", zhCnMessageResources);
         LOCAL_CACHE.put("en", enUsMessageResources);
 
@@ -58,8 +83,8 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
     /**
      * 从缓存中取出国际化配置对应的数据 或者从父级获取
      *
-     * @param code code
-     * @param args args
+     * @param code   code
+     * @param args   args
      * @param locale locale
      * @return string
      */

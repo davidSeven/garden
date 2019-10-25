@@ -41,6 +41,11 @@
             <artifactId>garden-job</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.stream</groupId>
+            <artifactId>garden-i18n</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

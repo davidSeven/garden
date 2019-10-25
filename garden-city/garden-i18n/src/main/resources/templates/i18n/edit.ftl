@@ -22,27 +22,36 @@
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">任务名称</label>
+            <label class="layui-form-label lay-required">编码</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入任务名称" autocomplete="off" class="layui-input"/>
+                <input type="hidden" name="id">
+                <input type="text" name="code" required lay-verify="required" placeholder="请输入编码" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">Cron</label>
+            <label class="layui-form-label lay-required">内容</label>
             <div class="layui-input-block">
-                <input type="text" name="cron" required lay-verify="required" placeholder="请输入Cron" autocomplete="off" class="layui-input"/>
+                <input type="text" name="value" required lay-verify="required" placeholder="请输入内容" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">路径</label>
+            <label class="layui-form-label lay-required">语言类型</label>
             <div class="layui-input-block">
-                <input type="text" name="url" required lay-verify="required" placeholder="请输入路径" autocomplete="off" class="layui-input"/>
+                <input type="radio" name="languageType" value="zh" title="中文" checked>
+                <input type="radio" name="languageType" value="en" title="英文">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">参数</label>
+            <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="text" name="params" placeholder="请输入参数" autocomplete="off" class="layui-input"/>
+                <input type="radio" name="state" value="1" title="启用" checked>
+                <input type="radio" name="state" value="0" title="禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">

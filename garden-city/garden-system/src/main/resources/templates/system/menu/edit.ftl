@@ -93,6 +93,7 @@
                     $("input[name='parentName']").val(node.name);
                 }
             } else {
+                console.log(nodes[0])
                 // 修改
                 parentId = nodes[0]["parentId"];
                 jsonData("editForm", nodes[0]);

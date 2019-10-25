@@ -143,7 +143,7 @@ public class SnowflakeIdWorker {
      * @return string
      */
     public static String generateId(String id) {
-        if (null == id) {
+        if (null == id || "".equals(id)) {
             return String.valueOf(generateId());
         }
         return id;

@@ -3,7 +3,7 @@
 <mapper namespace="com.stream.garden.i18n.dao.II18nDao">
     <resultMap id="BaseResultMap" type="com.stream.garden.i18n.model.I18n">
         <id column="ID" jdbcType="VARCHAR" property="id" />
-        <result column="KEY" jdbcType="VARCHAR" property="key" />
+        <result column="CODE" jdbcType="VARCHAR" property="code" />
         <result column="VALUE" jdbcType="VARCHAR" property="value" />
         <result column="LANGUAGE_TYPE" jdbcType="VARCHAR" property="languageType" />
         <result column="STATE" jdbcType="VARCHAR" property="state" />
