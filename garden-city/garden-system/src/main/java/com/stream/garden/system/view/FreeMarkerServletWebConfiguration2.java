@@ -1,7 +1,10 @@
 package com.stream.garden.system.view;
 
+import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.freemarker.FreeMarkerProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2019-09-30 11:39
  */
 @Configuration
-public class FreeMarkerServletWebConfiguration2 {
+public class FreeMarkerServletWebConfiguration2 implements ApplicationContextAware {
 
     private FreeMarkerProperties properties;
 
@@ -24,5 +27,10 @@ public class FreeMarkerServletWebConfiguration2 {
         FreeMarkerViewResolver2 resolver = new FreeMarkerViewResolver2();
         properties.applyToMvcViewResolver(resolver);
         return resolver;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        FreeMarkerViewCache.init(applicationContext);
     }
 }
