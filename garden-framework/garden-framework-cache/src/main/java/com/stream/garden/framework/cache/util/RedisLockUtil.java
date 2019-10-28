@@ -193,6 +193,25 @@ public class RedisLockUtil implements ApplicationContextAware {
         RedisLockUtil.releaseLockScripts = scripts;
     }
 
+    /**
+     * 获取id
+     *
+     * @param prefix 前缀
+     * @return string
+     */
+    public String getNextId(String prefix) {
+        String key = "ID_" + prefix;
+        String orderId = null;
+        try {
+            Long increment = stringObjectRedisTemplate.opsForValue().increment(key, 1);
+            // 往前补6位
+            orderId = prefix + String.format("%1$06d", increment);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return orderId;
+    }
+
     @SuppressWarnings({"unchecked"})
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
