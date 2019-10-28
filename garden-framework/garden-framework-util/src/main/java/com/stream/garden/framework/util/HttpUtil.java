@@ -51,6 +51,41 @@ public class HttpUtil {
         return result;
     }
 
+    public static InputStream doGetInputStream(String httpurl) {
+        HttpURLConnection connection = null;
+        String result = null;// 返回结果字符串
+        try {
+            // 创建远程url连接对象
+            URL url = new URL(httpurl);
+            // 通过远程url连接对象打开一个连接，强转成httpURLConnection类
+            connection = (HttpURLConnection) url.openConnection();
+            // 设置连接方式：get
+            connection.setRequestMethod("GET");
+            // 设置连接主机服务器的超时时间：15000毫秒
+            connection.setConnectTimeout(15000);
+            // 设置读取远程返回的数据时间：60000毫秒
+            connection.setReadTimeout(60000);
+            // 发送请求
+            connection.connect();
+            // 通过connection连接，获取输入流
+            if (connection.getResponseCode() == 200) {
+                // result = getResponse(connection);
+                return connection.getInputStream();
+            }
+        } catch (MalformedURLException e) {
+            logger.error("URL解析失败，" + e.getMessage(), e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            // 关闭资源
+            /*if (null != connection) {
+                // 关闭远程连接
+                connection.disconnect();
+            }*/
+        }
+        return null;
+    }
+
     public static String doPost(String httpUrl, String param, String auth) {
         HttpURLConnection connection = null;
         OutputStream os = null;
@@ -143,10 +178,24 @@ public class HttpUtil {
         return null;
     }
 
-    public static void main(String[] args) {
-        String url = "http://localhost:8090/dictionary/dictionary/list";
+    public static void main(String[] args) throws Exception {
+        /*String url = "http://localhost:8090/dictionary/dictionary/list";
         String auth = "bearer.eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJyb2xlSWQiOiIzMDMxMDY5NDg5NjQ3ODIwODAiLCJ1bmlxdWVfbmFtZSI6IuS9n-S4veWohSIsInVzZXJJZCI6IjMwMzEwNjk2NzkzNTYxOTA3MiIsImlzcyI6ImdhcmRlbl9hcGlfdXNlciIsImF1ZCI6IjZBRjQ1REUwOThBQTRFOUZBODQwMzQ3OTNGODY3M0NEIiwiZXhwIjoxNTcxOTAxMTg3LCJuYmYiOjE1NzE3MjgzODd9.H7Td0HFWopa7N-jZIsEuRh-EhBNO4aqgywok9L2wP3Y";
         String result = doPost(url, "", auth);
-        System.out.println(result);
+        System.out.println(result);*/
+
+        String url = "http://static.kunlun.com/qjp/v2.13/main_do.swf?__klver=1497604054";
+        InputStream is = doGetInputStream(url);
+        File file = new File("F:\\main_do.swf");
+        FileOutputStream fos = new FileOutputStream(file);
+
+        byte[] bs = new byte[1024];
+        int len = -1;
+        while ((len = is.read(bs)) != -1) {
+            fos.write(bs, 0, len);
+        }
+
+        fos.close();
+        is.close();
     }
 }
