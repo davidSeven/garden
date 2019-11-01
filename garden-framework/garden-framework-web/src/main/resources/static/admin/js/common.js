@@ -608,3 +608,103 @@ $(".close-btn").click(function (e) {
     var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
     parent.layer.close(index); // 再执行关闭
 });
+
+// 加载国际化信息
+var i18ns = {};
+function initI18ns() {
+    if (window.top === window) {
+        // 加载权限数据
+    } else {
+        // 获取顶级页面已经获取到的数据
+        i18ns = window.top.i18ns;
+    }
+}
+initI18ns();
+
+// 获取国际化信息
+function getI18n(code, args) {
+    var value = i18ns[code];
+    if (value && args && args.length) {
+        for (var i = 0; i < args.length; i++) {
+            value = value.replace("{" + i + "}", args[i]);
+        }
+    }
+    return value;
+}
+
+// 获取lookup数据
+function getLookup(lookupCode, callback) {
+    var url = "/lookup/lookupItem/get";
+    ajaxPost(url, {parentCode: lookupCode}, function (data) {
+         if (data.success) {
+             callback && callback(data.data);
+         }
+    });
+}
+
+// 处理统用按钮，下拉选项
+$(".lookup").each(function (i, v) {
+    var $v = $(v);
+    // 获取编码
+    var code = $v.attr("lookupcode");
+    if (!code) {
+        // continue;
+        return;
+    }
+    // 属性
+    var value = $v.attr("l-value") || "code";
+    var name = $v.attr("l-name") || "name";
+    if ("SELECT" === v.tagName) {
+        getLookup(code, function (list) {
+            var options = [];
+            for (var i in list) {
+                var item = list[i];
+                options.push("<option value=\""+item[value]+"\">"+item[name]+"</option>");
+            }
+            $v.append(options.join(""));
+            if (layui && layui.form) {
+                layui.form.render();
+            }
+        });
+    } else if ("INPUT" === v.tagName) {
+        var type = $v.attr("type");
+        var inputName = $v.attr("name");
+        if ("radio" === type) {
+            var firstChecked = true;
+            getLookup(code, function (list) {
+                var options = [];
+                for (var i in list) {
+                    var item = list[i];
+                    if (firstChecked && "0" === i) {
+                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\" checked>");
+                    } else {
+                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\">");
+                    }
+                }
+                $v.after(options.join(""));
+                $v.remove();
+                if (layui && layui.form) {
+                    layui.form.render();
+                }
+            });
+        } else if ("checkbox" === type) {
+            var firstChecked = true;
+            getLookup(code, function (list) {
+                var options = [];
+                for (var i in list) {
+                    var item = list[i];
+                    if (firstChecked && "0" === i) {
+                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\" checked>");
+                    } else {
+                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\">");
+                    }
+                }
+                $v.after(options.join(""));
+                $v.remove();
+                if (layui && layui.form) {
+                    layui.form.render();
+                }
+            });
+        }
+    }
+});

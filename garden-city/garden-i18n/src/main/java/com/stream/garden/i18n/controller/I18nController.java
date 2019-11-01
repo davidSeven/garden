@@ -4,18 +4,29 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
+import com.stream.garden.framework.web.util.ApplicationUtil;
 import com.stream.garden.i18n.exception.I18nExceptionCode;
 import com.stream.garden.i18n.model.I18n;
 import com.stream.garden.i18n.service.II18nService;
 import com.stream.garden.i18n.vo.I18nVO;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.LocaleContextResolver;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author garden
@@ -108,6 +119,51 @@ public class I18nController {
             return new Result<PageInfo<I18n>>().setData(i18nService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @PostMapping(value = "/reload")
+    @ResponseBody
+    public Result<Integer> reload() {
+        try {
+            Object messageSource = ApplicationUtil.getBeans(MessageSource.class);
+            // 反射调用
+            MethodUtils.invokeMethod(messageSource, true, "reload");
+            return new Result<Integer>().ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @PostMapping(value = "/currentI18nList")
+    @ResponseBody
+    @SuppressWarnings({"unchecked"})
+    public Result<Map<String, String>> currentI18nList(HttpServletRequest request) {
+        try {
+            Locale locale = null;
+            // Determine locale to use for this RequestContext.
+            LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+            if (localeResolver instanceof LocaleContextResolver) {
+                LocaleContext localeContext = ((LocaleContextResolver) localeResolver).resolveLocaleContext(request);
+                locale = localeContext.getLocale();
+            } else if (localeResolver != null) {
+                // Try LocaleResolver (we're within a DispatcherServlet request).
+                locale = localeResolver.resolveLocale(request);
+            }
+            if (null == locale) {
+                locale = request.getLocale();
+            }
+            if (null == locale) {
+                locale = Locale.getDefault();
+            }
+            Object messageSource = ApplicationUtil.getBeans(MessageSource.class);
+            Object messageMap = MethodUtils.invokeMethod(messageSource, true, "getMessageMap", locale.getLanguage());
+            Map<String, String> localeMap = (Map<String, String>) messageMap;
+            return new Result<Map<String, String>>().ok().setData(localeMap);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }

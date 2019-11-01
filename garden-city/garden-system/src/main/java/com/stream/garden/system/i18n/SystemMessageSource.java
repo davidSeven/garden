@@ -81,6 +81,16 @@ public class SystemMessageSource extends AbstractMessageSource implements Resour
     }
 
     /**
+     * 获取语言集
+     *
+     * @param language 语言
+     * @return map
+     */
+    public Map<String, String> getMessageMap(String language) {
+        return LOCAL_CACHE.get(language);
+    }
+
+    /**
      * 从缓存中取出国际化配置对应的数据 或者从父级获取
      *
      * @param code   code

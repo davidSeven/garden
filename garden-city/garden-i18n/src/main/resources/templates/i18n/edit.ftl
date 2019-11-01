@@ -37,15 +37,17 @@
         <div class="layui-form-item">
             <label class="layui-form-label lay-required">语言类型</label>
             <div class="layui-input-block">
-                <input type="radio" name="languageType" value="zh" title="中文" checked>
-                <input type="radio" name="languageType" value="en" title="英文">
+                <#--<input type="radio" name="languageType" value="zh" title="中文" checked>
+                <input type="radio" name="languageType" value="en" title="英文">-->
+                <input type="radio" name="languageType" class="lookup" lookupcode="LANGUAGE_TYPE">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="radio" name="state" value="1" title="启用" checked>
-                <input type="radio" name="state" value="0" title="禁用">
+                <#--<input type="radio" name="state" value="1" title="启用" checked>
+                <input type="radio" name="state" value="0" title="禁用">-->
+                <input type="radio" name="state" class="lookup" lookupcode="COMMON_STATE">
             </div>
         </div>
         <div class="layui-form-item">

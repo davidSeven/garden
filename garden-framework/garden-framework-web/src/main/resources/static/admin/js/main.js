@@ -132,5 +132,11 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function () {
                 });
             }
         });
+        // 加载国际化
+        ajaxPost('/i18n/i18n/currentI18nList', null, function (response) {
+            if (response.success) {
+                i18ns = response.data;
+            }
+        });
     });
 });

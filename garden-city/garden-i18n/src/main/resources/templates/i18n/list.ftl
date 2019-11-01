@@ -40,12 +40,18 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">语言类型</label>
+                    <div class="layui-input-inline">
+                        <select name="data.languageType" class="lookup" lookupcode="LANGUAGE_TYPE">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-inline">
-                        <select name="data.state">
+                        <select name="data.state" class="lookup" lookupcode="COMMON_STATE">
                             <option value="">请选择</option>
-                            <option value="1">启用</option>
-                            <option value="0">禁用</option>
                         </select>
                     </div>
                 </div>
@@ -68,6 +74,9 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/i18n/i18n/delete">删除</button>
+                <button id="reloadBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="reload"
+                        data-url="/i18n/i18n/reload">重新加载</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -120,7 +129,7 @@
             ,cols: [[
                 {type:'numbers'}
                 ,{type:'checkbox'}
-                ,{field:'code', width:200, title: '<@spring.message code="message.i18n.code"/>'}
+                ,{field:'code', width:200, title: getI18n("message.i18n.code")}
                 ,{field:'value', width:200, title: '内容'}
                 ,{field:'languageType', width:100, title: '语言类型', align: 'center', templet: function (row) {
                         if ("zh" === row.languageType) {
@@ -193,6 +202,19 @@
                 layer.msg('请选择一条记录', {icon: 7});
             }
             return false;
+        });
+
+        // 重新加载国际化
+        $("#reloadBtn").click(function () {
+            var url = $(this).attr('data-url');
+            ajaxPost(url, null, function (data) {
+                if (data.success) {
+                    layer.msg('操作成功', {icon: 1});
+                    layui.refresh();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
+                }
+            });
         });
 
         //监听行工具事件

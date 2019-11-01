@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * @author garden
  */
@@ -91,6 +93,21 @@ public class LookupItemController {
     public Result<Integer> delete(LookupItem lookupItem) {
         try {
             return new Result<Integer>().ok().setData(lookupItemService.delete(lookupItem.getId()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
+
+
+    @PostMapping(value = "/get")
+    @ResponseBody
+    public Result get(LookupItem lookupItem) {
+        try {
+            LookupItem paramLookupItem = new LookupItem();
+            paramLookupItem.setParentCode(lookupItem.getParentCode());
+            List<LookupItem> itemList = lookupItemService.list(paramLookupItem);
+            return new Result<>().ok().setData(itemList);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
