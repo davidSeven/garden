@@ -74,7 +74,6 @@
 <script type="text/javascript">
     // edit
     layui.use(['form', 'jquery', 'upload'], function() {
-        console.log('layui init');
         var form = layui.form,
                 upload = layui.upload,
                 $ = layui.jquery,
@@ -104,10 +103,6 @@
                 }
             }
         };
-
-        if (window['_initCallback']) {
-            window['_initCallback'](layui);
-        }
         
         function showUploadImg(bizCode, bizId, visitPath) {
             // 显示图片

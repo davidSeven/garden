@@ -72,7 +72,6 @@
 <script type="text/javascript">
     // edit
     layui.use(['form', 'jquery'], function() {
-        console.log('layui init');
         var form = layui.form,
                 $ = layui.jquery;
 

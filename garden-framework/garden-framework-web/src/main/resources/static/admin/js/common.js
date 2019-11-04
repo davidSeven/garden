@@ -258,6 +258,11 @@ function page(title, url, obj, w, h, params) {
     }
 }
 
+// 处理页面加载未完成的问题
+if (window['_initCallback']) {
+    window['_initCallback'](layui);
+}
+
 /**
  * 关闭子页面
  */
@@ -632,14 +637,58 @@ function getI18n(code, args) {
     return value;
 }
 
+// lookup缓存
+var lookups = {};
+var LOOKUP_LOG_ENABLE = true;
+// 初始化lookup
+function initLookups() {
+    if (window.top === window) {
+        // 加载权限数据
+    } else {
+        // 获取顶级页面已经获取到的数据
+        lookups = window.top.lookups;
+    }
+}
+initLookups();
+
+// 把lookup设置到缓存中
+function setLookups(code, data) {
+    // 本地缓存
+    if (LOOKUP_LOG_ENABLE) {
+        console.log("lookup-已设置缓存：[" + code + "]" + " ---> window.name:" + window.name);
+    }
+    lookups[code] = data;
+    // 判断是否存在父级，在给父级，避免下次进入再次查询
+    if (window.top !== window) {
+        window.top.setLookups(code, data);
+    }
+}
+
 // 获取lookup数据
 function getLookup(lookupCode, callback) {
-    var url = "/lookup/lookupItem/get";
-    ajaxPost(url, {parentCode: lookupCode}, function (data) {
-         if (data.success) {
-             callback && callback(data.data);
-         }
-    });
+    if (LOOKUP_LOG_ENABLE) {
+        console.log("lookup-正在获取：[" + lookupCode + "]");
+    }
+    if (lookups.hasOwnProperty(lookupCode)) {
+        if (LOOKUP_LOG_ENABLE) {
+            console.log("lookup-已从缓存中获取：[" + lookupCode + "]");
+        }
+        callback && callback(lookups[lookupCode]);
+    } else {
+        if (LOOKUP_LOG_ENABLE) {
+            console.log("lookup-正在向服务器请求数据：[" + lookupCode + "]");
+        }
+        var url = "/lookup/lookupItem/get";
+        ajaxPost(url, {parentCode: lookupCode}, function (data) {
+            if (data.success) {
+                if (LOOKUP_LOG_ENABLE) {
+                    console.log("lookup-请求成功：[" + lookupCode + "]");
+                }
+                setLookups(lookupCode, data.data);
+                callback && callback(data.data);
+            }
+        });
+    }
 }
 
 // 处理统用按钮，下拉选项
@@ -688,15 +737,15 @@ $(".lookup").each(function (i, v) {
                 }
             });
         } else if ("checkbox" === type) {
-            var firstChecked = true;
+            var firstChecked = false;
             getLookup(code, function (list) {
                 var options = [];
                 for (var i in list) {
                     var item = list[i];
                     if (firstChecked && "0" === i) {
-                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\" checked>");
+                        options.push("<input type=\"checkbox\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\" checked>");
                     } else {
-                        options.push("<input type=\"radio\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\">");
+                        options.push("<input type=\"checkbox\" name=\"" + inputName + "\" value=\"" + item[value] + "\" title=\"" + item[name] + "\">");
                     }
                 }
                 $v.after(options.join(""));

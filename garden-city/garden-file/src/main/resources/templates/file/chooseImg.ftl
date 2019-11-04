@@ -60,7 +60,6 @@
 <script type="text/javascript">
     // edit
     layui.use(['element', 'layer', 'upload'], function() {
-        console.log('layui init');
         var element = layui.element;
         var $ = layui.jquery;
         var layer = layui.layer;

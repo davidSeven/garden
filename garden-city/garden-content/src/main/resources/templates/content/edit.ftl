@@ -68,7 +68,6 @@
 <script type="text/javascript">
     // edit
     layui.use(['form', 'jquery', 'upload'], function() {
-        console.log('layui init');
         var form = layui.form,
                 upload = layui.upload,
                 $ = layui.jquery,
@@ -88,11 +87,6 @@
                 form.render();
             }
         };
-
-        // 处理页面加载未完成的问题
-        if (window['_initCallback']) {
-            window['_initCallback'](layui);
-        }
 
         // 监听提交
         form.on('submit(editForm)', function(data) {

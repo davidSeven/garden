@@ -9,34 +9,57 @@
     <title>编辑</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css" />
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css" />
+    <style type="text/css">
+        .layui-upload-img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">群组编码</label>
+            <label class="layui-form-label lay-required">编码</label>
             <div class="layui-input-block">
                 <input type="hidden" name="id">
-                <input type="text" name="code" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                <input type="text" name="code" required lay-verify="required" placeholder="请输入编码" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">群组名称</label>
+            <label class="layui-form-label lay-required">内容</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                <input type="text" name="value" required lay-verify="required" placeholder="请输入内容" autocomplete="off" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label lay-required">语言类型</label>
+            <div class="layui-input-block">
+                <#--<input type="radio" name="languageType" value="zh" title="中文" checked>
+                <input type="radio" name="languageType" value="en" title="英文">-->
+                <input type="radio" name="languageType" class="lookup" lookupcode="LANGUAGE_TYPE">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="radio" name="state" value="1" title="启用" checked>
-                <input type="radio" name="state" value="0" title="禁用">
+                <#--<input type="radio" name="state" value="1" title="启用" checked>
+                <input type="radio" name="state" value="0" title="禁用">-->
+                <input type="radio" name="state" class="lookup" lookupcode="COMMON_STATE">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input"/>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">立即提交</button>
+                <button id="closeBtn" type="button" class="layui-btn layui-btn-primary">关闭</button>
             </div>
         </div>
     </form>
@@ -46,9 +69,11 @@
 <script src="<@spring.url''/>/static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     // edit
-    layui.use(['form', 'jquery'], function() {
+    layui.use(['form', 'jquery', 'upload'], function() {
         var form = layui.form,
-                $ = layui.jquery;
+                upload = layui.upload,
+                $ = layui.jquery,
+                iframeObj = $(window.frameElement).attr('name');
 
         var index = parent.layer.getFrameIndex(window.name);
         console.log('current page index:' + index);
@@ -65,13 +90,13 @@
             }
         };
 
-        //监听提交
+        // 监听提交
         form.on('submit(editForm)', function(data) {
-            console.log(data.field);
+            // console.log(data.field);
             var id = data.field.id;
-            var url = '/system/group/add';
+            var url = '/excel/config/add';
             if (id) {
-                url = '/system/group/edit';
+                url = '/excel/config/edit';
             }
             ajaxPost(url, data.field, function (data) {
                 if (data.success) {
@@ -82,6 +107,10 @@
                 }
             });
             return false;
+        });
+
+        $("#closeBtn").click(function () {
+            closePageNoRefresh();
         });
     });
 </script>

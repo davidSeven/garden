@@ -30,7 +30,7 @@ public enum I18nExceptionCode implements AppCode {
     /*---------------------------DICTIONARY------------------------------*/
     I18N_ADD_EXCEPTION(30000, "新增国际化异常"),
     I18N_EDIT_EXCEPTION(30001, "修改国际化异常"),
-    I18N_ADD_REPEAT(30002, "编码[{0}]已存在"),
+    I18N_CODE_REPEAT(30002, "编码[{0}]已存在"),
 
     /*---------------------------DICTIONARY------------------------------*/;
 

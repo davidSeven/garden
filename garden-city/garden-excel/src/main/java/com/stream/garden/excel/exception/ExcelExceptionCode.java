@@ -31,7 +31,7 @@ public enum ExcelExceptionCode implements AppCode {
     /*---------------------------EXCEL------------------------------*/
     EXCEL_CONFIG_ADD_EXCEPTION(31500, "新增异常"),
     EXCEL_CONFIG_EDIT_EXCEPTION(31501, "修改异常"),
-    EXCEL_CONFIG_ADD_REPEAT(31502, "编码[{0}]已存在"),
+    EXCEL_CONFIG_CODE_REPEAT(31502, "编码[{0}]已存在"),
 
     /*---------------------------EXCEL------------------------------*/;
 
