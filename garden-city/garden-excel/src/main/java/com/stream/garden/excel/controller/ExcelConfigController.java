@@ -1,8 +1,8 @@
-package com.stream.garden.dictionary.controller;
+package com.stream.garden.excel.controller;
 
-import com.stream.garden.dictionary.exception.DictionaryExceptionCode;
-import com.stream.garden.dictionary.model.Dictionary;
-import com.stream.garden.dictionary.service.IDictionaryService;
+import com.stream.garden.excel.exception.ExcelExceptionCode;
+import com.stream.garden.excel.model.ExcelConfig;
+import com.stream.garden.excel.service.IExcelConfigService;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
@@ -24,18 +24,18 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author garden
- * @date 2019-09-29 13:40
+ * @date 2019-11-04 16:21
  */
 @Controller
-@RequestMapping(value = "/dictionary/dictionary")
-public class DictionaryController {
-    private Logger logger = LoggerFactory.getLogger(DictionaryController.class);
+@RequestMapping(value = "/excel/config")
+public class ExcelConfigController {
+    private Logger logger = LoggerFactory.getLogger(ExcelConfigController.class);
 
-    private IDictionaryService dictionaryService;
+    private IExcelConfigService excelConfigService;
 
     @Autowired
-    public DictionaryController(IDictionaryService dictionaryService) {
-        this.dictionaryService = dictionaryService;
+    public ExcelConfigController(IExcelConfigService excelConfigService) {
+        this.excelConfigService = excelConfigService;
     }
 
     /**
@@ -45,7 +45,7 @@ public class DictionaryController {
      */
     @GetMapping(value = "/toList")
     public String toList() {
-        return "dictionary/list";
+        return "excel/config/list";
     }
 
     /**
@@ -55,36 +55,36 @@ public class DictionaryController {
      */
     @GetMapping(value = "/toEdit")
     public String toEdit() {
-        return "dictionary/edit";
+        return "excel/config/edit";
     }
 
     @PostMapping(value = "/add")
     @ResponseBody
-    public Result<Integer> add(Dictionary dictionary) {
+    public Result<Integer> add(ExcelConfig excelConfig) {
         try {
-            return new Result<Integer>().ok().setData(dictionaryService.insert(dictionary));
+            return new Result<Integer>().ok().setData(excelConfigService.insert(excelConfig));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, DictionaryExceptionCode.DICTIONARY_ADD_EXCEPTION);
+            return new Result<>(e, ExcelExceptionCode.EXCEL_CONFIG_ADD_EXCEPTION);
         }
     }
 
     @PostMapping(value = "/edit")
     @ResponseBody
-    public Result<Integer> edit(Dictionary dictionary) {
+    public Result<Integer> edit(ExcelConfig excelConfig) {
         try {
-            return new Result<Integer>().ok().setData(dictionaryService.update(dictionary));
+            return new Result<Integer>().ok().setData(excelConfigService.update(excelConfig));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e, DictionaryExceptionCode.DICTIONARY_EDIT_EXCEPTION);
+            return new Result<>(e, ExcelExceptionCode.EXCEL_CONFIG_EDIT_EXCEPTION);
         }
     }
 
     @PostMapping(value = "/get")
     @ResponseBody
-    public Result<Dictionary> get(Dictionary dictionary) {
+    public Result<ExcelConfig> get(ExcelConfig excelConfig) {
         try {
-            return new Result<Dictionary>().ok().setData(dictionaryService.get(dictionary.getId()));
+            return new Result<ExcelConfig>().ok().setData(excelConfigService.get(excelConfig.getId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
@@ -93,7 +93,7 @@ public class DictionaryController {
 
     @PostMapping(value = "/list")
     @ResponseBody
-    public Result<List<Dictionary>> list(Dictionary dictionary) {
+    public Result<List<ExcelConfig>> list(ExcelConfig excelConfig) {
         try {
             String key = "test:1";
             String value = "" + System.currentTimeMillis();
@@ -111,11 +111,11 @@ public class DictionaryController {
                 }, 3000, 3000);
                 // 10s
                 // Thread.sleep(10 * 1000);
-                dictionary.asOrderBy("SORTS", OrderByObj.ASC);
-                List<Dictionary> list = this.dictionaryService.list(dictionary);
+                excelConfig.asOrderBy("SORTS", OrderByObj.ASC);
+                List<ExcelConfig> list = this.excelConfigService.list(excelConfig);
                 timer.cancel();
                 RedisLockUtil.releaseLock(key, value);
-                return new Result<List<Dictionary>>().ok().setData(list);
+                return new Result<List<ExcelConfig>>().ok().setData(list);
             }
             throw new ApplicationException(ExceptionCode.TIME_OUT);
         } catch (Exception e) {
@@ -126,9 +126,9 @@ public class DictionaryController {
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    public Result<Integer> delete(Dictionary dictionary) {
+    public Result<Integer> delete(ExcelConfig excelConfig) {
         try {
-            return new Result<Integer>().ok().setData(dictionaryService.delete(dictionary.getId()));
+            return new Result<Integer>().ok().setData(excelConfigService.delete(excelConfig.getId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
