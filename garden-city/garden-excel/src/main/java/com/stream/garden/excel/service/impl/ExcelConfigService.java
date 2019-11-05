@@ -6,7 +6,10 @@ import com.stream.garden.excel.model.ExcelConfig;
 import com.stream.garden.excel.service.IExcelConfigService;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.AbstractBaseService;
+import com.stream.garden.framework.util.CollectionUtil;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author garden
@@ -38,5 +41,21 @@ public class ExcelConfigService extends AbstractBaseService<ExcelConfig, String>
             throw new ApplicationException(ExcelExceptionCode.EXCEL_CONFIG_CODE_REPEAT, excelConfig.getCode());
         }
         return super.updateSelective(excelConfig);
+    }
+
+    @Override
+    public ExcelConfig getByCode(String code) throws ApplicationException {
+        try {
+            ExcelConfig paramExcelConfig = new ExcelConfig();
+            paramExcelConfig.setCode(code);
+            List<ExcelConfig> list = super.list(paramExcelConfig);
+            if (CollectionUtil.isNotEmpty(list)) {
+                return list.get(0);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException("查询导入导出配置异常");
+        }
+        return null;
     }
 }

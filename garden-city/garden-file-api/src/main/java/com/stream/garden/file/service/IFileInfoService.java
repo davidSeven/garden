@@ -4,6 +4,7 @@ import com.stream.garden.file.model.FileInfo;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.service.IBaseService;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -18,4 +19,6 @@ public interface IFileInfoService extends IBaseService<FileInfo, String> {
     FileInfo getFileInfo(String bizCode, String bizId) throws ApplicationException;
 
     int deleteByBiz(FileInfo fileInfo) throws ApplicationException;
+
+    ByteArrayInputStream getFileInfoStream(String bizCode, String bizId) throws ApplicationException;
 }

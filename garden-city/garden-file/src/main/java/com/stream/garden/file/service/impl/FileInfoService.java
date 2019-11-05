@@ -7,9 +7,12 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -57,6 +60,25 @@ public class FileInfoService extends AbstractBaseService<FileInfo, String> imple
                 return super.delete(ids);
             }
             return 0;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @Override
+    public ByteArrayInputStream getFileInfoStream(String bizCode, String bizId) throws ApplicationException {
+        try {
+            FileInfo fileInfo = this.getFileInfo(bizCode, bizId);
+            if (null == fileInfo) {
+                throw new ApplicationException("文件配置信息不存在");
+            }
+            File file = new File(fileInfo.getPhysicalPath());
+            if (!file.exists()) {
+                throw new ApplicationException("文件不存在");
+            }
+            byte[] bytes = FileUtils.readFileToByteArray(file);
+            return new ByteArrayInputStream(bytes);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
