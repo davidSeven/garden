@@ -1,13 +1,18 @@
 package com.stream.garden.file.service.impl;
 
 import com.stream.garden.file.dao.IFileInfoDao;
+import com.stream.garden.file.exception.FileExceptionCode;
 import com.stream.garden.file.model.FileInfo;
+import com.stream.garden.file.model.FileParameter;
 import com.stream.garden.file.service.IFileInfoService;
+import com.stream.garden.file.util.FileUtil;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
+import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class FileInfoService extends AbstractBaseService<FileInfo, String> implements IFileInfoService {
+
+    @Autowired
+    private GlobalConfig globalConfig;
 
     public FileInfoService(IFileInfoDao iFileInfoDao) {
         super(iFileInfoDao);
@@ -82,6 +90,36 @@ public class FileInfoService extends AbstractBaseService<FileInfo, String> imple
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @Override
+    public List<FileInfo> uploadFiles(FileParameter fileParameter) throws ApplicationException {
+        try {
+            // 设置文件上传的根目录
+            fileParameter.setFileRootPath(globalConfig.getUploadPath());
+            // 上传文件
+            List<FileInfo> files = FileUtil.uploadLocal(fileParameter);
+            // 保存到数据库
+            return this.update(files);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(FileExceptionCode.FILE_INFO_UPLOAD_FILE_FAIL);
+        }
+    }
+
+    @Override
+    public FileInfo uploadFile(FileParameter fileParameter) throws ApplicationException {
+        try {
+            // 调用批量的方法
+            List<FileInfo> list = this.uploadFiles(fileParameter);
+            if (CollectionUtil.isNotEmpty(list)) {
+                return list.get(0);
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(FileExceptionCode.FILE_INFO_UPLOAD_FILE_FAIL);
         }
     }
 }

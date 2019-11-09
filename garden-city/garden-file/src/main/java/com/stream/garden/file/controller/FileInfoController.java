@@ -14,7 +14,6 @@ import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 /**
  * @author garden
@@ -35,7 +36,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/file/fileInfo")
 public class FileInfoController {
-    private static final String MAP_KEY_ADD = "add";
     private Logger logger = LoggerFactory.getLogger(FileInfoController.class);
 
     @Autowired
@@ -137,7 +137,7 @@ public class FileInfoController {
             }
             fileParameter.setFileManageCode(fileManageCode);
             fileParameter.setFileManageId(fileManageId);
-            return new Result<List<FileInfo>>().ok().setData(this.uploadLocal(fileParameter));
+            return new Result<List<FileInfo>>().ok().setData(this.fileInfoService.uploadFiles(fileParameter));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(e, ExceptionCode.UNKOWN_EXCEPTION);
@@ -166,96 +166,4 @@ public class FileInfoController {
         }
     }
 
-    private List<FileInfo> uploadLocal(FileParameter fileParameter) throws ApplicationException {
-        Map<String, List<FileInfo>> fileMap = localParse(fileParameter);
-        List<FileInfo> newFiles = fileMap.get(MAP_KEY_ADD);
-        if (CollectionUtil.isNotEmpty(newFiles)) {
-            List<FileInfo> result = fileInfoService.update(newFiles);
-            for (FileInfo file : result) {
-                file.setBytes(null);
-                file.setPhysicalPath(null);
-            }
-            return result;
-        }
-        return new ArrayList<>();
-    }
-
-    private Map<String, List<FileInfo>> localParse(FileParameter fileParameter) throws ApplicationException {
-        return localParse(fileParameter.getBizCode(), fileParameter.getBizId(), fileParameter.getFileManageId(), fileParameter.getFiles());
-    }
-
-    private Map<String, List<FileInfo>> localParse(String bizCode, String bizId, String fileManageId, FileInfo... files) throws ApplicationException {
-        Map<String, List<FileInfo>> fileMap = new HashMap<>();
-        if (StringUtils.isEmpty(bizCode) || StringUtils.isEmpty(bizId)) {
-            return fileMap;
-        }
-        if (ArrayUtils.isEmpty(files)) {
-            return fileMap;
-        }
-        List<FileInfo> addFiles = new ArrayList<>();
-        fileMap.put(MAP_KEY_ADD, addFiles);
-        for (int i = 0, len = files.length; i < len; i++) {
-            FileInfo file = files[i];
-            if (file == null) {
-                continue;
-            }
-            file.setFileManageId(fileManageId);
-            file.setBizCode(bizCode);
-            file.setBizId(bizId);
-            file.setDisplayIndex(10 * (i + 1));
-            file.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-            addFiles.add(file);
-            if (file.getBytes() != null) {
-                String fileRootPath = globalConfig.getUploadPath();
-                StringBuilder fileName = new StringBuilder();
-                fileName.append(File.separatorChar)
-                        .append(UUID.randomUUID().toString().replaceAll("-", ""));
-                BufferedOutputStream stream = null;
-                try {
-                    mkdirs(fileRootPath + fileName.toString());
-                    fileName.append(File.separatorChar)
-                            .append(file.getId())
-                            .append(".")
-                            .append(file.getExtendName());
-                    stream = new BufferedOutputStream(new FileOutputStream(new java.io.File(fileRootPath + fileName.toString())));
-                    stream.write(file.getBytes());
-                } catch (Exception e) {
-                    logger.error("上传文件失败！[" + file.getBizCode() + ", " + file.getBizId() + ", " + file.getName() + "]", e);
-                    throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
-                } finally {
-                    close(stream);
-                }
-                file.setPhysicalPath(fileRootPath + fileName.toString());
-                file.setVisitPath(fileName.toString());
-            }
-        }
-        return fileMap;
-    }
-
-    /**
-     * 创建目录
-     *
-     * @param dirPath 目录路径
-     */
-    private void mkdirs(String dirPath) {
-        java.io.File dir = new java.io.File(dirPath);
-        if (!dir.exists() && !dir.mkdirs()) {
-            logger.error("创建目录失败：{}", dirPath);
-        }
-    }
-
-    /**
-     * 关闭文件流
-     *
-     * @param stream 文件流
-     */
-    private void close(OutputStream stream) {
-        if (null != stream) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                logger.error("文件流关闭错误", e);
-            }
-        }
-    }
 }

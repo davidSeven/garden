@@ -2,13 +2,18 @@ package com.stream.garden.file.util;
 
 import com.stream.garden.file.model.FileInfo;
 import com.stream.garden.file.model.FileParameter;
+import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
+import com.stream.garden.framework.util.CollectionUtil;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * 文件工具类
@@ -18,6 +23,8 @@ import java.util.List;
  */
 public class FileUtil {
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
+    private static final String MAP_KEY_ADD = "add";
 
     private FileUtil() {
     }
@@ -96,5 +103,102 @@ public class FileUtil {
             }
         }
         return files.toArray(new FileInfo[0]);
+    }
+
+    /**
+     * 上传文件到本地
+     *
+     * @param fileParameter 文件参数
+     * @return 文件列表
+     * @throws ApplicationException e
+     */
+    public static List<FileInfo> uploadLocal(FileParameter fileParameter) throws ApplicationException {
+        Map<String, List<FileInfo>> fileMap = localParse(fileParameter);
+        List<FileInfo> newFiles = fileMap.get(MAP_KEY_ADD);
+        if (CollectionUtil.isNotEmpty(newFiles)) {
+            for (FileInfo file : newFiles) {
+                file.setBytes(null);
+            }
+            return newFiles;
+        }
+        return new ArrayList<>();
+    }
+
+    private static Map<String, List<FileInfo>> localParse(FileParameter fileParameter) throws ApplicationException {
+        return localParse(fileParameter.getFileRootPath(), fileParameter.getBizCode(), fileParameter.getBizId(), fileParameter.getFileManageId(), fileParameter.getFiles());
+    }
+
+    private static Map<String, List<FileInfo>> localParse(String fileRootPath, String bizCode, String bizId, String fileManageId, FileInfo... files) throws ApplicationException {
+        Map<String, List<FileInfo>> fileMap = new HashMap<>();
+        if (StringUtils.isEmpty(bizCode) || StringUtils.isEmpty(bizId)) {
+            return fileMap;
+        }
+        if (ArrayUtils.isEmpty(files)) {
+            return fileMap;
+        }
+        List<FileInfo> addFiles = new ArrayList<>();
+        fileMap.put(MAP_KEY_ADD, addFiles);
+        for (int i = 0, len = files.length; i < len; i++) {
+            FileInfo file = files[i];
+            if (file == null) {
+                continue;
+            }
+            file.setFileManageId(fileManageId);
+            file.setBizCode(bizCode);
+            file.setBizId(bizId);
+            file.setDisplayIndex(10 * (i + 1));
+            file.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            addFiles.add(file);
+            if (file.getBytes() != null) {
+                StringBuilder fileName = new StringBuilder();
+                fileName.append(File.separatorChar)
+                        .append(UUID.randomUUID().toString().replaceAll("-", ""));
+                BufferedOutputStream stream = null;
+                try {
+                    mkdirs(fileRootPath + fileName.toString());
+                    fileName.append(File.separatorChar)
+                            .append(file.getId())
+                            .append(".")
+                            .append(file.getExtendName());
+                    stream = new BufferedOutputStream(new FileOutputStream(new java.io.File(fileRootPath + fileName.toString())));
+                    stream.write(file.getBytes());
+                } catch (Exception e) {
+                    logger.error("上传文件失败！[" + file.getBizCode() + ", " + file.getBizId() + ", " + file.getName() + "]", e);
+                    throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+                } finally {
+                    close(stream);
+                }
+                file.setPhysicalPath(fileRootPath + fileName.toString());
+                file.setVisitPath(fileName.toString());
+            }
+        }
+        return fileMap;
+    }
+
+    /**
+     * 创建目录
+     *
+     * @param dirPath 目录路径
+     */
+    private static void mkdirs(String dirPath) {
+        java.io.File dir = new java.io.File(dirPath);
+        if (!dir.exists() && !dir.mkdirs()) {
+            logger.error("创建目录失败：{}", dirPath);
+        }
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param stream 文件流
+     */
+    private static void close(OutputStream stream) {
+        if (null != stream) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                logger.error("文件流关闭错误", e);
+            }
+        }
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook>
+    <worksheet name="Sheet1">
+        <section startRow="0" endRow="1"/>
+        <loop startRow="2" endRow="2" items="i18nList" var="i18n" varType="com.stream.garden.i18n.model.I18n">
+            <section startRow="2" endRow="2">
+                <mapping row="2" col="0">i18n.code</mapping>
+                <mapping row="2" col="1">i18n.value</mapping>
+                <mapping row="2" col="2">i18n.languageType</mapping>
+            </section>
+            <loopbreakcondition>
+                <rowcheck offset="0">
+                    <cellcheck offset="0"></cellcheck>
+                    <cellcheck offset="1"></cellcheck>
+                </rowcheck>
+            </loopbreakcondition>
+        </loop>
+    </worksheet>
+</workbook>

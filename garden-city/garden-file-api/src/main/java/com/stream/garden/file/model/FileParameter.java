@@ -34,4 +34,9 @@ public class FileParameter {
      * 文件ID
      */
     private String fileManageId;
+
+    /**
+     * 文件存储的根目录
+     */
+    private String fileRootPath;
 }
