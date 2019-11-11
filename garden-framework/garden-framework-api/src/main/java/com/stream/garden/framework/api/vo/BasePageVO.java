@@ -2,6 +2,9 @@ package com.stream.garden.framework.api.vo;
 
 import com.stream.garden.framework.api.model.PageSize;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BasePageVO<T, ID> extends BaseVO<T, ID> {
 
     private static final long serialVersionUID = 7445342957138040313L;
@@ -28,4 +31,28 @@ public class BasePageVO<T, ID> extends BaseVO<T, ID> {
         this.criteria = criteria;
     }
 
+    public BasePageVO<T, ID> asOrderByUpdationDate() {
+        return this.asOrderByUpdationDate(OrderByObj.DESC);
+    }
+
+    public BasePageVO<T, ID> asOrderByUpdationDate(int orderByMode) {
+        return this.asOrderBy("UPDATION_DATE", orderByMode);
+    }
+
+    public BasePageVO<T, ID> asOrderBy(String field) {
+        return this.asOrderBy(field, OrderByObj.DESC);
+    }
+
+    public BasePageVO<T, ID> asOrderBy(String field, int orderByMode) {
+        if (null == this.criteria) {
+            this.criteria = new Criteria<>();
+        }
+        List<OrderByObj> orderByClauses = this.criteria.getOrderByClauses();
+        if (null == orderByClauses) {
+            orderByClauses = new ArrayList<>();
+        }
+        orderByClauses.add(new OrderByObj(field, orderByMode));
+        this.criteria.setOrderByClauses(orderByClauses);
+        return this;
+    }
 }

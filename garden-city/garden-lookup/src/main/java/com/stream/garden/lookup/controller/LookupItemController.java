@@ -59,6 +59,7 @@ public class LookupItemController {
                 vo.setCriteria(new Criteria<>());
             }
             vo.asOrderByUpdationDate();
+
             return new Result<PageInfo<LookupItem>>().setData(lookupItemService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);

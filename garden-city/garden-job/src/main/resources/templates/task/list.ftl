@@ -71,6 +71,12 @@
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
                    lay-event="edit"
                    data-url="/job/task/toEdit">编辑</a>
+                <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
+                   lay-event="del"
+                   data-url="/job/task/delete">删除</a>
+                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
+                   lay-event="log"
+                   data-url="/job/taskLog/toList">日志</a>
             </script>
             <script type="text/html" id="stateTemplet">
                 <input type="checkbox" name="state" value="{{d.state}}" data-id="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="stateChange" {{ d.state == '1' ? 'checked' : '' }}>
@@ -140,7 +146,7 @@
                         return formatDate(row.updationDate);
                     }
                 }
-                ,{fixed: 'right', title:'操作', toolbar: '#tableDataToolbar', width:120}
+                ,{fixed: 'right', title:'操作', toolbar: '#tableDataToolbar', width: 170}
             ]]
         });
 
@@ -167,9 +173,23 @@
         table.on('tool(tableData)', function(obj){
             var url = $(this).attr('data-url');
             var data = obj.data;
-            if(obj.event === 'edit'){
+            if(obj.event === 'del'){
+                layer.confirm('确定删除选中数据吗', function(index){
+                    ajaxPost(url, {id: data.id}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    });
+                    // layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "450px", {isInsert: false, data: data});
+            } else if (obj.event === 'log') {
+                parent.page("日志", url, iframeObj, w = "1000px", h = "550px", {isInsert: false, data: data});
             }
         });
 

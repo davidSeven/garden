@@ -197,8 +197,12 @@
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
         <logger name="com.stream.garden.framework.jdbc" level="error"/>
-        <logger name="org.mybatis" level="error"/>
-        <logger name="com.stream.garden" level="error"/>
+        <logger name="com.stream.garden" level="debug"/>
+
+        <logger name="org.mybatis" level="debug"/>
+        <logger name="io.lettuce" level="error"/>
+        <logger name="org.springframework.data.redis" level="error"/>
+        <logger name="org.springframework.jdbc" level="error"/>
         <!-- spring视图的日志级别 -->
         <logger name="org.springframework.web.servlet.view" level="error"/>
     </springProfile>

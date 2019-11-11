@@ -99,7 +99,7 @@ public class TaskService extends AbstractBaseService<Task, String> implements IT
                     Task updateTask = new Task();
                     updateTask.setId(dbTask.getId());
                     updateTask.setState(JobConstant.JOB_TASK_STATE_ENABLED);
-                    this.updateSelective(updateTask);
+                    super.updateSelective(updateTask);
                     JobScheduler.addJob(dbTask.getId(), JobConstant.JOB_GROUP_DEFAULT, dbTask.getCron(), dbTask.getUrl(), dbTask.getParams());
                 }
             } else if (JobConstant.JOB_TASK_STATE_DISABLED.equals(task.getState())) {
@@ -108,10 +108,28 @@ public class TaskService extends AbstractBaseService<Task, String> implements IT
                     Task updateTask = new Task();
                     updateTask.setId(dbTask.getId());
                     updateTask.setState(JobConstant.JOB_TASK_STATE_DISABLED);
-                    this.updateSelective(updateTask);
+                    super.updateSelective(updateTask);
                     JobScheduler.deleteJob(dbTask.getId(), JobConstant.JOB_GROUP_DEFAULT);
                 }
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @Override
+    public int delete(String... ids) throws ApplicationException {
+        try {
+            int i = 0;
+            for (String id : ids) {
+                Task task = super.get(id);
+                if (null != task) {
+                    i += super.delete(id);
+                    JobScheduler.deleteJob(task.getId(), JobConstant.JOB_GROUP_DEFAULT);
+                }
+            }
+            return i;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);

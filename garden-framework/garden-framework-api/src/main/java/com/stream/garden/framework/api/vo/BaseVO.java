@@ -1,6 +1,6 @@
 package com.stream.garden.framework.api.vo;
 
-import com.stream.garden.framework.api.model.OrderBy;
+import java.io.Serializable;
 
 /**
  * 分页
@@ -8,7 +8,7 @@ import com.stream.garden.framework.api.model.OrderBy;
  * @param <T> 业务对象
  * @author city
  */
-public class BaseVO<T, ID> extends OrderBy {
+public class BaseVO<T, ID> implements Serializable {
 
     private static final long serialVersionUID = 48442414440502818L;
     private T data;
