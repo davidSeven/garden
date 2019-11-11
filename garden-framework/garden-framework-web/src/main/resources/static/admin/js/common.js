@@ -479,6 +479,36 @@ function jsonData(formId, data, isDebug) {
     return data;
 }
 
+function ajaxPostDelete(url, params, successFn, errorFn, completeFn) {
+    // loading
+    var loadingIndex = parent.layer.msg('加载中', {
+        icon: 16
+        ,shade: 0.2
+        ,time: 0
+    });
+    // ajax
+    $.ajax({
+        // async: false, // 同步
+        type: 'post',
+        url: url,
+        data: params,
+        dataType: "json",
+        traditional: true,
+        success: function (data) {
+            successFn && successFn(data);
+        },
+        error: function () {
+            // console.log(arguments);
+            errorFn && errorFn();
+        },
+        complete: function () {
+            // console.log(arguments);
+            parent.layer.close(loadingIndex);
+            completeFn && completeFn();
+        }
+    });
+}
+
 function ajaxPost(url, params, successFn, errorFn, completeFn) {
     // loading
     var loadingIndex = parent.layer.msg('加载中', {

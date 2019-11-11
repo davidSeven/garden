@@ -60,9 +60,9 @@ public class TaskLogController {
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    public Result<Integer> delete(Task task) {
+    public Result<Integer> delete(TaskLogVO vo) {
         try {
-            return new Result<Integer>().ok().setData(taskLogService.delete(task.getId()));
+            return new Result<Integer>().ok().setData(taskLogService.delete(vo.getIds()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));

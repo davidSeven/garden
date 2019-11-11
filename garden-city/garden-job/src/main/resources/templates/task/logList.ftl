@@ -60,6 +60,7 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/job/taskLog/delete">删除</button>
+                <button id="closeBtn" type="button" class="layui-btn layui-btn-primary">关闭</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
@@ -154,13 +155,40 @@
             table.reload("tableData");
         };
 
+        // 批量删除
+        $("#deleteBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length > 0) {
+                var ids = [];
+                $.each(data, function (i, v) {
+                    ids.push(v.id);
+                });
+                var url = $(this).attr('data-url');
+                layer.confirm('确定删除选中数据吗', function(index){
+                    ajaxPostDelete(url, {ids: ids}, function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {icon: 1});
+                            layui.refresh();
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    });
+                });
+            } else {
+                layer.msg('请至少选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
         //监听行工具事件
         table.on('tool(tableData)', function(obj){
             var url = $(this).attr('data-url');
             var data = obj.data;
             if(obj.event === 'del'){
                 layer.confirm('确定删除选中数据吗', function(index){
-                    ajaxPost(url, {id: data.id}, function (data) {
+                    ajaxPostDelete(url, {ids: [data.id]}, function (data) {
                         if (data.success) {
                             layer.msg('操作成功', {icon: 1});
                             layui.refresh();
@@ -187,6 +215,10 @@
 
         $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function(e){
             e.stopPropagation();
+        });
+
+        $("#closeBtn").click(function () {
+            closePageNoRefresh();
         });
 
     });
