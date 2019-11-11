@@ -89,10 +89,16 @@ garden:
     - /verifyCode
     - /safetyCheck
   login-path: /login
-  safetyType: normal
   path: /adsfsdf/asdfas/asdf
   upload-path: /www/garden
   upload-dir: /adsfsdf/asdfas/asdf
+
+  # 登录相关配置
+  login:
+    safetyType: normal
+    safetyFailEnabled: true
+    safetyFailCount: 3
+    lockFailCount: 5
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD
     base64Secret: NkFGNDVERTA5OEFBNEU5RkE4NDAzNDc5M0Y4NjczQ0Q=

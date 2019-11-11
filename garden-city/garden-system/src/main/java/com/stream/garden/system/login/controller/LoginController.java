@@ -13,6 +13,7 @@ import com.stream.garden.framework.web.util.CookieUtil;
 import com.stream.garden.framework.web.util.IPUtil;
 import com.stream.garden.framework.web.util.JwtHelper;
 import com.stream.garden.system.constant.SystemConstant;
+import com.stream.garden.system.login.config.LoginConfig;
 import com.stream.garden.system.login.service.ILoginService;
 import com.stream.garden.system.menu.service.IMenuService;
 import com.stream.garden.system.menu.vo.MenuVO;
@@ -86,6 +87,8 @@ public class LoginController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private GlobalConfig globalConfig;
+    @Autowired
+    private LoginConfig loginConfig;
     @Autowired
     private ILoginService loginService;
     @Autowired
@@ -480,10 +483,10 @@ public class LoginController {
         try {
             int check;
             String loginToken = null;
-            if ("none".equals(globalConfig.getSafetyType())) {
+            if ("none".equals(loginConfig.getSafetyType())) {
                 // 不需要验证
                 check = 0;
-            } else if ("need".equals(globalConfig.getSafetyType())) {
+            } else if ("need".equals(loginConfig.getSafetyType())) {
                 // 不检测，需要验证
                 loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
                 if (StringUtils.isEmpty(loginToken)) {
@@ -492,7 +495,7 @@ public class LoginController {
                     loginToken = setLoginToken(response);
                 }
                 check = 1;
-            } else if ("normal".equals(globalConfig.getSafetyType())) {
+            } else if ("normal".equals(loginConfig.getSafetyType())) {
                 // 正常检测验证
                 // 验证login token是否存在
                 loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);

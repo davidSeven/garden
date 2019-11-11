@@ -5,6 +5,7 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.util.Md5SaltUtil;
 import com.stream.garden.system.constant.SystemConstant;
+import com.stream.garden.system.login.config.LoginConfig;
 import com.stream.garden.system.login.service.ILoginService;
 import com.stream.garden.system.login.util.EncryptCacheUtil;
 import com.stream.garden.system.role.model.Role;
@@ -39,6 +40,8 @@ public class LoginServiceImpl implements ILoginService {
     private IUserRoleService userRoleService;
     @Autowired
     private IRoleService roleService;
+    @Autowired
+    private LoginConfig loginConfig;
 
     @Override
     public UserBO login(String username, String password) throws ApplicationException {
@@ -205,6 +208,17 @@ public class LoginServiceImpl implements ILoginService {
             String lastLoginIp = userBO.getLastLoginIp();
             if (StringUtils.isEmpty(lastLoginIp) || !lastLoginIp.equals(ip)) {
                 return 1;
+            }
+            // 登录失败超过设定次数需要验证码
+            if (loginConfig.isSafetyFailEnabled()) {
+                Integer loginFailCount = userBO.getLoginFailCount();
+                if (null == loginFailCount) {
+                    loginFailCount = 0;
+                }
+                // 登录失败次数超过设定数值
+                if (loginFailCount >= loginConfig.getSafetyFailCount()) {
+                    return 1;
+                }
             }
             // 最后登录时间不存在，或者超过十天未登录，需要验证码
             Timestamp lastLoginDate = userBO.getLastLoginDate();
