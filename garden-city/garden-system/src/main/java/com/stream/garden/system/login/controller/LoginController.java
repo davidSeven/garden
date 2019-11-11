@@ -2,6 +2,7 @@ package com.stream.garden.system.login.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.util.VerifyCodeUtils;
 import com.stream.garden.framework.web.config.GlobalConfig;
@@ -138,9 +139,7 @@ public class LoginController {
             }
         }
         // 1.创建登录token
-        loginToken = UUID.randomUUID().toString();
-        CookieUtil.addCookie(response, LOGIN_TOKEN, loginToken, 3600);
-        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, "", 3600, TimeUnit.SECONDS);
+        loginToken = setLoginToken(response);
         // 进入登录页面
         return TO_SYSTEM_LOGIN_KEY;
     }
@@ -162,14 +161,18 @@ public class LoginController {
                 response.sendRedirect("/login");
                 return;
             }
-            os = response.getOutputStream();
-            // 1.获取验证码
-            int verifySize = 4 + VerifyCodeUtils.randomInt(2);
-            String verifyCode = VerifyCodeUtils.generateVerifyCode(verifySize);
-            // 2.验证码存入redis中
-            redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, verifyCode, 3600, TimeUnit.SECONDS);
-            // 3.返回验证码图片
-            VerifyCodeUtils.outputImage(100, 40, os, verifyCode);
+            // 判断验证码token是否存在
+            Object loginVerifyCodeToken = redisTemplate.opsForValue().get(LOGIN_VERIFY_CODE_TOKEN_KEY + loginToken);
+            if (null != loginVerifyCodeToken) {
+                os = response.getOutputStream();
+                // 1.获取验证码
+                int verifySize = 4 + VerifyCodeUtils.randomInt(2);
+                String verifyCode = VerifyCodeUtils.generateVerifyCode(verifySize);
+                // 2.验证码存入redis中
+                redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, verifyCode, 3600, TimeUnit.SECONDS);
+                // 3.返回验证码图片
+                VerifyCodeUtils.outputImage(100, 40, os, verifyCode);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
@@ -199,20 +202,22 @@ public class LoginController {
         if (null == loginTokenValue) {
             return TO_SYSTEM_LOGIN_KEY;
         }
-        // 如果不是空字符串，就需要验证码
-        if (!"".equals(loginTokenValue)) {
+        Object loginVerifyCodeToken = redisTemplate.opsForValue().get(LOGIN_VERIFY_CODE_TOKEN_KEY + loginToken);
+        // 如果不是空，就需要验证码
+        if (null != loginVerifyCodeToken) {
             // 从参数中获取验证码
             String verifyCode = request.getParameter("verifyCode");
             if (null == verifyCode) {
                 request.setAttribute(LOGIN_ERROR_MSG_KEY, "wrong verify code");
                 return TO_SYSTEM_LOGIN_KEY;
             }
-            if (!loginTokenValue.equals(verifyCode.toUpperCase())) {
+            // 全部都转成大写
+            if (!String.valueOf(loginTokenValue).toUpperCase().equals(verifyCode.toUpperCase())) {
                 request.setAttribute(LOGIN_ERROR_MSG_KEY, "wrong verify code");
                 return TO_SYSTEM_LOGIN_KEY;
             }
         }
-
+        // 获取登录参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -457,5 +462,73 @@ public class LoginController {
             logger.error("logout exception", e);
         }
         return REDIRECT_TO_INDEX_KEY;
+    }
+
+    /**
+     * 设置登录token
+     */
+    private String setLoginToken(HttpServletResponse response) {
+        String loginToken = UUID.randomUUID().toString();
+        CookieUtil.addCookie(response, LOGIN_TOKEN, loginToken, 3600);
+        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + loginToken, "", 3600, TimeUnit.SECONDS);
+        return loginToken;
+    }
+
+    @PostMapping(value = "/safetyCheck")
+    @ResponseBody
+    public Result<Integer> safetyCheck(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            int check;
+            String loginToken = null;
+            if ("none".equals(globalConfig.getSafetyType())) {
+                // 不需要验证
+                check = 0;
+            } else if ("need".equals(globalConfig.getSafetyType())) {
+                // 不检测，需要验证
+                loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
+                if (StringUtils.isEmpty(loginToken)) {
+                    // 不存在login token，需要验证
+                    // 重新设置一个cookie
+                    loginToken = setLoginToken(response);
+                }
+                check = 1;
+            } else if ("normal".equals(globalConfig.getSafetyType())) {
+                // 正常检测验证
+                // 验证login token是否存在
+                loginToken = CookieUtil.getUid(request, LOGIN_TOKEN);
+                if (StringUtils.isEmpty(loginToken)) {
+                    // 不存在login token，需要验证
+                    // 重新设置一个cookie
+                    loginToken = setLoginToken(response);
+                    check = 1;
+                } else {
+                    String username = request.getParameter("username");
+                    String ip = IPUtil.getIpAddress(request);
+                    if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(ip)) {
+                        // 返回1需要验证码
+                        check = loginService.safetyCheck(username, ip);
+                    } else {
+                        // 用户名，或ip不存在，需要验证码
+                        check = 1;
+                    }
+                }
+            } else {
+                // 其它情况，暂时不需要验证
+                check = 0;
+            }
+            // 1需要验证码
+            if (1 == check) {
+                // 验证码不要token，直接存redis。添加一个需要验证码的标识token
+                // 设置一个key
+                redisTemplate.opsForValue().set(LOGIN_VERIFY_CODE_TOKEN_KEY + loginToken, "", 3600, TimeUnit.SECONDS);
+            } else {
+                // 不需要验证，删除token
+                redisTemplate.delete(LOGIN_VERIFY_CODE_TOKEN_KEY + loginToken);
+            }
+            return new Result<Integer>().ok().setData(check);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
     }
 }

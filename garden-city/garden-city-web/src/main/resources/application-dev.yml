@@ -87,7 +87,9 @@ garden:
     - /favicon.ico
     - /static/**
     - /verifyCode
+    - /safetyCheck
   login-path: /login
+  safetyType: normal
   path: /adsfsdf/asdfas/asdf
   upload-path: /www/garden
   upload-dir: /adsfsdf/asdfas/asdf

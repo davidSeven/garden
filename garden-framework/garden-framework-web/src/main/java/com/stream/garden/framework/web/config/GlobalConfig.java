@@ -38,6 +38,14 @@ public class GlobalConfig {
     // @NacosValue(value = "${garden.login-path}")
     private String loginPath;
 
+    /**
+     * 安全验证类型
+     * none     不需要验证
+     * normal   正常验证，默认
+     * need     全部需要验证
+     */
+    private String safetyType = "normal";
+
     // @NacosProperty(value = "garden.jwt")
     private JwtConfig jwt;
 
@@ -99,6 +107,14 @@ public class GlobalConfig {
 
     public void setUploadDir(String uploadDir) {
         GlobalConfig.UPLOAD_DIR = uploadDir;
+    }
+
+    public String getSafetyType() {
+        return safetyType;
+    }
+
+    public void setSafetyType(String safetyType) {
+        this.safetyType = safetyType;
     }
 
     public static class JwtConfig {

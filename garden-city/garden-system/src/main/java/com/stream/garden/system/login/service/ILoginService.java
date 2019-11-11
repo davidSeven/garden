@@ -50,4 +50,14 @@ public interface ILoginService {
      * @throws ApplicationException e
      */
     List<PermissionBO> getPermissionByRoleId(String roleId) throws ApplicationException;
+
+    /**
+     * 安全检测
+     *
+     * @param username username
+     * @param ip       ip
+     * @return int
+     * @throws ApplicationException e
+     */
+    int safetyCheck(String username, String ip) throws ApplicationException;
 }

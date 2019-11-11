@@ -25,13 +25,13 @@
                             <i class="layui-icon layui-icon-password" style="position: absolute; margin-top: 6px; margin-left: 8px; font-size: 25px;"></i>
 							<input type="password" name="password" required lay-verify="required|jse" placeholder="密码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
 						</div>
-						<div class="layui-form-item">
+						<div class="layui-form-item" id="verifyCodeDiv" style="display: none;">
 							<div class="layui-inline">
                                 <i class="layui-icon layui-icon-vercode" style="position: absolute; margin-top: 6px; margin-left: 8px; font-size: 25px;"></i>
-								<input type="text" name="verifyCode" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
+								<input type="text" name="verifyCode" placeholder="验证码" autocomplete="off" class="layui-input" style="padding-left: 45px;">
 							</div>
 							<div class="layui-inline" style="margin-right: 0;">
-								<img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="/verifyCode" />
+								<img id="verifyImg" class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="" />
 							</div>
 						</div>
                         <#if Request.login_error_msg??>
@@ -55,6 +55,7 @@
 		<script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="<@spring.url''/>/static/jsencrypt/jsencrypt.js" type="text/javascript" charset="utf-8"></script>
 		<script src="<@spring.url''/>/static/login/public-key.js" type="text/javascript" charset="utf-8"></script>
+        <script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
             // 处理子页面里出现登录页面的问题
             if (window.top !== window) {
@@ -80,6 +81,31 @@
 				layui.loadHead = function (input) {
 				    console.log('layui loadHead');
                     loadHead(input.value);
+                    // 安全验证
+                    if (input.value) {
+                        var params = {
+                            username: input.value
+                        };
+                        $.ajax({
+                            // async: false, // 同步
+                            type: 'post',
+                            url: '/safetyCheck',
+                            data: params,
+                            dataType: "json",
+                            traditional: true,
+                            success: function (data) {
+                                if (data.success) {
+                                    if (data.data === 0) {
+                                        $("#verifyCodeDiv").hide();
+                                    } else {
+                                        $("#verifyCodeDiv").show();
+                                        $("#verifyImg").attr("src", "/verifyCode");
+                                        $("input[name='verifyCode']").attr("lay-verify", "required").attr("required", "");
+                                    }
+                                }
+                            }
+                        });
+                    }
                 };
 
                 function loadHead(value) {

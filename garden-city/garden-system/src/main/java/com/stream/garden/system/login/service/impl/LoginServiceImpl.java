@@ -191,4 +191,34 @@ public class LoginServiceImpl implements ILoginService {
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
+
+    @Override
+    public int safetyCheck(String username, String ip) throws ApplicationException {
+        try {
+            // 登录ip和上一次登录ip不一致，超过10天未登录，需要验证码。
+            // username未查询到，需要验证码
+            UserBO userBO = userService.getByCode(username);
+            if (null == userBO) {
+                return 1;
+            }
+            // 最后登录ip不存在，或者与本次登录ip不一致，需要验证码
+            String lastLoginIp = userBO.getLastLoginIp();
+            if (StringUtils.isEmpty(lastLoginIp) || !lastLoginIp.equals(ip)) {
+                return 1;
+            }
+            // 最后登录时间不存在，或者超过十天未登录，需要验证码
+            Timestamp lastLoginDate = userBO.getLastLoginDate();
+            if (null == lastLoginDate) {
+                return 1;
+            }
+            long l = System.currentTimeMillis() - lastLoginDate.getTime();
+            if (l > 864000000) {
+                return 1;
+            }
+            return 0;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
 }
