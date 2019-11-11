@@ -1,6 +1,7 @@
 package com.stream.garden.job.service.impl;
 
 import com.stream.garden.framework.api.exception.ApplicationException;
+import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.jdbc.util.SnowflakeIdWorker;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
@@ -81,6 +82,39 @@ public class TaskService extends AbstractBaseService<Task, String> implements IT
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(JobExceptionCode.TASK_INIT_EXCEPTION);
+        }
+    }
+
+    @Override
+    public void stateSwitch(Task task) throws ApplicationException {
+        Task dbTask = this.get(task.getId());
+        if (null == dbTask) {
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+        try {
+            // 启用
+            if (JobConstant.JOB_TASK_STATE_ENABLED.equals(task.getState())) {
+                // 如果是禁用的，就启用
+                if (JobConstant.JOB_TASK_STATE_DISABLED.equals(dbTask.getState())) {
+                    Task updateTask = new Task();
+                    updateTask.setId(dbTask.getId());
+                    updateTask.setState(JobConstant.JOB_TASK_STATE_ENABLED);
+                    this.updateSelective(updateTask);
+                    JobScheduler.addJob(dbTask.getId(), JobConstant.JOB_GROUP_DEFAULT, dbTask.getCron(), dbTask.getUrl(), dbTask.getParams());
+                }
+            } else if (JobConstant.JOB_TASK_STATE_DISABLED.equals(task.getState())) {
+                // 如果是启用的，就禁用
+                if (JobConstant.JOB_TASK_STATE_ENABLED.equals(dbTask.getState())) {
+                    Task updateTask = new Task();
+                    updateTask.setId(dbTask.getId());
+                    updateTask.setState(JobConstant.JOB_TASK_STATE_DISABLED);
+                    this.updateSelective(updateTask);
+                    JobScheduler.deleteJob(dbTask.getId(), JobConstant.JOB_GROUP_DEFAULT);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
 }

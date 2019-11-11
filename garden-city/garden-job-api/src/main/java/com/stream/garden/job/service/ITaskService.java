@@ -11,7 +11,15 @@ import com.stream.garden.job.model.Task;
 public interface ITaskService extends IBaseService<Task, String> {
 
     /**
-     * 出售任务
+     * 初始化任务
      */
     void initJob() throws ApplicationException;
+
+    /**
+     * 状态切换
+     *
+     * @param task 参数
+     * @throws ApplicationException e
+     */
+    void stateSwitch(Task task) throws ApplicationException;
 }

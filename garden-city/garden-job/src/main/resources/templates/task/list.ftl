@@ -72,6 +72,9 @@
                    lay-event="edit"
                    data-url="/job/task/toEdit">编辑</a>
             </script>
+            <script type="text/html" id="stateTemplet">
+                <input type="checkbox" name="state" value="{{d.state}}" data-id="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="stateChange" {{ d.state == '1' ? 'checked' : '' }}>
+            </script>
             <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
     </div>
@@ -116,14 +119,15 @@
                 {type:'numbers'}
                 ,{type:'checkbox'}
                 ,{field:'name', width:120, title: '任务名称'}
-                ,{field:'state', width:80, title: '状态', align: 'center', templet: function (row) {
+                /*,{field:'state', width:80, title: '状态', align: 'center', templet: function (row) {
                     if ("0" === row.state) {
                         return '<span class="layui-badge layui-bg-gray">禁用</span>';
                     } else if ("1" === row.state) {
                         return '<span class="layui-badge layui-bg-blue">启用</span>';
                     }
                     return row.state;
-                }}
+                }}*/
+                ,{field:'state', width:100, title:'状态', templet: '#stateTemplet', unresize: true}
                 ,{field:'cron', width:100, title: 'Cron'}
                 ,{field:'url', width:140, title: '路径'}
                 ,{field:'createdBy', width:120, title: '创建人'}
@@ -167,6 +171,27 @@
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "450px", {isInsert: false, data: data});
             }
+        });
+
+        // 状态开关
+        form.on('switch(stateChange)', function (obj) {
+            var state = "0";
+            if (this.checked) {
+                state = "1";
+            }
+            var id = $(this).attr("data-id");
+            var params = {
+                id: id,
+                state: state
+            };
+            ajaxPost('/job/task/stateSwitch', params, function (data) {
+                if (data.success) {
+                    layer.msg('操作成功', {icon: 1});
+                    layui.refresh();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
+                }
+            });
         });
 
         // 点击行选中

@@ -106,10 +106,23 @@ public class TaskController {
         }
     }
 
+    @PostMapping(value = "/stateSwitch")
+    @ResponseBody
+    public Result<Integer> stateSwitch(Task task) {
+        try {
+            taskService.stateSwitch(task);
+            return new Result<Integer>().ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
+
     @PostMapping(value = "/job")
     @ResponseBody
     public Result job(Task task) {
         try {
+            logger.debug("定时任务执行。。。");
             return new Result().ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
