@@ -149,7 +149,8 @@ public class LoginServiceImpl implements ILoginService {
             User paramsUser = new User();
             paramsUser.setId(user.getId());
             paramsUser.setLoginFailCount(loginFailCount);
-            if (loginFailCount > 3) {
+            // 超过设定次数锁定账户
+            if (loginFailCount > loginConfig.getLockFailCount()) {
                 paramsUser.setState(SystemConstant.USER_STATE_LOCKED);
             }
             this.userService.updateSelective(paramsUser);
