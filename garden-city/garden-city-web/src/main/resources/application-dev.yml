@@ -98,6 +98,7 @@ garden:
     safetyType: normal
     safetyFailEnabled: true
     safetyFailCount: 3
+    lockFailEnabled: false
     lockFailCount: 5
   jwt:
     clientId: 6AF45DE098AA4E9FA84034793F8673CD

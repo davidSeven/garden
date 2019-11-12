@@ -36,6 +36,11 @@ public class LoginConfig {
     private int safetyFailCount = 3;
 
     /**
+     * 登录失败超过设定次数，锁定账户
+     */
+    private boolean lockFailEnabled = false;
+
+    /**
      * 登录失败5次锁定账户
      */
     private int lockFailCount = 5;
