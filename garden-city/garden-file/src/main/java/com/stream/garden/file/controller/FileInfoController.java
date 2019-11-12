@@ -8,9 +8,12 @@ import com.stream.garden.file.model.FileParameter;
 import com.stream.garden.file.service.IFileInfoService;
 import com.stream.garden.file.service.IFileManageService;
 import com.stream.garden.file.util.FileUtil;
+import com.stream.garden.file.vo.FileInfoVO;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
+import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
@@ -163,6 +166,26 @@ public class FileInfoController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/toList")
+    public String toList() {
+        return "file/fileList";
+    }
+
+    @PostMapping(value = "/pageList")
+    @ResponseBody
+    public Result<PageInfo<FileInfo>> pageList(FileInfoVO vo) {
+        try {
+            if (null == vo.getCriteria()) {
+                vo.setCriteria(new Criteria<>());
+            }
+            vo.asOrderByUpdationDate();
+            return new Result<PageInfo<FileInfo>>().setData(fileInfoService.pageList(vo)).ok();
+        } catch (Exception e) {
+            logger.error(">>>" + e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
         }
     }
 

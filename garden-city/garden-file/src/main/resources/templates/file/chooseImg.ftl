@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>编辑</title>
+    <title>上传图片</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css" />
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css" />
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/cropper/cropper.min.css" />

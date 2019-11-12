@@ -87,8 +87,14 @@
                         data-type="batchdel"
                         data-url="/file/fileManage/delete">删除</button>
                 <button id="chooseImgBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
-                        data-type="batchdel"
-                        data-url="/file/fileManage/toChooseImg">选择图片</button>
+                        data-type="uploadImg"
+                        data-url="/file/fileManage/toChooseImg">上传图片</button>
+                <button id="chooseFileBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="uploadFile"
+                        data-url="/file/fileManage/toChooseFile">上传文件</button>
+                <button id="fileListBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="fileList"
+                        data-url="/file/fileInfo/toList">文件列表</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -212,9 +218,63 @@
 
         // 选择图片
         $("#chooseImgBtn").click(function () {
-            var url = $(this).attr('data-url');
-            //将iframeObj传递给父级窗口,执行操作完成刷新
-            parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", {isInsert: true});
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var params = {
+                    iframeObj: iframeObj,
+                    fileCode: data[0].code,
+                    bizCode: data[0].code,
+                    bizId: (new Date().getTime())
+                };
+                var url = $(this).attr('data-url');
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("选择图片", url, iframeObj, w = "850px", h = "550px", params);
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        // 上传图片
+        $("#chooseFileBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var params = {
+                    iframeObj: iframeObj,
+                    fileCode: data[0].code,
+                    bizCode: data[0].code,
+                    bizId: (new Date().getTime())
+                };
+                var url = $(this).attr('data-url');
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("选择文件", url, iframeObj, w = "400px", h = "240px", params);
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
+            return false;
+        });
+
+        // 文件回调
+        layui.cropperCallback = function(data) {
+            console.log("窗口回调返回参数：");
+            console.log(data);
+        };
+
+        // 文件列表
+        $("#fileListBtn").click(function () {
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('tableData')
+                    ,data = checkStatus.data;
+            if (data.length === 1) {
+                var url = $(this).attr('data-url');
+                parent.page("文件列表", url, iframeObj, w = "1000px", h = "550px", {isInsert: false, data: data[0]});
+            } else {
+                layer.msg('请选择一条记录', {icon: 7});
+            }
             return false;
         });
 
@@ -238,6 +298,22 @@
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "350px", {isInsert: false, data: data});
             }
+        });
+
+        // 点击行选中
+        $(document).on("click", ".layui-table-body table.layui-table tbody tr", function(){
+            var obj = event ? event.target : event.srcElement;
+            var tag = obj.tagName;
+            var checkbox = $(this).find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+            if(checkbox.length !== 0){
+                if(tag === 'DIV') {
+                    checkbox.click();
+                }
+            }
+        });
+
+        $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function(e){
+            e.stopPropagation();
         });
     });
 </script>
