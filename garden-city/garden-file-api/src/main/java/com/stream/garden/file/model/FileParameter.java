@@ -39,4 +39,9 @@ public class FileParameter {
      * 文件存储的根目录
      */
     private String fileRootPath;
+
+    /**
+     * 存储类型
+     */
+    private String storageType;
 }

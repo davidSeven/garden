@@ -118,3 +118,11 @@ garden:
   # 任务调度
   job:
     enabled: true
+
+  # 文件配置
+  file:
+    uploadPath: /www/garden
+    fastDfsConfig:
+      enabled: true
+      httpSecretKey: Fast1234567890DFS
+      trackerServer: 192.168.1.77:22122

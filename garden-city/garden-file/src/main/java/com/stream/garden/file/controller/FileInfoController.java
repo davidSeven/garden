@@ -15,7 +15,6 @@ import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.framework.util.CollectionUtil;
-import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,9 +45,6 @@ public class FileInfoController {
 
     @Autowired
     private IFileManageService fileManageService;
-
-    @Autowired
-    private GlobalConfig globalConfig;
 
     @RequestMapping(value = "/download/{bizCode}/{bizId}")
     public void download(@PathVariable("bizCode") String bizCode, @PathVariable("bizId") String bizId, HttpServletResponse response) {
@@ -134,12 +130,13 @@ public class FileInfoController {
             if (StringUtils.isEmpty(fileManageCode)) {
                 throw new ApplicationException(FileExceptionCode.FILE_MANAGE_CODE_NOT_NULL);
             }
-            String fileManageId = this.getFileManageId(fileManageCode);
-            if (StringUtils.isEmpty(fileManageId)) {
+            FileManage fileManage = this.getFileManage(fileManageCode);
+            if (null == fileManage) {
                 throw new ApplicationException(FileExceptionCode.FILE_MANAGE_UNREGISTERED, fileManageCode);
             }
             fileParameter.setFileManageCode(fileManageCode);
-            fileParameter.setFileManageId(fileManageId);
+            fileParameter.setFileManageId(fileManage.getId());
+            fileParameter.setStorageType(fileManage.getStorageType());
             return new Result<List<FileInfo>>().ok().setData(this.fileInfoService.uploadFiles(fileParameter));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -156,11 +153,31 @@ public class FileInfoController {
      */
     private String getFileManageId(String fileManageCode) throws ApplicationException {
         try {
+            FileManage fileManage = this.getFileManage(fileManageCode);
+            if (null != fileManage) {
+                return fileManage.getId();
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取文件注册信息
+     *
+     * @param fileManageCode 文件码
+     * @return 文件注册信息
+     * @throws ApplicationException e
+     */
+    private FileManage getFileManage(String fileManageCode) throws ApplicationException {
+        try {
             FileManage paramFileManage = new FileManage();
             paramFileManage.setCode(fileManageCode);
             List<FileManage> fileManageList = this.fileManageService.list(paramFileManage);
             if (CollectionUtil.isNotEmpty(fileManageList)) {
-                return fileManageList.get(0).getId();
+                return fileManageList.get(0);
             }
             return null;
         } catch (Exception e) {

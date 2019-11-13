@@ -1,5 +1,7 @@
 package com.stream.garden.file.util;
 
+import com.stream.garden.file.constants.StorageConfig;
+import com.stream.garden.file.exception.FileExceptionCode;
 import com.stream.garden.file.model.FileInfo;
 import com.stream.garden.file.model.FileParameter;
 import com.stream.garden.framework.api.exception.ApplicationException;
@@ -113,10 +115,19 @@ public class FileUtil {
      * @throws ApplicationException e
      */
     public static List<FileInfo> uploadLocal(FileParameter fileParameter) throws ApplicationException {
-        Map<String, List<FileInfo>> fileMap = localParse(fileParameter);
+        Map<String, List<FileInfo>> fileMap = null;
+        if (StorageConfig.FILE.name().equals(fileParameter.getStorageType())) {
+            fileMap = localParse(fileParameter);
+        } else if (StorageConfig.FAST_DFS.name().equals(fileParameter.getStorageType())) {
+
+        }
+        if (null == fileMap) {
+            throw new ApplicationException(FileExceptionCode.FILE_INFO_UPLOAD_FILE_FAIL);
+        }
         List<FileInfo> newFiles = fileMap.get(MAP_KEY_ADD);
         if (CollectionUtil.isNotEmpty(newFiles)) {
             for (FileInfo file : newFiles) {
+                // 清除文件字节信息
                 file.setBytes(null);
             }
             return newFiles;

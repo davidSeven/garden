@@ -1,5 +1,6 @@
 package com.stream.garden.file.service.impl;
 
+import com.stream.garden.file.config.FileConfig;
 import com.stream.garden.file.dao.IFileInfoDao;
 import com.stream.garden.file.exception.FileExceptionCode;
 import com.stream.garden.file.model.FileInfo;
@@ -10,7 +11,6 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
-import com.stream.garden.framework.web.config.GlobalConfig;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.List;
 public class FileInfoService extends AbstractBaseService<FileInfo, String> implements IFileInfoService {
 
     @Autowired
-    private GlobalConfig globalConfig;
+    private FileConfig fileConfig;
 
     public FileInfoService(IFileInfoDao iFileInfoDao) {
         super(iFileInfoDao);
@@ -97,7 +97,7 @@ public class FileInfoService extends AbstractBaseService<FileInfo, String> imple
     public List<FileInfo> uploadFiles(FileParameter fileParameter) throws ApplicationException {
         try {
             // 设置文件上传的根目录
-            fileParameter.setFileRootPath(globalConfig.getUploadPath());
+            fileParameter.setFileRootPath(fileConfig.getUploadPath());
             // 上传文件
             List<FileInfo> files = FileUtil.uploadLocal(fileParameter);
             // 保存到数据库

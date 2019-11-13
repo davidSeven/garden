@@ -3,6 +3,7 @@ package com.stream.garden.framework.web.config;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class GlobalConfig {
     // @NacosValue(value = "${garden.login-path}")
     private String loginPath;
 
+    @NestedConfigurationProperty
     // @NacosProperty(value = "garden.jwt")
     private JwtConfig jwt;
 

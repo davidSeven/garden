@@ -25,4 +25,9 @@ public class FileManage extends BaseModel<String> {
      * 状态
      */
     private String state;
+
+    /**
+     * 存储类型
+     */
+    private String storageType;
 }
