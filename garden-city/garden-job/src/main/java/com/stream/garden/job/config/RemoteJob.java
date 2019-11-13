@@ -1,6 +1,7 @@
 package com.stream.garden.job.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stream.garden.framework.util.EncryptUtils;
 import com.stream.garden.framework.util.HttpClientUtil;
 import com.stream.garden.framework.web.util.ApplicationUtil;
 import com.stream.garden.job.constants.JobConstant;
@@ -37,12 +38,18 @@ public class RemoteJob implements Job {
             String url = jobDataMap.getString(JobConstant.JOB_DATA_KEY_URL);
             String params = jobDataMap.getString(JobConstant.JOB_DATA_KEY_PARAMS);
             String response;
+            Map<String, Object> headers = new HashMap<>();
+            headers.put("Accept", "application/json, text/javascript, */*; q=0.01");
             if (isRemote(params)) {
-                response = HttpClientUtil.httpPostRequest(url, params);
+                response = HttpClientUtil.httpPostRequest(url, params, headers);
             } else {
-                Map<String, Object> headers = new HashMap<>();
                 // 本地认证
                 headers.put("remote-authorization", "1");
+                Map<String, Object> tokenMap = new HashMap<>();
+                tokenMap.put("time", System.currentTimeMillis());
+                String tokenMapJson = JSONObject.toJSONString(tokenMap);
+                String token = EncryptUtils.base64Encoder(tokenMapJson);
+                headers.put("remote-authorization-token", token);
                 response = HttpClientUtil.httpPostRequest(url, params, headers);
             }
             taskLog.setType(JobConstant.JOB_TASK_LOG_TYPE_SUCCESS);

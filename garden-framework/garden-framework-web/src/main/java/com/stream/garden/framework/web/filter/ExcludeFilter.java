@@ -1,6 +1,7 @@
 package com.stream.garden.framework.web.filter;
 
 import com.stream.garden.framework.web.config.GlobalConfig;
+import com.stream.garden.framework.web.remote.RemoteAuthorizationUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +27,7 @@ public class ExcludeFilter extends StaticExcludeFilter {
         if (null == request) {
             return false;
         }
-        if (request.getHeader("remote-authorization") != null) {
+        if (RemoteAuthorizationUtil.authorization(request)) {
             return true;
         }
         return false;

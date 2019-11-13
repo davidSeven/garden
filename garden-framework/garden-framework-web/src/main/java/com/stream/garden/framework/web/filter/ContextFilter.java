@@ -1,5 +1,7 @@
 package com.stream.garden.framework.web.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.model.Context;
@@ -74,7 +76,14 @@ public class ContextFilter extends ExcludeFilter implements Filter {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                     String contextPath = request.getContextPath();
-                    response.sendRedirect(contextPath + globalConfig.getLoginPath());
+                    if (RequestFilterUtils.isJsonRequest(request)) {
+                        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+                        Result<String> result = new Result<String>().setData(e.getMessage());
+                        response.getWriter().append(JSONObject.toJSONString(result));
+                        return;
+                    } else {
+                        response.sendRedirect(contextPath + globalConfig.getLoginPath());
+                    }
                     return;
                 }
             }
