@@ -117,7 +117,7 @@ garden:
 
   # 任务调度
   job:
-    enabled: true
+    enabled: false
 
   # 文件配置
   file:

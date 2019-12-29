@@ -34,6 +34,8 @@
         <module>garden-content</module>
         <module>garden-excel-api</module>
         <module>garden-excel</module>
+        <module>garden-warehouse-api</module>
+        <module>garden-warehouse</module>
     </modules>
 
     <properties>
@@ -191,6 +193,17 @@
             <dependency>
                 <groupId>org.stream</groupId>
                 <artifactId>garden-excel</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-warehouse-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.stream</groupId>
+                <artifactId>garden-warehouse</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
