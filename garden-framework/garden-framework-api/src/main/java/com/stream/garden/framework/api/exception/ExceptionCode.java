@@ -11,6 +11,10 @@ public enum ExceptionCode implements AppCode {
     /** success */
     SUCCESS(0, "success"),
     TIME_OUT(408, "请求超时"),
+
+    ADD_EXCEPTION(500, "新增异常"),
+    EDIT_EXCEPTION(500, "修改异常"),
+
     ;
 
     private int code;

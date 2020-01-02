@@ -4,9 +4,9 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
-import com.stream.garden.warehouse.model.Warehouse;
-import com.stream.garden.warehouse.service.IWarehouseService;
-import com.stream.garden.warehouse.vo.WarehouseVO;
+import com.stream.garden.warehouse.model.Material;
+import com.stream.garden.warehouse.service.IMaterialService;
+import com.stream.garden.warehouse.vo.MaterialVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author garden
- * @date 2019-12-29 16:02
+ * @date 2020-01-02 19:04
  */
 @Controller
-@RequestMapping(value = "/warehouse/warehouse")
-public class WarehouseController {
+@RequestMapping(value = "/warehouse/material")
+public class MaterialController {
 
-    private Logger logger = LoggerFactory.getLogger(WarehouseController.class);
+    private Logger logger = LoggerFactory.getLogger(MaterialController.class);
 
     @Autowired
-    private IWarehouseService warehouseService;
+    private IMaterialService materialService;
 
     /**
      * 跳转列表页面
@@ -36,7 +36,7 @@ public class WarehouseController {
      */
     @GetMapping(value = "/toList")
     public String toList() {
-        return "warehouse/list";
+        return "material/list";
     }
 
     /**
@@ -46,18 +46,18 @@ public class WarehouseController {
      */
     @GetMapping(value = "/toEdit")
     public String toEdit() {
-        return "warehouse/edit";
+        return "material/edit";
     }
 
     @PostMapping(value = "/pageList")
     @ResponseBody
-    public Result<PageInfo<Warehouse>> pageList(WarehouseVO vo) {
+    public Result<PageInfo<Material>> pageList(MaterialVO vo) {
         try {
             if (null == vo.getCriteria()) {
                 vo.setCriteria(new Criteria<>());
             }
             vo.asOrderByUpdationDate();
-            return new Result<PageInfo<Warehouse>>().setData(warehouseService.pageList(vo)).ok();
+            return new Result<PageInfo<Material>>().setData(materialService.pageList(vo)).ok();
         } catch (Exception e) {
             logger.error(">>>" + e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
@@ -66,31 +66,31 @@ public class WarehouseController {
 
     @PostMapping(value = "/add")
     @ResponseBody
-    public Result<Integer> add(Warehouse warehouse) {
+    public Result<Integer> add(Material material) {
         try {
-            return new Result<Integer>().setData(warehouseService.insert(warehouse)).ok();
+            return new Result<Integer>().setData(materialService.insert(material)).ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e);
+            return new Result<>(e, ExceptionCode.ADD_EXCEPTION);
         }
     }
 
     @PostMapping(value = "/edit")
     @ResponseBody
-    public Result<Integer> edit(Warehouse warehouse) {
+    public Result<Integer> edit(Material material) {
         try {
-            return new Result<Integer>().ok().setData(warehouseService.update(warehouse));
+            return new Result<Integer>().ok().setData(materialService.update(material));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new Result<>(e);
+            return new Result<>(e, ExceptionCode.ADD_EXCEPTION);
         }
     }
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    public Result<Integer> delete(Warehouse warehouse) {
+    public Result<Integer> delete(Material material) {
         try {
-            return new Result<Integer>().ok().setData(warehouseService.delete(warehouse.getId()));
+            return new Result<Integer>().ok().setData(materialService.delete(material.getId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
