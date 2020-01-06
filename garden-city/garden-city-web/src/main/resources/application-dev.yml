@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/garden?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
-    username: garden
-    password: 123456
+    username: root
+    password: root
     #druid
     type: com.zaxxer.hikari.HikariDataSource
 
@@ -13,7 +13,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: 123456
+    password:
     jedis:
       pool:
         # 连接池最大连接数（使用负值表示没有限制）
