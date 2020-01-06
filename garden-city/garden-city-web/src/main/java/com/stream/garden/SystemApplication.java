@@ -16,6 +16,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 //@NacosPropertySource(dataId = "garden-system-web", autoRefreshed = true)
 public class SystemApplication {
 
+    /**
+     * 增加注释
+     * @param args 参数
+     */
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(SystemApplication.class);
         springApplication.run(args);
