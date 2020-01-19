@@ -19,6 +19,11 @@ public class PermissionContext {
      */
     private static Map<String, String> permissionUrlMap = new HashMap<>();
 
+    /**
+     * 字段过滤map
+     */
+    private static Map<String, String> fieldFilterMap = new HashMap<>();
+
     private PermissionContext() {
     }
 
@@ -35,11 +40,22 @@ public class PermissionContext {
         }
     }
 
+    public static void reloadFieldFilter(String key, String value) {
+        fieldFilterMap.put(key, value);
+    }
+
     /**
      * 清除权限url
      */
     public static void clear() {
         permissionUrlMap.clear();
+    }
+
+    /**
+     * 清除字段过滤
+     */
+    public static void clearField() {
+        fieldFilterMap.clear();
     }
 
     /**
@@ -50,5 +66,15 @@ public class PermissionContext {
      */
     public static String getUrlCode(String url) {
         return permissionUrlMap.get(url);
+    }
+
+    /**
+     * 获取字段过滤
+     *
+     * @param url url
+     * @return String
+     */
+    public static String getFieldFilter(String url) {
+        return fieldFilterMap.get(url);
     }
 }

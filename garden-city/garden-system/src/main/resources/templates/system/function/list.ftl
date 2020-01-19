@@ -34,7 +34,8 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">功能名称</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="hidden" name="data.menuId"/>
+                        <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input"/>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -169,6 +170,9 @@
                             console.log(treeNode);
 
                             currentNode = treeNode;
+
+                            // 填充表单上的id
+                            $("input[name='data.menuId']").val(currentNode.id);
 
                             // 刷新表格
                             table.reload("tableData", {
