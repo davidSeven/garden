@@ -75,6 +75,17 @@ public class StorageLocationController {
         }
     }
 
+    @PostMapping(value = "/addLock")
+    @ResponseBody
+    public Result<Integer> addLock(StorageLocation storageLocation) {
+        try {
+            return new Result<Integer>().setData(storageLocationService.insertLock(storageLocation)).ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(e, ExceptionCode.ADD_EXCEPTION);
+        }
+    }
+
     @PostMapping(value = "/edit")
     @ResponseBody
     public Result<Integer> edit(StorageLocation storageLocation) {
