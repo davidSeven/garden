@@ -6,6 +6,8 @@ import com.stream.garden.warehouse.dao.IWarehouseDao;
 import com.stream.garden.warehouse.model.Warehouse;
 import com.stream.garden.warehouse.service.IWarehouseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
@@ -40,7 +42,7 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
         }
     }
 
-    // @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void addQuantity(String id, int quantity) throws ApplicationException {
         Warehouse warehouse = super.get(id);
