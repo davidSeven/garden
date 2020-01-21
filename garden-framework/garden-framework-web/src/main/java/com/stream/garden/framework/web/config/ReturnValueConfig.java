@@ -11,10 +11,10 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBody
 import java.util.ArrayList;
 import java.util.List;
 
-// @Configuration
+@Configuration
 public class ReturnValueConfig implements InitializingBean {
 
-    // @Autowired
+    @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     @Override

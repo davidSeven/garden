@@ -78,6 +78,9 @@
                 <button id="setRoleBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="setRole"
                         data-url="/system/user/toSetRole">设置角色</button>
+                <button id="testBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                        data-type="test"
+                        data-url="/system/user/toSetRole">Test</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
@@ -225,6 +228,11 @@
                 layer.msg('请选择一条记录', {icon: 7});
             }
             return false;
+        });
+
+        $("#testBtn").click(function () {
+            ajaxPost("/system/user/list");
+            ajaxPost("/system/user/get", {id: "303106967935619072"});
         });
 
         //监听行工具事件

@@ -86,6 +86,28 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/list")
+    @ResponseBody
+    public Result<List<User>> list(User user) {
+        try {
+            return new Result<List<User>>().setData(userService.list(user)).ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
+    @PostMapping(value = "/get")
+    @ResponseBody
+    public Result<User> get(String id) {
+        try {
+            return new Result<User>().setData(userService.get(id)).ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION);
+        }
+    }
+
     @PostMapping(value = "/add")
     @ResponseBody
     public Result<Integer> add(User user) {
