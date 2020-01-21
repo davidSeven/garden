@@ -115,6 +115,9 @@ public class FileUtil {
      * @throws ApplicationException e
      */
     public static List<FileInfo> uploadLocal(FileParameter fileParameter) throws ApplicationException {
+        if (null == fileParameter.getStorageType()) {
+            fileParameter.setStorageType(StorageConfig.FILE.name());
+        }
         Map<String, List<FileInfo>> fileMap = null;
         if (StorageConfig.FILE.name().equals(fileParameter.getStorageType())) {
             fileMap = localParse(fileParameter);
