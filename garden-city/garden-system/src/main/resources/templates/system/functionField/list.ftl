@@ -84,9 +84,6 @@
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
                    lay-event="edit"
                    data-url="/system/function/toEdit">编辑</a>
-                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
-                   lay-event="edit"
-                   data-url="/system/function-field/toEdit">字段权限</a>
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
                    lay-event="del"
                    data-url="/system/function/delete">删除</a>
