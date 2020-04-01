@@ -5,6 +5,7 @@ import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.warehouse.dao.IWarehouseDao;
 import com.stream.garden.warehouse.model.Warehouse;
 import com.stream.garden.warehouse.service.IWarehouseService;
+import com.stream.garden.warehouse.util.RedissLockUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String> implements IWarehouseService {
     private Lock lock = new ReentrantLock();
+
+
 
     public WarehouseServiceImpl(IWarehouseDao iWarehouseDao) {
         super(iWarehouseDao);
@@ -53,6 +56,20 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
             updateWarehouse.setId(warehouse.getId());
             updateWarehouse.setCode(String.valueOf(code));
             super.updateSelective(updateWarehouse);
+        }
+    }
+
+    @Override
+    public void addQuantityRedisLock(String id, int quantity) throws ApplicationException {
+        String lockKey = "addQuantityRedisLock";
+        try {
+            RedissLockUtil.lock(lockKey);
+            this.addQuantity(id, quantity);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new ApplicationException(e.getMessage());
+        } finally {
+            RedissLockUtil.unlock(lockKey);
         }
     }
 }

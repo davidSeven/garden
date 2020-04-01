@@ -61,8 +61,9 @@ public class StorageLocationServiceImpl extends AbstractBaseService<StorageLocat
     public int insertLock(StorageLocation storageLocation) throws ApplicationException {
         int i = super.insert(storageLocation);
         if (i == 1) {
-            this.warehouseLockService.addQuantity(storageLocation.getWarehouseId(), 1);
-            //this.warehouseService.addQuantityLock(storageLocation.getWarehouseId(), 1);
+            //this.warehouseLockService.addQuantity(storageLocation.getWarehouseId(), 1);
+            // this.warehouseService.addQuantityLock(storageLocation.getWarehouseId(), 1);
+            this.warehouseService.addQuantityRedisLock(storageLocation.getWarehouseId(), 1);
         }
         return i;
     }
