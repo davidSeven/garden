@@ -10,4 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IWarehouseDao extends IBaseMapper<Warehouse, String> {
+
+    Warehouse getLock(Warehouse warehouse);
 }

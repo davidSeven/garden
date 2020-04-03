@@ -23,7 +23,6 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
     private Lock lock = new ReentrantLock();
 
 
-
     public WarehouseServiceImpl(IWarehouseDao iWarehouseDao) {
         super(iWarehouseDao);
     }
@@ -49,14 +48,7 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
     @Override
     public void addQuantity(String id, int quantity) throws ApplicationException {
         Warehouse warehouse = super.get(id);
-        if (Objects.nonNull(warehouse)) {
-            Integer code = Integer.valueOf(warehouse.getCode());
-            code++;
-            Warehouse updateWarehouse = new Warehouse();
-            updateWarehouse.setId(warehouse.getId());
-            updateWarehouse.setCode(String.valueOf(code));
-            super.updateSelective(updateWarehouse);
-        }
+        this.addQuantity(warehouse);
     }
 
     @Override
@@ -70,6 +62,25 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
             throw new ApplicationException(e.getMessage());
         } finally {
             RedissLockUtil.unlock(lockKey);
+        }
+    }
+
+    @Override
+    public void addQuantityForUpdate(String id, int quantity) throws ApplicationException {
+        Warehouse warehouseQuery = new Warehouse();
+        warehouseQuery.setId(id);
+        Warehouse warehouse = this.getDao().getLock(warehouseQuery);
+        this.addQuantity(warehouse);
+    }
+
+    private void addQuantity(Warehouse warehouse) throws ApplicationException {
+        if (Objects.nonNull(warehouse)) {
+            Integer code = Integer.valueOf(warehouse.getCode());
+            code++;
+            Warehouse updateWarehouse = new Warehouse();
+            updateWarehouse.setId(warehouse.getId());
+            updateWarehouse.setCode(String.valueOf(code));
+            super.updateSelective(updateWarehouse);
         }
     }
 }

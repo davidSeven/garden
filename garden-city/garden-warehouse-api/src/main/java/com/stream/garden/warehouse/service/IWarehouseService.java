@@ -15,4 +15,6 @@ public interface IWarehouseService extends IBaseService<Warehouse, String> {
     void addQuantity(String id, int quantity) throws ApplicationException;
 
     void addQuantityRedisLock(String id, int quantity) throws ApplicationException;
+
+    void addQuantityForUpdate(String id, int quantity) throws ApplicationException;
 }

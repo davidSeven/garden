@@ -16,4 +16,9 @@
     <sql id="BaseTable">
         WAR_WAREHOUSE_T
     </sql>
+
+    <select id="getLock" resultMap="BaseResultMap">
+        SELECT * FROM WAR_WAREHOUSE_T
+        WHERE ID = #{id} FOR UPDATE
+    </select>
 </mapper>

@@ -63,7 +63,8 @@ public class StorageLocationServiceImpl extends AbstractBaseService<StorageLocat
         if (i == 1) {
             //this.warehouseLockService.addQuantity(storageLocation.getWarehouseId(), 1);
             // this.warehouseService.addQuantityLock(storageLocation.getWarehouseId(), 1);
-            this.warehouseService.addQuantityRedisLock(storageLocation.getWarehouseId(), 1);
+            // this.warehouseService.addQuantityRedisLock(storageLocation.getWarehouseId(), 1);
+            this.warehouseService.addQuantityForUpdate(storageLocation.getWarehouseId(), 1);
         }
         return i;
     }
