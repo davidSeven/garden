@@ -5,7 +5,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * @author zhangyuyuan
+ * @author garden
  * @date 2020-04-07 13:49
  */
 public class SchedulerFactoryBean implements FactoryBean<Scheduler> {
