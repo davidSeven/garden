@@ -4,6 +4,7 @@ import com.stream.garden.framework.limit.annotation.Limit;
 import com.stream.garden.framework.limit.enums.LimitType;
 import com.stream.garden.framework.type.DefaultTargetType;
 import com.stream.garden.framework.web.util.ApplicationUtil;
+import com.stream.garden.framework.web.util.ContextUtil;
 import com.stream.garden.framework.web.util.IPUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -69,6 +70,9 @@ public abstract class AbstractHandlerLimit implements HandlerLimit {
                 break;
             case CUSTOMER:
                 key = limitAnnotation.key();
+                break;
+            case USER:
+                key = ContextUtil.getUserId();
                 break;
             default:
                 key = getIpAddress();

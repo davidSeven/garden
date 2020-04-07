@@ -24,6 +24,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label lay-required">任务名称</label>
             <div class="layui-input-block">
+                <input type="hidden" name="id"/>
                 <input type="text" name="name" required lay-verify="required" placeholder="请输入任务名称" autocomplete="off" class="layui-input"/>
             </div>
         </div>

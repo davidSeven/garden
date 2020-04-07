@@ -4,6 +4,7 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.framework.limit.annotation.Limit;
+import com.stream.garden.framework.limit.enums.LimitType;
 import com.stream.garden.system.exception.SystemExceptionCode;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
@@ -93,7 +94,7 @@ public class MenuController {
 
     @PostMapping(value = "/list")
     @ResponseBody
-    @Limit(name = "menu", key = "list", prefix = "limit", period = 1, count = 1)
+    @Limit(name = "menu", key = "list", prefix = "limit", period = 1, count = 1, limitType = LimitType.USER)
 //    @Cacheable(value = CACHE_NAMES, key = CACHE_KEY)
     public Result<List<Menu>> list(Menu menu) {
         try {

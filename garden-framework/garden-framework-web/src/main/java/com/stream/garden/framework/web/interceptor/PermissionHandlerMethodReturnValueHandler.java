@@ -28,6 +28,7 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
         fieldSet.add("data.lastLoginIp");
         filterFields.put("/system/user/pageList", fieldSet);
         filterFields.put("/system/user/list", fieldSet);
+        filterFields.put("/system/user/get", fieldSet);
     }
 
     public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate) {

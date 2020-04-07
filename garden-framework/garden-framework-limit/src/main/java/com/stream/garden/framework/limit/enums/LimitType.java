@@ -13,5 +13,10 @@ public enum LimitType {
      * 根据请求者IP
      */
     IP,
+    /**
+     * 根据请求用户ID
+     */
+    USER,
+
     ;
 }
