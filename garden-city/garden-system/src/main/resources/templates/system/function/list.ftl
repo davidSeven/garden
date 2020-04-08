@@ -260,7 +260,7 @@
                             return formatDate(row.updationDate);
                         }
                     }
-                    , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 120}
+                    , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 200}
                 ]]
             });
         }

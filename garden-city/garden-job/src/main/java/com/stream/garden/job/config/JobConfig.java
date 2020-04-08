@@ -56,14 +56,16 @@ public class JobConfig implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        Class<Scheduler> schedulerClass = Scheduler.class;
+        String className = schedulerClass.getName();
+        String alias = "scheduler";
+        // 拿到自己注册的实例
+        this.scheduler = this.applicationContext.getBean(schedulerClass);
+
         // 启用任务调度
         if (enabled) {
             ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) this.applicationContext;
             BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) configurableApplicationContext.getBeanFactory();
-
-            Class<Scheduler> schedulerClass = Scheduler.class;
-            String className = schedulerClass.getName();
-            String alias = "scheduler";
 
             // 动态注册Bean Scheduler
 //            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(SchedulerFactoryBean.class);
@@ -73,11 +75,8 @@ public class JobConfig implements InitializingBean {
             // 获取注册的Bean Scheduler
             // Object scheduler1 = this.applicationContext.getBean(alias);
             // Object scheduler2 = this.applicationContext.getBean(alias, schedulerClass);
-            // 这里根据类型去获取会拿到多个实例，QuartzAutoConfiguration配置类已经注册了一个
+            // 这里根据类型去获取会拿到多个实例，QuartzAutoConfiguration 配置类已经注册了一个
             // Object scheduler3 = this.applicationContext.getBean(schedulerClass);
-
-            // 拿到自己注册的实例
-            this.scheduler = this.applicationContext.getBean(schedulerClass);
 
             JobScheduler.setScheduler(this.scheduler);
 
