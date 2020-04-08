@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.BeanSerializer;
 import com.stream.garden.framework.util.EncryptUtils;
 import com.stream.garden.framework.web.json.HandlerJsonView;
 import com.stream.garden.framework.web.json.HandlerJsonViewFilter;
@@ -30,6 +32,9 @@ public class Test {
         // 时间的转化格式,转换成时间戳
         // objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+        //
+        // objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         HandlerJsonViewSerializer serializer = new HandlerJsonViewSerializer();
         objectMapper.registerModule(new HandlerJsonViewModule(serializer));
@@ -68,7 +73,7 @@ public class Test {
                 // 敏感字段
                 if (sensitiveFieldSet.contains(name)) {
                     try {
-                        jgen.writeFieldName(fieldName);
+                        jgen.writeFieldName(fieldName + "Encoder");
                         jgen.writeString(EncryptUtils.base64Encoder(value.toString()));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -79,8 +84,9 @@ public class Test {
             }
         });
         try {
-            String string = objectMapper.writeValueAsString(handlerJsonView);
-            System.out.println(string);
+            System.out.println(objectMapper.writeValueAsString(handlerJsonView));
+            System.out.println(objectMapper.writeValueAsString(user));
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
  */
 public class HandlerJsonViewModule extends SimpleModule {
 
+    private static final long serialVersionUID = 1741077246505553071L;
+
     public HandlerJsonViewModule() {
         this(new HandlerJsonViewSerializer());
     }

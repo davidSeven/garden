@@ -1,9 +1,12 @@
 package com.stream.garden.framework.web.config;
 
 import com.stream.garden.framework.web.interceptor.PermissionHandlerMethodReturnValueHandler;
+import com.stream.garden.framework.web.json.HandlerJsonViewMessageConverter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
@@ -29,5 +32,10 @@ public class ReturnValueConfig implements InitializingBean {
             }
         }
         requestMappingHandlerAdapter.setReturnValueHandlers(list);
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter getMappingJackson2HttpMessageConverter() {
+        return new HandlerJsonViewMessageConverter();
     }
 }

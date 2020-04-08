@@ -1,10 +1,12 @@
 package com.stream.garden.framework.web.json.test;
 
+import java.io.Serializable;
+
 /**
  * @author garden
  * @date 2020-04-07 19:59
  */
-public class ObjectValue {
+public class ObjectValue implements Serializable {
 
     private Integer id;
     private String name;

@@ -1,7 +1,12 @@
 package com.stream.garden.framework.web.interceptor;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
+import com.stream.garden.framework.util.EncryptUtils;
+import com.stream.garden.framework.web.json.HandlerJsonView;
+import com.stream.garden.framework.web.json.HandlerJsonViewFilter;
+import com.stream.garden.framework.web.json.test.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -9,6 +14,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -51,7 +57,49 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
             fieldSet = filterFields.get(servletPath);
         }
         // 处理返回值
-        this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSet), methodParameter, modelAndViewContainer, nativeWebRequest);
+        // this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSet), methodParameter, modelAndViewContainer, nativeWebRequest);
+        if (null != fieldSet) {
+            this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSet, null), methodParameter, modelAndViewContainer, nativeWebRequest);
+        } else {
+            this.delegate.handleReturnValue(o, methodParameter, modelAndViewContainer, nativeWebRequest);
+        }
+    }
+
+    private Object handleReturnValue(Object source, Set<String> handlerFieldSet, Set<String> sensitiveFieldSet) {
+        if (null == source) {
+            return null;
+        }
+        if (null == handlerFieldSet) {
+            return source;
+        }
+        HandlerJsonView<?> handlerJsonView = new HandlerJsonView<>(source);
+        handlerJsonView.setHandlerJsonViewFilter(new HandlerJsonViewFilter() {
+            @Override
+            public boolean filter(String currentPath, String fieldName, Object value, JsonGenerator jgen) {
+                String prefix = currentPath.length() > 0 ? currentPath + "." : "";
+                String name = prefix + fieldName;
+                // 不可见字段
+                if (handlerFieldSet.contains(name)) {
+                    try {
+                        jgen.writeFieldName(fieldName);
+                        jgen.writeString("******");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+
+                try {
+                    jgen.writeFieldName(fieldName + "1");
+                    jgen.writeString("1");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return false;
+            }
+        });
+        return handlerJsonView;
     }
 
     /**
