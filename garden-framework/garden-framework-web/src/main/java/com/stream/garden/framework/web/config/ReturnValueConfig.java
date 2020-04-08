@@ -56,6 +56,7 @@ public class ReturnValueConfig implements InitializingBean {
 
     @Bean
     public HandlerFieldSerializer handlerFieldSerializer() {
+        // 这里后期可以做成配置化的，根据权限判断字段是否可以看见
         return new HandlerFieldSerializer() {
             @Override
             public FieldSerializer filterUrl(String url) {
