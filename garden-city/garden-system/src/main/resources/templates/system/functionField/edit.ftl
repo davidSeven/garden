@@ -14,23 +14,17 @@
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">功能名称</label>
+            <label class="layui-form-label lay-required">字段名称</label>
             <div class="layui-input-block">
                 <input type="hidden" name="id">
-                <input type="hidden" name="menuId">
+                <input type="hidden" name="functionId">
                 <input type="text" name="name" required lay-verify="required" placeholder="请输入功能名称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">功能编码</label>
+            <label class="layui-form-label lay-required">字段编码</label>
             <div class="layui-input-block">
                 <input type="text" name="code" required lay-verify="required" placeholder="请输入功能编码" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label lay-required">功能地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="url" required lay-verify="required" placeholder="请输入功能地址" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -65,12 +59,9 @@
         layui.init = function (params) {
             // 处理初始值
             if (params.isInsert) {
-                var nodes = params.nodes;
+                var data = params.data;
                 // 新增
-                if (nodes && nodes.length) {
-                    var node = nodes[0];
-                    $("input[name='menuId']").val(node.id);
-                }
+                $("input[name='functionId']").val(data.functionId);
             } else {
                 // 修改
                 jsonData("editForm", params.data);
@@ -82,9 +73,9 @@
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
             var id = data.field.id;
-            var url = '/system/function/add';
+            var url = '/system/function-field/add';
             if (id) {
-                url = '/system/function/edit';
+                url = '/system/function-field/edit';
             }
             ajaxPost(url, data.field, function (data) {
                 if (data.success) {

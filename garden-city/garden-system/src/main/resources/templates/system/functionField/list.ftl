@@ -25,29 +25,20 @@
 
 <body>
 <div class="page-content-wrap">
-    <div class="layui-col-md3">
-        <ul id="menuTree" class="ztree"></ul>
-    </div>
-    <div class="layui-card layui-col-md9">
+    <div class="layui-card">
         <form class="layui-form layui-card-header layuiadmin-card-header-auto search-form">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">功能名称</label>
+                    <label class="layui-form-label">字段名称</label>
                     <div class="layui-input-inline">
-                        <input type="hidden" name="data.menuId"/>
+                        <input type="hidden" name="data.functionId"/>
                         <input type="text" name="data.name" placeholder="请输入" autocomplete="off" class="layui-input"/>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">功能编码</label>
+                    <label class="layui-form-label">字段编码</label>
                     <div class="layui-input-inline">
                         <input type="text" name="data.code" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">功能地址</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="data.url" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -75,18 +66,19 @@
             <div class="tool-btn">
                 <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="add"
-                        data-url="/system/function/toEdit">添加</button>
+                        data-url="/system/function-field/toEdit">添加</button>
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
-                        data-url="/system/function/delete">删除</button>
+                        data-url="/system/function-field/delete">删除</button>
+                <button type="button" class="layui-btn layui-btn-primary close-btn">关闭</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
                    lay-event="edit"
-                   data-url="/system/function/toEdit">编辑</a>
+                   data-url="/system/function-field/toEdit">编辑</a>
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
                    lay-event="del"
-                   data-url="/system/function/delete">删除</a>
+                   data-url="/system/function-field/delete">删除</a>
             </script>
             <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
         </div>
@@ -108,160 +100,79 @@
         var index = parent.layer.getFrameIndex(window.name);
         console.log('current page index:' + index);
 
-        var config = {
-            showIcon: true,
-            showDisabled: true
+        var functionId = null;
+        var functionData = null;
+
+        // 初始化方法
+        layui.init = function (params) {
+            functionId = params.data.id;
+            functionData = params.data;
+            $("input[name='data.functionId']").val(functionId);
         };
 
-        // 当前选中节点
-        var currentNode = null;
-
-        function getTree() {
-
-            ajaxPost('/system/function/menuList', null, function (data) {
-                if (data.success) {
-                    callback && callback(data.data);
-                } else {
-                    parent.layer.msg(data.msg, {icon: 2});
-                }
-            });
-
-            // 成功后的回调
-            function callback(datas) {
-                if (datas && datas.length) {
-                    $.each(datas, function (i, v) {
-                        var ns = [v.name];
-                        if (v.icon && config.showIcon) {
-                            ns.push('<i style="margin-left: 5px;" class="layui-icon ' + v.icon + '"></i>');
-                        }
-                        v['name_ztree'] = ns.join("");
-                    });
-                }
-
-                var setting = {
-                    view: {
-                        dblClickExpand: false,
-                        showLine: true,
-                        selectedMulti: false,
-                        nameIsHTML: true,
-                        fontCss: function (treeId, treeNode) {
-                            if (treeNode.state === '0' && config.showDisabled) {
-                                return {
-                                    "color": "#c9c9c9"
-                                };
-                            }
-                        }
-                    },
-                    data: {
-                        simpleData: {
-                            enable: true,
-                            idKey: "id",
-                            pIdKey: "parentId",
-                            rootPId: ""
-                        },
-                        key: {
-                            icon: "icon_name_ztree",
-                            name: "name_ztree",
-                            title: "name"
-                        }
-                    },
-                    callback: {
-                        onClick: function (event, treeId, treeNode) {
-                            console.log(treeNode);
-
-                            currentNode = treeNode;
-
-                            // 填充表单上的id
-                            $("input[name='data.menuId']").val(currentNode.id);
-
-                            // 刷新表格
-                            table.reload("tableData", {
-                                where: {
-                                    "data.menuId": currentNode.id
-                                },
-                                url: '/system/function/pageList'
-                            });
-                        }
-                    }
-                };
-
-                var treeObj = $.fn.zTree.init($("#menuTree"), setting, datas);
-                treeObj.expandAll(true);
-            }
-        }
         // 新增，编辑后回调
         layui.refresh = function() {
             // 刷新表格
-            table.reload("tableData", {
-                where: {
-                    "data.menuId": currentNode.id
-                },
-                url: '/system/function/pageList'
-            });
+            table.reload("tableData");
         };
-        getTree();
 
-        function getTableData() {
-            table.render({
-                elem: '#tableData'
-                //, url: '/system/function/pageList'
-                , data: []
-                , method: 'post'
-                , page: {
-                    limit: 20
-                    , limits: [10, 20, 50, 200]
-                }
-                //,height: '350'
-                , height: 'full-220'
-                , done: function (response, curr, count) {
-                    //$(".layui-card-body").resetTableHeight();
-                }
-                , request: {
-                    pageName: 'pageSize.page'
-                    , limitName: 'pageSize.pageSize'
-                }
-                , parseData: function (response) {
-                    return {
-                        "code": response.code,  //解析接口状态
-                        "msg": response.msg,    //解析提示文本
-                        "count": response.data ? response.data.rowTotal : 0,    //解析数据长度
-                        "data": response.data ? response.data.rows : []         //解析数据列表
-                    };
-                }
-                // ,data: datas
-                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-                , cols: [[
-                    {type: 'numbers'}
-                    , {type: 'checkbox'}
-                    , {field: 'name', width: 120, title: '功能名称'}
-                    , {field: 'code', width: 150, title: '功能编码', sort: true}
-                    , {field: 'url', width: 200, title: '功能地址', sort: true}
-                    , {
-                        field: 'state', width: 120, title: '状态', align: 'center', templet: function (row) {
-                            if ("1" === row.state) {
-                                return '<span class="layui-badge layui-bg-blue">启用</span>';
-                            } else {
-                                return '<span class="layui-badge layui-bg-gray">禁用</span>';
-                            }
+        table.render({
+            elem: '#tableData'
+            , url: '/system/function-field/pageList'
+            , data: []
+            , method: 'post'
+            , page: {
+                limit: 20
+                , limits: [10, 20, 50, 200]
+            }
+            //,height: '350'
+            , height: 'full-230'
+            , done: function (response, curr, count) {
+                //$(".layui-card-body").resetTableHeight();
+            }
+            , request: {
+                pageName: 'pageSize.page'
+                , limitName: 'pageSize.pageSize'
+            }
+            , parseData: function (response) {
+                return {
+                    "code": response.code,  //解析接口状态
+                    "msg": response.msg,    //解析提示文本
+                    "count": response.data ? response.data.rowTotal : 0,    //解析数据长度
+                    "data": response.data ? response.data.rows : []         //解析数据列表
+                };
+            }
+            // ,data: datas
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , cols: [[
+                {type: 'numbers'}
+                , {type: 'checkbox'}
+                , {field: 'name', width: 120, title: '字段名称'}
+                , {field: 'code', width: 150, title: '字段编码', sort: true}
+                , {
+                    field: 'state', width: 120, title: '状态', align: 'center', templet: function (row) {
+                        if ("1" === row.state) {
+                            return '<span class="layui-badge layui-bg-blue">启用</span>';
+                        } else {
+                            return '<span class="layui-badge layui-bg-gray">禁用</span>';
                         }
                     }
-                    , {field: 'createdBy', width: 120, title: '创建人'}
-                    , {
-                        field: 'creationDate', width: 160, title: '创建时间', templet: function (row) {
-                            return formatDate(row.creationDate);
-                        }
+                }
+                , {field: 'createdBy', width: 120, title: '创建人'}
+                , {
+                    field: 'creationDate', width: 160, title: '创建时间', templet: function (row) {
+                        return formatDate(row.creationDate);
                     }
-                    , {field: 'updatedBy', width: 120, title: '修改人'}
-                    , {
-                        field: 'updationDate', width: 160, title: '修改时间', templet: function (row) {
-                            return formatDate(row.updationDate);
-                        }
+                }
+                , {field: 'updatedBy', width: 120, title: '修改人'}
+                , {
+                    field: 'updationDate', width: 160, title: '修改时间', templet: function (row) {
+                        return formatDate(row.updationDate);
                     }
-                    , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 120}
-                ]]
-            });
-        }
-        getTableData();
+                }
+                , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 120}
+            ]]
+        });
 
         function formatDate(value) {
             if (value) {
@@ -271,18 +182,9 @@
         }
 
         $("#addBtn").click(function () {
-            // 获取选中的数据
-            var treeObj = $.fn.zTree.getZTreeObj("menuTree");
-            var nodes = treeObj.getSelectedNodes();
-            if (!nodes.length) {
-                layer.msg('请选择一条记录', {icon: 7});
-                return false;
-            }
-            console.log(nodes);
-
             var url = $(this).attr('data-url');
             //将iframeObj传递给父级窗口,执行操作完成刷新
-            parent.page("编辑", url, iframeObj, w = "650px", h = "400px", {isInsert: true, nodes: nodes});
+            parent.page("编辑", url, iframeObj, w = "650px", h = "400px", {isInsert: true, data: {functionId: functionId}});
             return false;
         });
 

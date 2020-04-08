@@ -85,8 +85,8 @@
                    lay-event="edit"
                    data-url="/system/function/toEdit">编辑</a>
                 <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
-                   lay-event="edit"
-                   data-url="/system/function-field/toEdit">字段权限</a>
+                   lay-event="fieldEdit"
+                   data-url="/system/function-field/toList">字段权限</a>
                 <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
                    lay-event="del"
                    data-url="/system/function/delete">删除</a>
@@ -331,6 +331,9 @@
             } else if(obj.event === 'edit'){
                 //将iframeObj传递给父级窗口,执行操作完成刷新
                 parent.page("编辑", url, iframeObj, w = "650px", h = "400px", {isInsert: false, data: data});
+            } else if(obj.event === 'fieldEdit') {
+                //将iframeObj传递给父级窗口,执行操作完成刷新
+                parent.page("功能字段", url, iframeObj, w = "1000px", h = "600px", {data: data});
             }
         });
 
