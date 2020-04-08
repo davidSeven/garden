@@ -1,10 +1,12 @@
 package com.stream.garden.framework.web.interceptor;
 
+import com.stream.garden.framework.api.model.BaseModel;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.web.json.HandlerJsonView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -52,7 +54,9 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
         }
         // 处理返回值
         // this.delegate.handleReturnValue(this.handleReturnValue(o, handlerFieldSet), methodParameter, modelAndViewContainer, nativeWebRequest);
-        if (null != fieldSerializer) {
+        // 权限字段，敏感字段的逻辑处理
+        // 用户ID显示名称的逻辑处理
+        if (null != fieldSerializer || fieldIntensify(o)) {
             this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSerializer), methodParameter, modelAndViewContainer, nativeWebRequest);
         } else {
             this.delegate.handleReturnValue(o, methodParameter, modelAndViewContainer, nativeWebRequest);
@@ -63,14 +67,49 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
         if (null == source) {
             return null;
         }
-        Set<String> handlerFieldSet = fieldSerializer.getHandlerFieldSet();
-        Set<String> sensitiveFieldSet = fieldSerializer.getSensitiveFieldSet();
-        if (null == handlerFieldSet && null == sensitiveFieldSet) {
-            return source;
+        Set<String> handlerFieldSet = null;
+        Set<String> sensitiveFieldSet = null;
+        if (null != fieldSerializer) {
+            handlerFieldSet = fieldSerializer.getHandlerFieldSet();
+            sensitiveFieldSet = fieldSerializer.getSensitiveFieldSet();
         }
         HandlerJsonView<?> handlerJsonView = new HandlerJsonView<>(source);
         handlerJsonView.setHandlerJsonViewFilter(new PermissionHandlerJsonViewFilter(handlerFieldSet, sensitiveFieldSet));
         return handlerJsonView;
+    }
+
+    /**
+     * 字段强化
+     * @param source
+     * @return
+     */
+    private boolean fieldIntensify(Object source) {
+        if (source instanceof Result) {
+            Result<?> result = (Result<?>) source;
+            Object data = result.getData();
+            if (data instanceof PageInfo) {
+                PageInfo<?> pageInfo = (PageInfo<?>) data;
+                List<?> list = pageInfo.getRows();
+                if (!CollectionUtils.isEmpty(list)) {
+                    Object sourceType = list.get(0);
+                    return sourceType instanceof BaseModel;
+                }
+            } else {
+                if (data instanceof List || data instanceof Set || data.getClass().isArray()) {
+                    Iterable iterable;
+                    if (data.getClass().isArray()) {
+                        iterable = Arrays.asList((Object[]) data);
+                    } else {
+                        iterable = (Iterable) data;
+                    }
+                    Object sourceType = iterable.iterator().next();
+                    return sourceType instanceof BaseModel;
+                } else {
+                    return data instanceof BaseModel;
+                }
+            }
+        }
+        return false;
     }
 
     /**

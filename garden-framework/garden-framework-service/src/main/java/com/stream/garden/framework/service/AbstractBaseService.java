@@ -4,11 +4,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.model.BaseModel;
+import com.stream.garden.framework.api.model.Context;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.PageSize;
 import com.stream.garden.framework.api.vo.BasePageVO;
 import com.stream.garden.framework.jdbc.mapper.IBaseMapper;
 import com.stream.garden.framework.util.CollectionUtil;
+import com.stream.garden.framework.util.ContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,10 +143,18 @@ public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> 
         }
         if (t instanceof BaseModel) {
             BaseModel baseModel = (BaseModel) t;
+            String userId = null;
+            Context context = ContextUtil.getContext();
+            if (null != context) {
+                userId = context.getUserId();
+            }
             if (isInsert) {
+                baseModel.setCreatedBy(userId);
+                baseModel.setUpdatedBy(userId);
                 baseModel.setCreationDate(new Timestamp(System.currentTimeMillis()));
                 baseModel.setUpdationDate(baseModel.getCreationDate());
             } else {
+                baseModel.setUpdatedBy(userId);
                 baseModel.setUpdationDate(new Timestamp(System.currentTimeMillis()));
             }
         }

@@ -1,6 +1,4 @@
-package com.stream.garden.framework.web.model;
-
-import java.io.Serializable;
+package com.stream.garden.framework.api.model;
 
 /**
  * @author garden

@@ -1,6 +1,6 @@
-package com.stream.garden.framework.web.util;
+package com.stream.garden.framework.util;
 
-import com.stream.garden.framework.web.model.Context;
+import com.stream.garden.framework.api.model.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ContextUtil {
     private static Logger logger = LoggerFactory.getLogger(ContextUtil.class);
-    private static ThreadLocal<Context> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<Context> threadLocal = new InheritableThreadLocal<>();
 
     private ContextUtil() {
     }

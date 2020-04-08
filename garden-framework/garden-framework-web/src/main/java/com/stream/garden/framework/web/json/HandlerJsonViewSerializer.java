@@ -357,6 +357,10 @@ public class HandlerJsonViewSerializer extends JsonSerializer<JsonView> {
                                     new JsonWriter(jgen, result, currentMatch, currentPath, path, field, serializerProvider).writeByFirst(name, val);
                                 }
                             }
+                            // 字段强化操作
+                            if (null != handlerJsonViewFilter) {
+                                handlerJsonViewFilter.fieldIntensify(name, val, jgen);
+                            }
                         }
                     } catch (IllegalArgumentException | IllegalAccessException e) {
                         e.printStackTrace();
