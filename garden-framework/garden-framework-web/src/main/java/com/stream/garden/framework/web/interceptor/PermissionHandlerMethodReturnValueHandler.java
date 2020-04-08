@@ -1,12 +1,8 @@
 package com.stream.garden.framework.web.interceptor;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
-import com.stream.garden.framework.util.EncryptUtils;
 import com.stream.garden.framework.web.json.HandlerJsonView;
-import com.stream.garden.framework.web.json.HandlerJsonViewFilter;
-import com.stream.garden.framework.web.json.test.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -14,9 +10,10 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author garden
@@ -26,19 +23,16 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
 
     private final HandlerMethodReturnValueHandler delegate;
 
-    private Map<String, Set<String>> filterFields = new HashMap<>();
-
-    {
-        Set<String> fieldSet = new HashSet<>();
-        fieldSet.add("data.rows.lastLoginIp");
-        fieldSet.add("data.lastLoginIp");
-        filterFields.put("/system/user/pageList", fieldSet);
-        filterFields.put("/system/user/list", fieldSet);
-        filterFields.put("/system/user/get", fieldSet);
-    }
+    private final HandlerFieldSerializer handlerFieldSerializer;
 
     public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate) {
         this.delegate = delegate;
+        this.handlerFieldSerializer = null;
+    }
+
+    public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate, HandlerFieldSerializer handlerFieldSerializer) {
+        this.delegate = delegate;
+        this.handlerFieldSerializer = handlerFieldSerializer;
     }
 
     @Override
@@ -50,55 +44,32 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
     public void handleReturnValue(Object o, MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest) throws Exception {
         // 获取到请求的url
         HttpServletRequest httpServletRequest = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        Set<String> fieldSet = null;
-        if (null != httpServletRequest) {
+        FieldSerializer fieldSerializer = null;
+        if (null != httpServletRequest && null != this.handlerFieldSerializer) {
             String servletPath = httpServletRequest.getServletPath();
-            System.out.println(servletPath);
-            fieldSet = filterFields.get(servletPath);
+            // System.out.println(servletPath);
+            fieldSerializer = this.handlerFieldSerializer.filterUrl(servletPath);
         }
         // 处理返回值
-        // this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSet), methodParameter, modelAndViewContainer, nativeWebRequest);
-        if (null != fieldSet) {
-            this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSet, null), methodParameter, modelAndViewContainer, nativeWebRequest);
+        // this.delegate.handleReturnValue(this.handleReturnValue(o, handlerFieldSet), methodParameter, modelAndViewContainer, nativeWebRequest);
+        if (null != fieldSerializer) {
+            this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSerializer), methodParameter, modelAndViewContainer, nativeWebRequest);
         } else {
             this.delegate.handleReturnValue(o, methodParameter, modelAndViewContainer, nativeWebRequest);
         }
     }
 
-    private Object handleReturnValue(Object source, Set<String> handlerFieldSet, Set<String> sensitiveFieldSet) {
+    private Object handleReturnValue(Object source, FieldSerializer fieldSerializer) {
         if (null == source) {
             return null;
         }
-        if (null == handlerFieldSet) {
+        Set<String> handlerFieldSet = fieldSerializer.getHandlerFieldSet();
+        Set<String> sensitiveFieldSet = fieldSerializer.getSensitiveFieldSet();
+        if (null == handlerFieldSet && null == sensitiveFieldSet) {
             return source;
         }
         HandlerJsonView<?> handlerJsonView = new HandlerJsonView<>(source);
-        handlerJsonView.setHandlerJsonViewFilter(new HandlerJsonViewFilter() {
-            @Override
-            public boolean filter(String currentPath, String fieldName, Object value, JsonGenerator jgen) {
-                String prefix = currentPath.length() > 0 ? currentPath + "." : "";
-                String name = prefix + fieldName;
-                // 不可见字段
-                if (handlerFieldSet.contains(name)) {
-                    try {
-                        jgen.writeFieldName(fieldName);
-                        jgen.writeString("******");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return true;
-                }
-
-                try {
-                    jgen.writeFieldName(fieldName + "1");
-                    jgen.writeString("1");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return false;
-            }
-        });
+        handlerJsonView.setHandlerJsonViewFilter(new PermissionHandlerJsonViewFilter(handlerFieldSet, sensitiveFieldSet));
         return handlerJsonView;
     }
 
