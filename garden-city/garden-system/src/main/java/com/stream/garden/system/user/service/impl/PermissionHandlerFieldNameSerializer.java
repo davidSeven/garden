@@ -6,10 +6,10 @@ import com.stream.garden.system.user.model.User;
 import com.stream.garden.system.user.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author garden
@@ -18,17 +18,26 @@ import java.util.Map;
 @Component
 public class PermissionHandlerFieldNameSerializer implements HandlerFieldNameSerializer {
 
-    private Map<String, String> keyValueMap = new HashMap<>();
+    /**
+     * 缓存KEY
+     */
+    private static final String PERMISSION_HANDLER_FIELD_NAME = "garden:permissionHandlerFieldName:";
     @Autowired
     private IUserService userService;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public String getName(String code) {
         if (StringUtils.isNotEmpty(code)) {
-            if (keyValueMap.containsKey(code)) {
-                return keyValueMap.get(code);
+            String key = PERMISSION_HANDLER_FIELD_NAME + code;
+            // 从缓存中获取
+            Boolean hasKey = redisTemplate.hasKey(key);
+            if (null != hasKey && hasKey) {
+                Object value = redisTemplate.opsForValue().get(key);
+                return (String) value;
             } else {
-                String value = null;
+                String value = "";
                 User user = null;
                 try {
                     user = this.userService.get(code);
@@ -38,10 +47,7 @@ public class PermissionHandlerFieldNameSerializer implements HandlerFieldNameSer
                 if (null != user) {
                     value = user.getName();
                 }
-                if (keyValueMap.size() > 100) {
-                    keyValueMap.clear();
-                }
-                keyValueMap.put(code, value);
+                redisTemplate.opsForValue().set(key, value, 10, TimeUnit.DAYS);
                 return value;
             }
         }
