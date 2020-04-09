@@ -158,13 +158,13 @@
                         }
                     }
                 }
-                , {field: 'createdBy', width: 120, title: '创建人'}
+                , {field: 'createdByName', width: 120, title: '创建人'}
                 , {
                     field: 'creationDate', width: 160, title: '创建时间', templet: function (row) {
                         return formatDate(row.creationDate);
                     }
                 }
-                , {field: 'updatedBy', width: 120, title: '修改人'}
+                , {field: 'updatedByName', width: 120, title: '修改人'}
                 , {
                     field: 'updationDate', width: 160, title: '修改时间', templet: function (row) {
                         return formatDate(row.updationDate);

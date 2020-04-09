@@ -92,4 +92,9 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
     public PageInfo<User> pageList(BasePageVO<User, String> pageVO) throws ApplicationException {
         return super.pageList(pageVO);
     }
+
+    @Override
+    public User getUserByCode(String code) {
+        return this.getDao().getUserByCode(code);
+    }
 }

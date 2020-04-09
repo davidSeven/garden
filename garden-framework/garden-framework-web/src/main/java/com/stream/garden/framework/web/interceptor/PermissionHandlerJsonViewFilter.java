@@ -16,10 +16,14 @@ public class PermissionHandlerJsonViewFilter implements HandlerJsonViewFilter {
 
     private Set<String> handlerFieldSet;
     private Set<String> sensitiveFieldSet;
+    private HandlerFieldNameSerializer handlerFieldNameSerializer;
 
-    public PermissionHandlerJsonViewFilter(Set<String> handlerFieldSet, Set<String> sensitiveFieldSet) {
-        this.handlerFieldSet = handlerFieldSet;
-        this.sensitiveFieldSet = sensitiveFieldSet;
+    public PermissionHandlerJsonViewFilter(FieldSerializer fieldSerializer, HandlerFieldNameSerializer handlerFieldNameSerializer) {
+        if (null != fieldSerializer) {
+            this.handlerFieldSet = fieldSerializer.getHandlerFieldSet();
+            this.sensitiveFieldSet = fieldSerializer.getSensitiveFieldSet();
+        }
+        this.handlerFieldNameSerializer = handlerFieldNameSerializer;
     }
 
     @Override
@@ -59,25 +63,20 @@ public class PermissionHandlerJsonViewFilter implements HandlerJsonViewFilter {
         if (null == value) {
             return;
         }
+        if (null == handlerFieldNameSerializer) {
+            return;
+        }
         if ("createdBy".equals(fieldName) || "updatedBy".equals(fieldName)) {
             String text = (String) value;
             if (StringUtils.isEmpty(text)) {
                 return;
             }
-            if ("createdBy".equals(fieldName)) {
-                try {
-                    jgen.writeFieldName("createdByName");
-                    jgen.writeString("张三");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else if ("updatedBy".equals(fieldName)) {
-                try {
-                    jgen.writeFieldName("updatedByName");
-                    jgen.writeString("李四");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                String name = handlerFieldNameSerializer.getName(text);
+                jgen.writeFieldName(fieldName + "Name");
+                jgen.writeString(name);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

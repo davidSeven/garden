@@ -20,6 +20,8 @@ public class User implements Serializable {
     private ObjectValue objectValue;
     private List<ObjectValue> objectValueList;
 
+    private boolean success;
+
     public User() {
     }
 
@@ -95,5 +97,13 @@ public class User implements Serializable {
 
     public void setObjectValueList(List<ObjectValue> objectValueList) {
         this.objectValueList = objectValueList;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public boolean isSuccess() {
+        return null != this.id;
     }
 }

@@ -20,6 +20,7 @@ public class Result<T> implements Serializable {
     private String msg;
     private T data;
     private String traceId;
+    private boolean success;
 
     public Result() {
         this(ExceptionCode.UNKOWN_EXCEPTION);
@@ -63,6 +64,8 @@ public class Result<T> implements Serializable {
     public void setAppCode(AppCode appCode) {
         this.code = appCode.getCode();
         this.msg = appCode.getMessage();
+        // 处理成功标识
+        this.success = this.code == ExceptionCode.SUCCESS.getCode();
     }
 
     public Result<T> ok() {
@@ -103,7 +106,15 @@ public class Result<T> implements Serializable {
         this.traceId = traceId;
     }
 
-    public boolean isSuccess() {
+    /*public boolean isSuccess() {
         return this.code == ExceptionCode.SUCCESS.getCode();
+    }*/
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

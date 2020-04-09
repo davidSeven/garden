@@ -26,15 +26,18 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
     private final HandlerMethodReturnValueHandler delegate;
 
     private final HandlerFieldSerializer handlerFieldSerializer;
+    private final HandlerFieldNameSerializer handlerFieldNameSerializer;
 
     public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate) {
         this.delegate = delegate;
         this.handlerFieldSerializer = null;
+        this.handlerFieldNameSerializer = null;
     }
 
-    public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate, HandlerFieldSerializer handlerFieldSerializer) {
+    public PermissionHandlerMethodReturnValueHandler(HandlerMethodReturnValueHandler delegate, HandlerFieldSerializer handlerFieldSerializer, HandlerFieldNameSerializer handlerFieldNameSerializer) {
         this.delegate = delegate;
         this.handlerFieldSerializer = handlerFieldSerializer;
+        this.handlerFieldNameSerializer = handlerFieldNameSerializer;
     }
 
     @Override
@@ -57,29 +60,24 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
         // 权限字段，敏感字段的逻辑处理
         // 用户ID显示名称的逻辑处理
         if (null != fieldSerializer || fieldIntensify(o)) {
-            this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSerializer), methodParameter, modelAndViewContainer, nativeWebRequest);
+            this.delegate.handleReturnValue(this.handleReturnValue(o, fieldSerializer, handlerFieldNameSerializer), methodParameter, modelAndViewContainer, nativeWebRequest);
         } else {
             this.delegate.handleReturnValue(o, methodParameter, modelAndViewContainer, nativeWebRequest);
         }
     }
 
-    private Object handleReturnValue(Object source, FieldSerializer fieldSerializer) {
+    private Object handleReturnValue(Object source, FieldSerializer fieldSerializer, HandlerFieldNameSerializer handlerFieldNameSerializer) {
         if (null == source) {
             return null;
         }
-        Set<String> handlerFieldSet = null;
-        Set<String> sensitiveFieldSet = null;
-        if (null != fieldSerializer) {
-            handlerFieldSet = fieldSerializer.getHandlerFieldSet();
-            sensitiveFieldSet = fieldSerializer.getSensitiveFieldSet();
-        }
         HandlerJsonView<?> handlerJsonView = new HandlerJsonView<>(source);
-        handlerJsonView.setHandlerJsonViewFilter(new PermissionHandlerJsonViewFilter(handlerFieldSet, sensitiveFieldSet));
+        handlerJsonView.setHandlerJsonViewFilter(new PermissionHandlerJsonViewFilter(fieldSerializer, handlerFieldNameSerializer));
         return handlerJsonView;
     }
 
     /**
      * 字段强化
+     *
      * @param source
      * @return
      */

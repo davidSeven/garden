@@ -185,4 +185,13 @@
         </if>
     </select>
 
+    <select id="getUserByCode" resultMap="BaseResultMap">
+        SELECT
+        t.*
+        FROM SYS_USER_T t
+        <where>
+            t.CODE = #{code,jdbcType=VARCHAR}
+        </where>
+    </select>
+
 </mapper>

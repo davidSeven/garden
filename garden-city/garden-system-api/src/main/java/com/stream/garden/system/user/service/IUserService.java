@@ -36,4 +36,12 @@ public interface IUserService extends IBaseService<User, String> {
      * @return list
      */
     List<PermissionBO> getPermissionByRoleId(String roleId);
+
+    /**
+     * 根据用户编码查询用户
+     *
+     * @param code code
+     * @return User
+     */
+    User getUserByCode(String code);
 }
