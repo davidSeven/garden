@@ -90,9 +90,11 @@ public class RequestFilter extends StaticExcludeFilter implements Filter {
             logger.info(">>>请求路径：{}[{}]，开始时间：{}，结束时间：{}，总耗时：{}",
                     uri, method, startTime, endTime, times);
         }
+        /*
         if (RequestFilterHandlerEventListener.hasRequestFilterHandler) {
             ApplicationUtil.publishEvent(new RequestFilterHandlerEvent(this, uri, times));
         }
+        */
     }
 
     @Override

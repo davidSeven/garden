@@ -79,7 +79,7 @@ public class FunctionFieldController {
     @ResponseBody
     public Result<Integer> edit(FunctionField functionField) {
         try {
-            return new Result<Integer>().ok().setData(functionFieldService.update(functionField));
+            return new Result<Integer>().ok().setData(functionFieldService.updateSelective(functionField));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(e, SystemExceptionCode.FUNCTION_EDIT_EXCEPTION.getAppCode(e));

@@ -50,13 +50,13 @@ public class GlobalApplicationRunner implements ApplicationRunner {
         logger.debug(">>>path:{}", GlobalConfig.path);
         logger.debug(">>>uploadPath:{}", GlobalConfig.uploadPath);
         logger.debug(">>>UPLOAD_DIR:{}", GlobalConfig.UPLOAD_DIR);
-        printController();
+        // printController();
         runCompleted();
         printServiceInfo();
         line();
 
         // 测试全路径访问Service
-        try {
+        /*try {
 
             Class<?> clazz = Class.forName("com.stream.garden.system.user.service.IUserService");
 
@@ -69,7 +69,7 @@ public class GlobalApplicationRunner implements ApplicationRunner {
             logger.debug("value: {}", value);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        }
+        }*/
     }
 
     private void printController() {
