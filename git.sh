@@ -29,6 +29,8 @@ push() {
     git config user.name $old_un
     git config user.email $old_ue
 
+    #echo "current user name : $(git config user.name)"
+    #echo "current user email: $(git config user.email)"
     echo "current user name : `git config user.name`"
     echo "current user email: `git config user.email`"
 
