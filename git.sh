@@ -21,8 +21,8 @@ push() {
     echo "do git commit -a -m 'add'"
     git commit -a -m 'add'
 
-    echo "do git push"
-    git push
+    echo "do git push origin master"
+    git push origin master
 
     echo "switch..."
 
