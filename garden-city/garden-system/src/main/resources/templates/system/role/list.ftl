@@ -204,7 +204,7 @@
             if (data.length === 1) {
                 var url = $(this).attr('data-url');
                 //将iframeObj传递给父级窗口,执行操作完成刷新
-                parent.page("权限设置", url, iframeObj, w = "400px", h = "600px", {isInsert: false, data: data});
+                parent.page("权限设置", url, iframeObj, w = "600px", h = "600px", {isInsert: false, data: data});
                 return false;
             } else {
                 layer.msg('请选择一条记录', {icon: 7});

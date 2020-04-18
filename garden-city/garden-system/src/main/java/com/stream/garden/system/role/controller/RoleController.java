@@ -7,8 +7,11 @@ import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
 import com.stream.garden.framework.api.vo.OrderByObj;
 import com.stream.garden.system.exception.SystemExceptionCode;
+import com.stream.garden.system.function.vo.FunctionFieldTypeResultVO;
 import com.stream.garden.system.role.model.Role;
 import com.stream.garden.system.role.model.RoleFunction;
+import com.stream.garden.system.role.model.RoleFunctionField;
+import com.stream.garden.system.role.service.IRoleFunctionFieldService;
 import com.stream.garden.system.role.service.IRoleFunctionService;
 import com.stream.garden.system.role.service.IRoleService;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author garden
@@ -40,6 +44,8 @@ public class RoleController {
     private IRoleService roleService;
     @Autowired
     private IRoleFunctionService roleFunctionService;
+    @Autowired
+    private IRoleFunctionFieldService roleFunctionFieldService;
 
     /**
      * 跳转列表页面
@@ -147,6 +153,17 @@ public class RoleController {
             RoleMenuVO vo = JSONObject.parseObject(voJson, RoleMenuVO.class);
             this.roleFunctionService.saveMenuFunction(vo);
             return new Result<Integer>().ok();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));
+        }
+    }
+
+    @PostMapping(value = "/getRoleFunctionField")
+    @ResponseBody
+    public Result<Map<Integer, List<FunctionFieldTypeResultVO>>> getRoleFunctionField(RoleFunctionField params) {
+        try {
+            return new Result<Map<Integer, List<FunctionFieldTypeResultVO>>>().ok().setData(roleFunctionFieldService.listConfig(params));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new Result<>(ExceptionCode.UNKOWN_EXCEPTION.getAppCode(e));

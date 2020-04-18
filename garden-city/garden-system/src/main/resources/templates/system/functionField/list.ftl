@@ -70,6 +70,10 @@
                 <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
                         data-type="batchdel"
                         data-url="/system/function-field/delete">删除</button>
+                <button id="permissionBtn" type="button" class="layui-btn layui-btn-primary"
+                        data-url="/system/function-field-type/toEdit">权限字段</button>
+                <button id="sensitiveBtn" type="button" class="layui-btn layui-btn-primary"
+                        data-url="/system/function-field-type/toEdit">敏感字段</button>
                 <button type="button" class="layui-btn layui-btn-primary close-btn">关闭</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
@@ -185,6 +189,20 @@
             var url = $(this).attr('data-url');
             //将iframeObj传递给父级窗口,执行操作完成刷新
             parent.page("编辑", url, iframeObj, w = "650px", h = "400px", {isInsert: true, data: {functionId: functionId}});
+            return false;
+        });
+
+        $("#permissionBtn").click(function() {
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("权限字段", url, iframeObj, w = "650px", h = "400px", {functionId: functionId, type: 10});
+            return false;
+        });
+
+        $("#sensitiveBtn").click(function() {
+            var url = $(this).attr('data-url');
+            //将iframeObj传递给父级窗口,执行操作完成刷新
+            parent.page("敏感字段", url, iframeObj, w = "650px", h = "400px", {functionId: functionId, type: 20});
             return false;
         });
 

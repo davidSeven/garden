@@ -1,13 +1,11 @@
 <#import "../../spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
     <title>权限设置</title>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url''/>/static/admin/css/admin.css"/>
@@ -16,11 +14,24 @@
 
     </style>
 </head>
-
 <body>
-<div class="layui-fluid" style="padding-top: 15px">
-    <div class="layui-col-md12">
-        <ul id="organizationTree" class="ztree" style="height: 450px; overflow: scroll; border: 1px solid #333;"></ul>
+<div class="page-content-wrap">
+    <div class="layui-col-md7">
+        <ul id="organizationTree" class="ztree" style="height: 450px; overflow: scroll; border: 1px solid #CCC"></ul>
+    </div>
+    <div class="layui-col-md5">
+        <form id="fieldForm" class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限字段</label>
+                <div id="fieldDiv" class="layui-input-block">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限字段</label>
+                <div id="fieldDiv" class="layui-input-block">
+                </div>
+            </div>
+        </form>
     </div>
     <form id="editForm" class="layui-form" style="padding-top: 20px;">
         <div class="layui-form-item">

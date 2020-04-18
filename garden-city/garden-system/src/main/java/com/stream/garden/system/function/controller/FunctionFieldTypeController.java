@@ -1,5 +1,6 @@
 package com.stream.garden.system.function.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.system.exception.SystemExceptionCode;
@@ -42,8 +43,9 @@ public class FunctionFieldTypeController {
 
     @PostMapping(value = "/save")
     @ResponseBody
-    public Result<Integer> save(FunctionFieldTypeSaveVO vo) {
+    public Result<Integer> save(String json) {
         try {
+            FunctionFieldTypeSaveVO vo = JSONObject.parseObject(json, FunctionFieldTypeSaveVO.class);
             return new Result<Integer>().setData(functionFieldTypeService.save(vo)).ok();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

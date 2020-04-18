@@ -11,6 +11,7 @@ import com.stream.garden.system.menu.service.IMenuService;
 import com.stream.garden.system.role.dao.IRoleFunctionDao;
 import com.stream.garden.system.role.model.RoleFunction;
 import com.stream.garden.system.role.model.RoleMenu;
+import com.stream.garden.system.role.service.IRoleFunctionFieldService;
 import com.stream.garden.system.role.service.IRoleFunctionService;
 import com.stream.garden.system.role.service.IRoleMenuService;
 import com.stream.garden.system.role.vo.MenuFunctionVO;
@@ -37,6 +38,8 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
     private IFunctionService functionService;
     @Autowired
     private IRoleMenuService roleMenuService;
+    @Autowired
+    private IRoleFunctionFieldService roleFunctionFieldService;
 
     public RoleFunctionServiceImpl(IRoleFunctionDao iRoleFunctionDao) {
         super(iRoleFunctionDao);
@@ -76,6 +79,8 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
             if (CollectionUtil.isNotEmpty(roleFunctionList)) {
                 this.insertBatch(roleFunctionList);
             }
+            // 保存字段数据
+            this.roleFunctionFieldService.saveBatch(roleId, vo.getFieldList());
         }
     }
 

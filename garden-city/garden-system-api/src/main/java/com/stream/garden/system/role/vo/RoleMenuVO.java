@@ -1,5 +1,7 @@
 package com.stream.garden.system.role.vo;
 
+import com.stream.garden.system.role.model.RoleFunctionField;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +14,11 @@ public class RoleMenuVO implements Serializable {
 
     private String roleId;
     private List<MenuFunctionVO> voList;
+
+    /**
+     * 字段
+     */
+    private List<RoleFunctionField> fieldList;
 
     public String getRoleId() {
         return roleId;
@@ -27,5 +34,13 @@ public class RoleMenuVO implements Serializable {
 
     public void setVoList(List<MenuFunctionVO> voList) {
         this.voList = voList;
+    }
+
+    public List<RoleFunctionField> getFieldList() {
+        return fieldList;
+    }
+
+    public void setFieldList(List<RoleFunctionField> fieldList) {
+        this.fieldList = fieldList;
     }
 }

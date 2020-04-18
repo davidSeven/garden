@@ -14,24 +14,10 @@
 <div class="wrap-container">
     <form id="editForm" class="layui-form" style="width: 90%;padding-top: 20px;">
         <div class="layui-form-item">
-            <label class="layui-form-label lay-required">字段名称</label>
-            <div class="layui-input-block">
-                <input type="hidden" name="id">
-                <input type="hidden" name="functionId">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入功能名称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label lay-required">字段编码</label>
-            <div class="layui-input-block">
-                <input type="text" name="code" required lay-verify="required" placeholder="请输入功能编码" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <input type="radio" name="state" value="1" title="启用" checked>
-                <input type="radio" name="state" value="0" title="禁用">
+            <input type="hidden" name="functionId">
+            <input type="hidden" name="type">
+            <label class="layui-form-label">权限字段</label>
+            <div id="fieldDiv" class="layui-input-block">
             </div>
         </div>
         <div class="layui-form-item">
@@ -56,28 +42,48 @@
         console.log('current page index:' + index);
 
         // 初始化方法
-        layui.init = function (params) {
-            // 处理初始值
-            if (params.isInsert) {
-                var data = params.data;
-                // 新增
-                $("input[name='functionId']").val(data.functionId);
-            } else {
-                // 修改
-                jsonData("editForm", params.data);
+        layui.init = function (data) {
+            // 填充默认值
+            jsonData("editForm", data);
+            // 查询字段相关信息
+            var url = "/system/function-field-type/list-view";
+            var params = {
+                functionId: data.functionId,
+                type: data.type
+            };
+            ajaxPost(url, params, function (data) {
+                if (data.success) {
+                    var fields = data.data;
+                    if (fields) {
+                        var length = fields.length;
+                        for (var i = 0; i < length; i++) {
+                            var field = fields[i];
+                            $("#fieldDiv").append('<input type="checkbox" name="fields" value="'+field.functionFieldId+'" lay-skin="primary" title="'+field.name+'"'+(field.type ? 'checked=""':'')+'>');
+                        }
+                    }
+                }
+                // 渲染，动态添加的内容需要渲染后才会显示
                 form.render();
-            }
+            });
         };
 
         //监听提交
         form.on('submit(editForm)', function(data) {
             console.log(data.field);
-            var id = data.field.id;
-            var url = '/system/function-field/add';
-            if (id) {
-                url = '/system/function-field/edit';
-            }
-            ajaxPost(url, data.field, function (data) {
+            var list = [];
+            $("input:checkbox[name='fields']:checked").each(function(i){
+                var value = $(this).val();
+                list.push({
+                    functionFieldId: value
+                });
+            });
+            var params = {
+                functionId: data.field.functionId,
+                type: data.field.type,
+                list: list
+            };
+            var url = '/system/function-field-type/save';
+            ajaxPost(url, {json: JSON.stringify(params)}, function (data) {
                 if (data.success) {
                     layer.msg('操作成功', {icon: 1});
                     closePage();

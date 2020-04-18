@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.system.role.dao.IRoleFunctionFieldDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.system.role.model.RoleFunctionField">
+        <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+        <result column="FUNCTION_ID" jdbcType="VARCHAR" property="functionId" />
+        <result column="FUNCTION_FIELD_ID" jdbcType="VARCHAR" property="functionFieldId" />
+        <result column="TYPE" jdbcType="INTEGER" property="type" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_ROLE_FUNCTION_FIELD_T
+    </sql>
+
+    <delete id="deleteByRoleId">
+        DELETE FROM SYS_ROLE_FUNCTION_FIELD_T WHERE ROLE_ID = #{roleId,jdbcType=VARCHAR}
+    </delete>
+</mapper>
