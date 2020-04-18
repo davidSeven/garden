@@ -15,32 +15,38 @@
     </style>
 </head>
 <body>
-<div class="page-content-wrap">
-    <div class="layui-col-md7">
-        <ul id="organizationTree" class="ztree" style="height: 450px; overflow: scroll; border: 1px solid #CCC"></ul>
-    </div>
-    <div class="layui-col-md5">
-        <form id="fieldForm" class="layui-form">
-            <div class="layui-form-item">
-                <label class="layui-form-label">权限字段</label>
-                <div id="fieldDiv" class="layui-input-block">
+<div class="page-content-wrap" style="padding: 10px;">
+    <div class="layui-row">
+        <div class="layui-col-xs5 layui-col-sm5">
+            <ul id="organizationTree" class="ztree" style="height: 450px; overflow: scroll; border: 1px solid #CCC"></ul>
+        </div>
+        <div class="layui-col-xs7 layui-col-sm7">
+            <form id="fieldForm" class="layui-form">
+                <div class="layui-card">
+                    <div class="layui-card-header">权限字段</div>
+                    <div id="permissionDiv" class="layui-card-body">
+                        <span class="layui-badge layui-bg-gray">没有可以配置的字段</span>
+                    </div>
                 </div>
-            </div>
+                <div class="layui-card">
+                    <div class="layui-card-header">敏感字段</div>
+                    <div id="sensitiveDiv" class="layui-card-body">
+                        <span class="layui-badge layui-bg-gray">没有可以配置的字段</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-row">
+        <form id="editForm" class="layui-form" style="padding-top: 20px;">
             <div class="layui-form-item">
-                <label class="layui-form-label">权限字段</label>
-                <div id="fieldDiv" class="layui-input-block">
+                <div class="layui-input-block" style="margin-left: 0; text-align: center;">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">保存</button>
+                    <button type="button" class="layui-btn layui-btn-primary close-btn">关闭</button>
                 </div>
             </div>
         </form>
     </div>
-    <form id="editForm" class="layui-form" style="padding-top: 20px;">
-        <div class="layui-form-item">
-            <div class="layui-input-block" style="margin-left: 0; text-align: center;">
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="editForm">保存</button>
-                <button type="button" class="layui-btn layui-btn-primary close-btn">关闭</button>
-            </div>
-        </div>
-    </form>
 </div>
 <script src="<@spring.url''/>/static/jquery/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="<@spring.url''/>/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
@@ -108,6 +114,7 @@
                     callback: {
                         onClick: function (event, treeId, treeNode) {
                             console.log(treeNode);
+                            layui.getRoleFunctionField(treeNode.id);
                         }
                     }
                 };
@@ -126,6 +133,40 @@
 
             // 赋值之后再去查询
             layui.refresh();
+        };
+
+        layui.getRoleFunctionField = function (functionId) {
+            // 查询字段相关信息
+            ajaxPost('/system/role/getRoleFunctionField', {roleId: roleId, functionId: functionId}, function (data) {
+                if (data.success) {
+                    var map = data.data;
+                    var permissionList = map[10];
+                    var sensitiveList = map[20];
+                    var $permissionDiv = $("#permissionDiv");
+                    if (permissionList && permissionList.length) {
+                        $permissionDiv.empty();
+                        for (var i = 0; i < permissionList.length; i++) {
+                            var p_field = permissionList[i];
+                            $permissionDiv.append('<input type="checkbox" name="p_fields" value="'+p_field.functionFieldId+'" lay-skin="primary" title="'+p_field.name+'" '+(p_field.checked ? 'checked=""':'')+'>');
+                        }
+                    } else {
+                        $permissionDiv.html('<span class="layui-badge layui-bg-gray">没有可以配置的字段</span>');
+                    }
+                    var $sensitiveDiv = $("#sensitiveDiv");
+                    if (sensitiveList && sensitiveList.length) {
+                        $sensitiveDiv.empty();
+                        for (var j = 0; j < sensitiveList.length; j++) {
+                            var s_field = sensitiveList[j];
+                            $sensitiveDiv.append('<input type="checkbox" name="s_fields" value="'+s_field.functionFieldId+'" lay-skin="primary" title="'+s_field.name+'" '+(s_field.checked ? 'checked=""':'')+'>');
+                        }
+                    } else {
+                        $sensitiveDiv.html('<span class="layui-badge layui-bg-gray">没有可以配置的字段</span>');
+                    }
+                    form.render();
+                } else {
+                    parent.layer.msg(data.msg, {icon: 2});
+                }
+            });
         };
 
         //监听提交
