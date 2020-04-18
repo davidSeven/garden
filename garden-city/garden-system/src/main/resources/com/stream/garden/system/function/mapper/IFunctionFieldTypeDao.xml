@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.system.function.dao.IFunctionFieldTypeDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.system.function.model.FunctionFieldType">
+        <id column="FUNCTION_ID" jdbcType="VARCHAR" property="functionId" />
+        <result column="FUNCTION_FIELD_ID" jdbcType="VARCHAR" property="functionFieldId" />
+        <result column="TYPE" jdbcType="INTEGER" property="type" />
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_FUNCTION_FIELD_TYPE_T
+    </sql>
+
+    <delete id="deleteByFunctionId">
+        DELETE FROM SYS_FUNCTION_FIELD_TYPE_T
+        WHERE FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+        AND TYPE = #{type,jdbcType=INTEGER}
+    </delete>
+</mapper>

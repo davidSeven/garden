@@ -13,9 +13,20 @@ import lombok.EqualsAndHashCode;
 public class FunctionFieldType extends BaseModel<String> {
     private static final long serialVersionUID = 309810894391359449L;
 
+    private String functionId;
+
     private String functionFieldId;
     /**
      * 类型：10权限字段，20敏感字段
      */
-    private String type;
+    private Integer type;
+
+    public FunctionFieldType() {
+    }
+
+    public FunctionFieldType(String functionId, String functionFieldId, Integer type) {
+        this.functionId = functionId;
+        this.functionFieldId = functionFieldId;
+        this.type = type;
+    }
 }

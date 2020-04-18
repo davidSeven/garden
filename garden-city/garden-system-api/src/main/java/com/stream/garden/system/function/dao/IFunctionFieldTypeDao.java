@@ -10,4 +10,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IFunctionFieldTypeDao extends IBaseMapper<FunctionFieldType, String> {
+
+    /**
+     * 根据functionId，type删除字段类型
+     *
+     * @param params params
+     * @return int
+     */
+    int deleteByFunctionId(FunctionFieldType params);
 }
