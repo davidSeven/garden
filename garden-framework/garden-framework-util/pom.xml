@@ -30,6 +30,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
