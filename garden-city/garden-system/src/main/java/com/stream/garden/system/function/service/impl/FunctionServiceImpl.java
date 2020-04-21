@@ -15,11 +15,7 @@ import java.util.List;
  * @date 2019-07-20 15:46
  */
 @Service
-public class FunctionServiceImpl extends AbstractBaseService<Function, String> implements IFunctionService {
-
-    public FunctionServiceImpl(IFunctionDao iFunctionDao) {
-        super(iFunctionDao);
-    }
+public class FunctionServiceImpl extends AbstractBaseService<Function, String, IFunctionDao> implements IFunctionService {
 
     @Override
     public List<Function> getRoleFunction() throws ApplicationException {

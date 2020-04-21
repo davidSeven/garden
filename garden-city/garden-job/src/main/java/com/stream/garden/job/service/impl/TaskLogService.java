@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019-10-23 15:58
  */
 @Service
-public class TaskLogService extends AbstractBaseService<TaskLog, String> implements ITaskLogService {
+public class TaskLogService extends AbstractBaseService<TaskLog, String, ITaskLogDao> implements ITaskLogService {
 
-    public TaskLogService(ITaskLogDao iTaskLogDao) {
-        super(iTaskLogDao);
-    }
 }

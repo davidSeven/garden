@@ -25,18 +25,10 @@ import java.util.List;
  * @date 2019-09-26 15:37
  */
 @Service
-public class FileInfoService extends AbstractBaseService<FileInfo, String> implements IFileInfoService {
+public class FileInfoService extends AbstractBaseService<FileInfo, String, IFileInfoDao> implements IFileInfoService {
 
     @Autowired
     private FileConfig fileConfig;
-
-    public FileInfoService(IFileInfoDao iFileInfoDao) {
-        super(iFileInfoDao);
-    }
-
-    private IFileInfoDao getDao() {
-        return (IFileInfoDao) super.baseMapper;
-    }
 
     @Override
     public List<FileInfo> update(List<FileInfo> files) throws ApplicationException {
@@ -49,7 +41,7 @@ public class FileInfoService extends AbstractBaseService<FileInfo, String> imple
     @Override
     public FileInfo getFileInfo(String bizCode, String bizId) throws ApplicationException {
         try {
-            return this.getDao().getFileInfo(bizCode, bizId);
+            return this.getMapper().getFileInfo(bizCode, bizId);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ApplicationException(ExceptionCode.UNKOWN_EXCEPTION);

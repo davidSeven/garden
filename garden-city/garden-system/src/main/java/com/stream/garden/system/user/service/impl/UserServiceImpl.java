@@ -22,15 +22,7 @@ import java.util.List;
  * @date 2019-06-19 11:36
  */
 @Service
-public class UserServiceImpl extends AbstractBaseService<User, String> implements IUserService {
-
-    public UserServiceImpl(IUserDao iUserDao) {
-        super(iUserDao);
-    }
-
-    public IUserDao getDao() {
-        return (IUserDao) super.baseMapper;
-    }
+public class UserServiceImpl extends AbstractBaseService<User, String, IUserDao> implements IUserService {
 
     @Override
     public int insert(User user) throws ApplicationException {
@@ -61,6 +53,7 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
 
     /**
      * 密码加密
+     *
      * @param user user
      */
     private void encryptedPwd(User user) {
@@ -75,17 +68,17 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
 
     @Override
     public UserBO getByCode(String code) {
-        return this.getDao().getByCode(code);
+        return this.getMapper().getByCode(code);
     }
 
     @Override
     public UserBO getById(String id) {
-        return this.getDao().getById(id);
+        return this.getMapper().getById(id);
     }
 
     @Override
     public List<PermissionBO> getPermissionByRoleId(String roleId) {
-        return this.getDao().getPermissionByRoleId(roleId);
+        return this.getMapper().getPermissionByRoleId(roleId);
     }
 
     @Override
@@ -95,6 +88,6 @@ public class UserServiceImpl extends AbstractBaseService<User, String> implement
 
     @Override
     public User getUserByCode(String code) {
-        return this.getDao().getUserByCode(code);
+        return this.getMapper().getUserByCode(code);
     }
 }

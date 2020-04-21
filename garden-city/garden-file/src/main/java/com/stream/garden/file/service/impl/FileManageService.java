@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019-09-26 14:31
  */
 @Service
-public class FileManageService extends AbstractBaseService<FileManage, String> implements IFileManageService {
-
-    public FileManageService(IFileManageDao iFileManageDao) {
-        super(iFileManageDao);
-    }
+public class FileManageService extends AbstractBaseService<FileManage, String, IFileManageDao> implements IFileManageService {
 
 }

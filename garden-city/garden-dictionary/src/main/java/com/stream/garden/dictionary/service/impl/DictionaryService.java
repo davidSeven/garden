@@ -15,15 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2019-09-29 13:39
  */
 @Service
-public class DictionaryService extends AbstractBaseService<Dictionary, String> implements IDictionaryService {
-
-    public DictionaryService(IDictionaryDao iDictionaryDao) {
-        super(iDictionaryDao);
-    }
-
-    private IDictionaryDao getDao() {
-        return (IDictionaryDao) super.baseMapper;
-    }
+public class DictionaryService extends AbstractBaseService<Dictionary, String, IDictionaryDao> implements IDictionaryService {
 
     @Override
     public int insert(Dictionary dictionary) throws ApplicationException {

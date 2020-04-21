@@ -16,11 +16,7 @@ import java.util.List;
  * @date 2019-11-04 16:22
  */
 @Service
-public class ExcelConfigService extends AbstractBaseService<ExcelConfig, String> implements IExcelConfigService {
-
-    public ExcelConfigService(IExcelConfigDao iExcelConfigDao) {
-        super(iExcelConfigDao);
-    }
+public class ExcelConfigService extends AbstractBaseService<ExcelConfig, String, IExcelConfigDao> implements IExcelConfigService {
 
     @Override
     public int insert(ExcelConfig excelConfig) throws ApplicationException {

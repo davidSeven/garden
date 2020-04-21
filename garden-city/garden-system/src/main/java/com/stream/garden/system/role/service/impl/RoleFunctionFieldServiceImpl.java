@@ -22,20 +22,12 @@ import java.util.*;
  * @date 2019/7/22 22:29
  */
 @Service
-public class RoleFunctionFieldServiceImpl extends AbstractBaseService<RoleFunctionField, String> implements IRoleFunctionFieldService {
+public class RoleFunctionFieldServiceImpl extends AbstractBaseService<RoleFunctionField, String, IRoleFunctionFieldDao> implements IRoleFunctionFieldService {
 
     @Autowired
     private IFunctionFieldService functionFieldService;
     @Autowired
     private IFunctionFieldTypeService functionFieldTypeService;
-
-    public RoleFunctionFieldServiceImpl(IRoleFunctionFieldDao iRoleFunctionFieldDao) {
-        super(iRoleFunctionFieldDao);
-    }
-
-    public IRoleFunctionFieldDao getMapper() {
-        return (IRoleFunctionFieldDao) super.baseMapper;
-    }
 
     @Override
     public Map<Integer, List<FunctionFieldTypeResultVO>> listConfig(RoleFunctionField params) throws ApplicationException {

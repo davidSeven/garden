@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019-06-22 11:15
  */
 @Service
-public class RoleGroupServiceImpl extends AbstractBaseService<RoleGroup, String> implements IRoleGroupService {
+public class RoleGroupServiceImpl extends AbstractBaseService<RoleGroup, String, IRoleGroupDao> implements IRoleGroupService {
 
-    public RoleGroupServiceImpl(IRoleGroupDao iRoleGroupDao) {
-        super(iRoleGroupDao);
-    }
 }

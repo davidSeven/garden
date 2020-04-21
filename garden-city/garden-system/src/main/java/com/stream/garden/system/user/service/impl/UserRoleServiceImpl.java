@@ -12,20 +12,12 @@ import org.springframework.stereotype.Service;
  * @date 2019-06-22 11:09
  */
 @Service
-public class UserRoleServiceImpl extends AbstractBaseService<UserRole, String> implements IUserRoleService {
-
-    public UserRoleServiceImpl(IUserRoleDao iUserRoleDao) {
-        super(iUserRoleDao);
-    }
-
-    public IUserRoleDao getDao() {
-        return (IUserRoleDao) super.baseMapper;
-    }
+public class UserRoleServiceImpl extends AbstractBaseService<UserRole, String, IUserRoleDao> implements IUserRoleService {
 
     @Override
     public Integer setRole(UserRole userRole) throws ApplicationException {
         // 先删除关系
-        this.getDao().delete(userRole.getUserId());
+        this.getMapper().delete(userRole.getUserId());
         return super.insert(userRole);
     }
 }

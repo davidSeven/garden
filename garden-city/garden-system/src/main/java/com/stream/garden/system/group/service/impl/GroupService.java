@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019-06-22 11:16
  */
 @Service
-public class GroupService extends AbstractBaseService<Group, String> implements IGroupService {
+public class GroupService extends AbstractBaseService<Group, String, IGroupDao> implements IGroupService {
 
-    public GroupService(IGroupDao iGroupDao) {
-        super(iGroupDao);
-    }
 }

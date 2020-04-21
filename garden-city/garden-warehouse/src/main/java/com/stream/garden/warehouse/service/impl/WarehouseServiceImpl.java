@@ -19,17 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2019-12-29 16:02
  */
 @Service
-public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String> implements IWarehouseService {
+public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String, IWarehouseDao> implements IWarehouseService {
     private Lock lock = new ReentrantLock();
-
-
-    public WarehouseServiceImpl(IWarehouseDao iWarehouseDao) {
-        super(iWarehouseDao);
-    }
-
-    private IWarehouseDao getDao() {
-        return (IWarehouseDao) super.baseMapper;
-    }
 
     @Override
     public void addQuantityLock(String id, int quantity) throws ApplicationException {
@@ -69,7 +60,7 @@ public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String>
     public void addQuantityForUpdate(String id, int quantity) throws ApplicationException {
         Warehouse warehouseQuery = new Warehouse();
         warehouseQuery.setId(id);
-        Warehouse warehouse = this.getDao().getLock(warehouseQuery);
+        Warehouse warehouse = this.getMapper().getLock(warehouseQuery);
         this.addQuantity(warehouse);
     }
 

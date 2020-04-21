@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2020-01-22 11:03
  */
 @Service
-public class FunctionFieldServiceImpl extends AbstractBaseService<FunctionField, String> implements IFunctionFieldService {
+public class FunctionFieldServiceImpl extends AbstractBaseService<FunctionField, String, IFunctionFieldDao> implements IFunctionFieldService {
 
-    public FunctionFieldServiceImpl(IFunctionFieldDao iFunctionFieldDao) {
-        super(iFunctionFieldDao);
-    }
 }

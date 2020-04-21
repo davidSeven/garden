@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019-10-25 16:38
  */
 @Service
-public class ContentService extends AbstractBaseService<Content, String> implements IContentService {
+public class ContentService extends AbstractBaseService<Content, String, IContentDao> implements IContentService {
 
-    public ContentService(IContentDao iContentDao) {
-        super(iContentDao);
-    }
 }

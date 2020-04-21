@@ -21,15 +21,7 @@ import java.util.List;
  * @author garden
  */
 @Service
-public class MenuServiceImpl extends AbstractBaseService<Menu, String > implements IMenuService {
-
-    public MenuServiceImpl(IMenuDao iMenuDao) {
-        super(iMenuDao);
-    }
-
-    public IMenuDao getMapper() {
-        return (IMenuDao) super.baseMapper;
-    }
+public class MenuServiceImpl extends AbstractBaseService<Menu, String, IMenuDao> implements IMenuService {
 
     @Autowired
     private IUserService userService;

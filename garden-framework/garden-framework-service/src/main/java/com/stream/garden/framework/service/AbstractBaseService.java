@@ -13,6 +13,7 @@ import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.framework.util.ContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -24,12 +25,14 @@ import java.util.List;
  * @author garden
  */
 @Transactional(rollbackFor = Exception.class)
-public abstract class AbstractBaseService<T, ID> implements IBaseService<T, ID> {
+public abstract class AbstractBaseService<T, ID, M extends IBaseMapper<T, ID>> implements IBaseService<T, ID> {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseService.class);
-    protected IBaseMapper<T, ID> baseMapper;
 
-    public AbstractBaseService(IBaseMapper<T, ID> baseMapper) {
-        this.baseMapper = baseMapper;
+    @Autowired
+    protected M baseMapper;
+
+    public M getMapper() {
+        return this.baseMapper;
     }
 
     @Override

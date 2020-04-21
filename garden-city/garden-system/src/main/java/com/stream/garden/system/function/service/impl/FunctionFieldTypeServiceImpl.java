@@ -23,25 +23,17 @@ import java.util.Set;
  * @date 2020-04-08 19:14
  */
 @Service
-public class FunctionFieldTypeServiceImpl extends AbstractBaseService<FunctionFieldType, String> implements IFunctionFieldTypeService {
+public class FunctionFieldTypeServiceImpl extends AbstractBaseService<FunctionFieldType, String, IFunctionFieldTypeDao> implements IFunctionFieldTypeService {
 
     @Autowired
     private IFunctionFieldService functionFieldService;
-
-    public FunctionFieldTypeServiceImpl(IFunctionFieldTypeDao iFunctionFieldTypeDao) {
-        super(iFunctionFieldTypeDao);
-    }
-
-    private IFunctionFieldTypeDao getDao() {
-        return (IFunctionFieldTypeDao) this.baseMapper;
-    }
 
     @Override
     public int save(FunctionFieldTypeSaveVO vo) throws ApplicationException {
         FunctionFieldType params = new FunctionFieldType();
         params.setFunctionId(vo.getFunctionId());
         params.setType(vo.getType());
-        int delete = this.getDao().deleteByFunctionId(params);
+        int delete = this.getMapper().deleteByFunctionId(params);
         List<FunctionFieldType> list = vo.getList();
         if (CollectionUtil.isNotEmpty(list)) {
             for (FunctionFieldType functionFieldType : list) {

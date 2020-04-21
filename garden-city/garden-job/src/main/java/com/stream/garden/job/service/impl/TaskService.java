@@ -21,11 +21,7 @@ import java.util.List;
  * @date 2019-10-23 11:01
  */
 @Service
-public class TaskService extends AbstractBaseService<Task, String> implements ITaskService {
-
-    public TaskService(ITaskDao iTaskDao) {
-        super(iTaskDao);
-    }
+public class TaskService extends AbstractBaseService<Task, String, ITaskDao> implements ITaskService {
 
     @Override
     public int insert(Task task) throws ApplicationException {

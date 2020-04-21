@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @date 2019/7/22 22:29
  */
 @Service
-public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, String> implements IRoleFunctionService {
+public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, String, IRoleFunctionDao> implements IRoleFunctionService {
 
     @Autowired
     private IMenuService menuService;
@@ -40,14 +40,6 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, S
     private IRoleMenuService roleMenuService;
     @Autowired
     private IRoleFunctionFieldService roleFunctionFieldService;
-
-    public RoleFunctionServiceImpl(IRoleFunctionDao iRoleFunctionDao) {
-        super(iRoleFunctionDao);
-    }
-
-    public IRoleFunctionDao getMapper() {
-        return (IRoleFunctionDao) super.baseMapper;
-    }
 
     @Override
     public int deleteByRoleId(String roleId) throws ApplicationException {

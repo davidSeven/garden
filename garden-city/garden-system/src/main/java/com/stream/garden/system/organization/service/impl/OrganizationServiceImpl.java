@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2019/7/21 11:37
  */
 @Service
-public class OrganizationServiceImpl extends AbstractBaseService<Organization, String> implements IOrganizationService {
-    public OrganizationServiceImpl(IOrganizationDao iOrganizationDao) {
-        super(iOrganizationDao);
-    }
+public class OrganizationServiceImpl extends AbstractBaseService<Organization, String, IOrganizationDao> implements IOrganizationService {
 
     @Override
     public int insert(Organization organization) throws ApplicationException {

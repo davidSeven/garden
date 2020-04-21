@@ -16,16 +16,12 @@ import org.springframework.stereotype.Service;
  * @date 2020-01-02 19:01
  */
 @Service
-public class StorageLocationServiceImpl extends AbstractBaseService<StorageLocation, String> implements IStorageLocationService {
+public class StorageLocationServiceImpl extends AbstractBaseService<StorageLocation, String, IStorageLocationDao> implements IStorageLocationService {
 
     @Autowired
     private IWarehouseService warehouseService;
     @Autowired
     private IWarehouseLockService warehouseLockService;
-
-    public StorageLocationServiceImpl(IStorageLocationDao iStorageLocationDao) {
-        super(iStorageLocationDao);
-    }
 
     /**
      * 普通新增
