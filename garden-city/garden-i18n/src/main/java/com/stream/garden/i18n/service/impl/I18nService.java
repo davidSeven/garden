@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @date 2019-10-24 17:17
  */
 @Service
-public class I18nService extends AbstractBaseService<I18n, String, II18nDao> implements II18nService {
+public class I18nService extends AbstractBaseService<I18n, II18nDao> implements II18nService {
 
     @Override
     public int insert(I18n i18n) throws ApplicationException {

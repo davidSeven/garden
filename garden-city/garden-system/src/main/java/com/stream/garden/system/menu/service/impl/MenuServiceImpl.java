@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * @author garden
  */
 @Service
-public class MenuServiceImpl extends AbstractBaseService<Menu, String, IMenuDao> implements IMenuService {
+public class MenuServiceImpl extends AbstractBaseService<Menu, IMenuDao> implements IMenuService {
 
     @Autowired
     private IUserService userService;
@@ -67,13 +68,13 @@ public class MenuServiceImpl extends AbstractBaseService<Menu, String, IMenuDao>
     }
 
     @Override
-    public int delete(String... strings) throws ApplicationException {
+    public int delete(Serializable... strings) throws ApplicationException {
         if (ArrayUtils.isEmpty(strings)) {
             return 0;
         }
-        for (String id : strings) {
+        for (Serializable id : strings) {
             Menu paramMenu = new Menu();
-            paramMenu.setParentId(id);
+            paramMenu.setParentId((String) id);
             // 根据parentId查询记录，如果存在，则存在子级，则不能删除
             if (super.exists(paramMenu)) {
                 throw new ApplicationException(SystemExceptionCode.MENU_EXISTS_CHILDREN_DELETE_EXCEPTION);

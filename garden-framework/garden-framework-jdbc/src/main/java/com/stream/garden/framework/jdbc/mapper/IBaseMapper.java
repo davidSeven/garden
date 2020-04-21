@@ -3,6 +3,7 @@ package com.stream.garden.framework.jdbc.mapper;
 import com.github.pagehelper.Page;
 import com.stream.garden.framework.api.vo.BasePageVO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @param <T>
  * @author
  */
-public interface IBaseMapper<T, ID> {
+public interface IBaseMapper<T> {
 
     /**
      * 新增
@@ -47,11 +48,11 @@ public interface IBaseMapper<T, ID> {
      * @param ids id
      * @return 影响条数
      */
-    public int delete(ID... ids);
+    public int delete(Serializable... ids);
 
-    public int disable(ID... ids);
+    public int disable(Serializable... ids);
 
-    public int enable(ID... ids);
+    public int enable(Serializable... ids);
 
     /**
      * 根据id查询
@@ -59,7 +60,7 @@ public interface IBaseMapper<T, ID> {
      * @param id id
      * @return 对象
      */
-    public T get(ID id);
+    public T get(Serializable id);
 
     /**
      * 多个id查询
@@ -67,7 +68,7 @@ public interface IBaseMapper<T, ID> {
      * @param ids id
      * @return 对象集合
      */
-    public List<T> getByIds(ID... ids);
+    public List<T> getByIds(Serializable... ids);
 
     /**
      * 对象查询
@@ -83,7 +84,7 @@ public interface IBaseMapper<T, ID> {
      * @param vo 对象
      * @return 对象集合
      */
-    public Page<T> pageList(BasePageVO<T, ID> vo);
+    public Page<T> pageList(BasePageVO<T> vo);
 
     /**
      * 检查是否存在

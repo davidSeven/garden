@@ -16,16 +16,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @param <T>  实体对象
- * @param <ID> id类型
+ * @param <T> 实体对象
+ * @param <M> Mapper
  * @author garden
  */
 @Transactional(rollbackFor = Exception.class)
-public abstract class AbstractBaseService<T, ID, M extends IBaseMapper<T, ID>> implements IBaseService<T, ID> {
+public abstract class AbstractBaseService<T, M extends IBaseMapper<T>> implements IBaseService<T> {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseService.class);
 
     @Autowired
@@ -70,27 +71,27 @@ public abstract class AbstractBaseService<T, ID, M extends IBaseMapper<T, ID>> i
     }
 
     @Override
-    public int delete(ID... ids) throws ApplicationException {
+    public int delete(Serializable... ids) throws ApplicationException {
         return baseMapper.delete(ids);
     }
 
     @Override
-    public int disable(ID... ids) throws ApplicationException {
+    public int disable(Serializable... ids) throws ApplicationException {
         return baseMapper.disable(ids);
     }
 
     @Override
-    public int enable(ID... ids) throws ApplicationException {
+    public int enable(Serializable... ids) throws ApplicationException {
         return baseMapper.enable(ids);
     }
 
     @Override
-    public T get(ID id) throws ApplicationException {
+    public T get(Serializable id) throws ApplicationException {
         return baseMapper.get(id);
     }
 
     @Override
-    public List<T> getByIds(ID... ids) throws ApplicationException {
+    public List<T> getByIds(Serializable... ids) throws ApplicationException {
         return baseMapper.getByIds(ids);
     }
 
@@ -106,7 +107,7 @@ public abstract class AbstractBaseService<T, ID, M extends IBaseMapper<T, ID>> i
      * @return 返回数据
      */
     @Override
-    public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException {
+    public PageInfo<T> pageList(BasePageVO<T> pageVO) throws ApplicationException {
         // 设置PageHelper参数信息
         PageSize pageSize = pageVO.getPageSize();
         PageHelper.startPage(pageSize.getPage(), pageSize.getPageSize(), pageSize.isCount());

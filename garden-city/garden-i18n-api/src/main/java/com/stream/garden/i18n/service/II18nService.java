@@ -7,5 +7,5 @@ import com.stream.garden.i18n.model.I18n;
  * @author garden
  * @date 2019-10-24 17:14
  */
-public interface II18nService extends IBaseService<I18n, String> {
+public interface II18nService extends IBaseService<I18n> {
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @date 2019-06-22 11:09
  */
 @Service
-public class UserRoleServiceImpl extends AbstractBaseService<UserRole, String, IUserRoleDao> implements IUserRoleService {
+public class UserRoleServiceImpl extends AbstractBaseService<UserRole, IUserRoleDao> implements IUserRoleService {
 
     @Override
     public Integer setRole(UserRole userRole) throws ApplicationException {

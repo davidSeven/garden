@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-06-22 10:58
  */
 @Mapper
-public interface IUserRoleDao extends IBaseMapper<UserRole, String> {
+public interface IUserRoleDao extends IBaseMapper<UserRole> {
 }

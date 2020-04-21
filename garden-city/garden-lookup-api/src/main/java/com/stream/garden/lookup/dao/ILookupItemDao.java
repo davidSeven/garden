@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author garden
  */
 @Mapper
-public interface ILookupItemDao extends IBaseMapper<LookupItem, String> {
+public interface ILookupItemDao extends IBaseMapper<LookupItem> {
 }

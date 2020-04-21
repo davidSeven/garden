@@ -12,7 +12,7 @@ import java.util.Map;
  * @author garden
  * @date 2019/7/22 22:28
  */
-public interface IRoleFunctionFieldService extends IBaseService<RoleFunctionField, String> {
+public interface IRoleFunctionFieldService extends IBaseService<RoleFunctionField> {
 
     Map<Integer, List<FunctionFieldTypeResultVO>> listConfig(RoleFunctionField params) throws ApplicationException;
 

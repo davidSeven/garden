@@ -22,7 +22,7 @@ import java.util.*;
  * @date 2019/7/22 22:29
  */
 @Service
-public class RoleFunctionFieldServiceImpl extends AbstractBaseService<RoleFunctionField, String, IRoleFunctionFieldDao> implements IRoleFunctionFieldService {
+public class RoleFunctionFieldServiceImpl extends AbstractBaseService<RoleFunctionField, IRoleFunctionFieldDao> implements IRoleFunctionFieldService {
 
     @Autowired
     private IFunctionFieldService functionFieldService;

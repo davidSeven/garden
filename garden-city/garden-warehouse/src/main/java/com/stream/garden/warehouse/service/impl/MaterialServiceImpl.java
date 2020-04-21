@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2020-01-02 19:02
  */
 @Service
-public class MaterialServiceImpl extends AbstractBaseService<Material, String, IMaterialDao> implements IMaterialService {
+public class MaterialServiceImpl extends AbstractBaseService<Material, IMaterialDao> implements IMaterialService {
 
 }

@@ -7,6 +7,6 @@ import com.stream.garden.framework.api.vo.BasePageVO;
  * @author garden
  * @date 2019-09-26 14:23
  */
-public class FileManageVO extends BasePageVO<FileManage, String> {
+public class FileManageVO extends BasePageVO<FileManage> {
     private static final long serialVersionUID = 2851702037120906823L;
 }

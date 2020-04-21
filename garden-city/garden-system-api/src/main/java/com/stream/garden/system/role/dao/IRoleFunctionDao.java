@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019/7/22 22:27
  */
 @Mapper
-public interface IRoleFunctionDao extends IBaseMapper<RoleFunction, String> {
+public interface IRoleFunctionDao extends IBaseMapper<RoleFunction> {
 
     int deleteByRoleId(RoleFunction roleFunction);
 }

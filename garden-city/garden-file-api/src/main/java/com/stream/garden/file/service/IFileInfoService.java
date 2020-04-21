@@ -12,7 +12,7 @@ import java.util.List;
  * @author garden
  * @date 2019-09-26 14:20
  */
-public interface IFileInfoService extends IBaseService<FileInfo, String> {
+public interface IFileInfoService extends IBaseService<FileInfo> {
 
 
     List<FileInfo> update(List<FileInfo> files) throws ApplicationException;

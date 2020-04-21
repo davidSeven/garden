@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-10-22 16:55
  */
 @Mapper
-public interface ITaskDao extends IBaseMapper<Task, String> {
+public interface ITaskDao extends IBaseMapper<Task> {
 }

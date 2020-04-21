@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-10-24 17:13
  */
 @Mapper
-public interface II18nDao extends IBaseMapper<I18n, String> {
+public interface II18nDao extends IBaseMapper<I18n> {
 }

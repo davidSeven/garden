@@ -8,7 +8,7 @@ import com.stream.garden.warehouse.model.StorageLocation;
  * @author garden
  * @date 2019-12-29 16:00
  */
-public interface IStorageLocationService extends IBaseService<StorageLocation, String> {
+public interface IStorageLocationService extends IBaseService<StorageLocation> {
 
     int insertLock(StorageLocation storageLocation) throws ApplicationException;
 }

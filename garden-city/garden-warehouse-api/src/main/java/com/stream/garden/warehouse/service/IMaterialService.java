@@ -7,5 +7,5 @@ import com.stream.garden.warehouse.model.Material;
  * @author garden
  * @date 2019-12-29 16:00
  */
-public interface IMaterialService extends IBaseService<Material, String> {
+public interface IMaterialService extends IBaseService<Material> {
 }

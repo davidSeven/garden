@@ -12,7 +12,7 @@ import java.util.List;
  * @author garden
  * @date 2020-04-08 19:13
  */
-public interface IFunctionFieldTypeService extends IBaseService<FunctionFieldType, String> {
+public interface IFunctionFieldTypeService extends IBaseService<FunctionFieldType> {
 
     int save(FunctionFieldTypeSaveVO vo) throws ApplicationException;
 

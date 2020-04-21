@@ -7,5 +7,5 @@ import com.stream.garden.system.position.model.Position;
  * @author garden
  * @date 2019/7/21 12:24
  */
-public interface IPositionService extends IBaseService<Position, String> {
+public interface IPositionService extends IBaseService<Position> {
 }

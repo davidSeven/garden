@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @date 2019/7/22 22:29
  */
 @Service
-public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, String, IRoleFunctionDao> implements IRoleFunctionService {
+public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, IRoleFunctionDao> implements IRoleFunctionService {
 
     @Autowired
     private IMenuService menuService;

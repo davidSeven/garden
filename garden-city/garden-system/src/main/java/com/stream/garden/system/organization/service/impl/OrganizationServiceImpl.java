@@ -10,12 +10,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 /**
  * @author garden
  * @date 2019/7/21 11:37
  */
 @Service
-public class OrganizationServiceImpl extends AbstractBaseService<Organization, String, IOrganizationDao> implements IOrganizationService {
+public class OrganizationServiceImpl extends AbstractBaseService<Organization, IOrganizationDao> implements IOrganizationService {
 
     @Override
     public int insert(Organization organization) throws ApplicationException {
@@ -58,13 +60,13 @@ public class OrganizationServiceImpl extends AbstractBaseService<Organization, S
     }
 
     @Override
-    public int delete(String... strings) throws ApplicationException {
+    public int delete(Serializable... strings) throws ApplicationException {
         if (ArrayUtils.isEmpty(strings)) {
             return 0;
         }
-        for (String id : strings) {
+        for (Serializable id : strings) {
             Organization paramMenu = new Organization();
-            paramMenu.setParentId(id);
+            paramMenu.setParentId((String) id);
             // 根据parentId查询记录，如果存在，则存在自己，则不能删除
             if (super.exists(paramMenu)) {
                 throw new ApplicationException(SystemExceptionCode.ORGANIZATION_EXISTS_CHILDREN_DELETE_EXCEPTION);

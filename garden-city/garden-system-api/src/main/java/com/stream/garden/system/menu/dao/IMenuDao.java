@@ -10,7 +10,7 @@ import java.util.List;
  * @author garden
  */
 @Mapper
-public interface IMenuDao extends IBaseMapper<Menu, String> {
+public interface IMenuDao extends IBaseMapper<Menu> {
 
     /**
      * 查询角色菜单

@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-09-26 14:16
  */
 @Mapper
-public interface IFileManageDao extends IBaseMapper<FileManage, String> {
+public interface IFileManageDao extends IBaseMapper<FileManage> {
 }

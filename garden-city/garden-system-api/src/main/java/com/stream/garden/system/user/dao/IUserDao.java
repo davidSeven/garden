@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2019-06-19 11:27
  */
 @Mapper
-public interface IUserDao extends IBaseMapper<User, String> {
+public interface IUserDao extends IBaseMapper<User> {
 
     /**
      * 根据用户编码查询用户

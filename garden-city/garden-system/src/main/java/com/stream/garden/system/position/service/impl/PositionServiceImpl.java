@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @date 2019/7/21 12:26
  */
 @Service
-public class PositionServiceImpl extends AbstractBaseService<Position, String, IPositionDao> implements IPositionService {
+public class PositionServiceImpl extends AbstractBaseService<Position, IPositionDao> implements IPositionService {
 
 }

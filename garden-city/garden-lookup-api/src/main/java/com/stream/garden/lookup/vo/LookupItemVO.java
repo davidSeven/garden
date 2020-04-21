@@ -6,6 +6,6 @@ import com.stream.garden.lookup.model.LookupItem;
 /**
  * @author garden
  */
-public class LookupItemVO extends BasePageVO<LookupItem, String> {
+public class LookupItemVO extends BasePageVO<LookupItem> {
     private static final long serialVersionUID = -377379732440978527L;
 }

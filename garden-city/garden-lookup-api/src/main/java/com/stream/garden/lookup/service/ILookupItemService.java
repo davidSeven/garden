@@ -6,5 +6,5 @@ import com.stream.garden.lookup.model.LookupItem;
 /**
  * @author garden
  */
-public interface ILookupItemService extends IBaseService<LookupItem, String> {
+public interface ILookupItemService extends IBaseService<LookupItem> {
 }

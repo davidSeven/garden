@@ -10,12 +10,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 /**
  * @author garden
  * @date 2019-09-29 13:39
  */
 @Service
-public class DictionaryService extends AbstractBaseService<Dictionary, String, IDictionaryDao> implements IDictionaryService {
+public class DictionaryService extends AbstractBaseService<Dictionary, IDictionaryDao> implements IDictionaryService {
 
     @Override
     public int insert(Dictionary dictionary) throws ApplicationException {
@@ -58,13 +60,13 @@ public class DictionaryService extends AbstractBaseService<Dictionary, String, I
     }
 
     @Override
-    public int delete(String... strings) throws ApplicationException {
+    public int delete(Serializable... strings) throws ApplicationException {
         if (ArrayUtils.isEmpty(strings)) {
             return 0;
         }
-        for (String id : strings) {
+        for (Serializable id : strings) {
             Dictionary paramDictionary = new Dictionary();
-            paramDictionary.setParentId(id);
+            paramDictionary.setParentId((String) id);
             // 根据parentId查询记录，如果存在，则存在子级，则不能删除
             if (super.exists(paramDictionary)) {
                 throw new ApplicationException(DictionaryExceptionCode.DICTIONARY_EXISTS_CHILDREN_DELETE_EXCEPTION);

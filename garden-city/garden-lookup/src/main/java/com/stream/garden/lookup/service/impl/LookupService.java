@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author garden
  */
 @Service
-public class LookupService extends AbstractBaseService<Lookup, String, ILookupDao> implements ILookupService {
+public class LookupService extends AbstractBaseService<Lookup, ILookupDao> implements ILookupService {
 
     @Override
     public int insert(Lookup lookup) throws ApplicationException {

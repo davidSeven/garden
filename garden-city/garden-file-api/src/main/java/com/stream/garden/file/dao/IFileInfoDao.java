@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2019-09-26 14:20
  */
 @Mapper
-public interface IFileInfoDao extends IBaseMapper<FileInfo, String> {
+public interface IFileInfoDao extends IBaseMapper<FileInfo> {
 
     FileInfo getFileInfo(@Param("bizCode") String bizCode, @Param("bizId") String bizId);
 }

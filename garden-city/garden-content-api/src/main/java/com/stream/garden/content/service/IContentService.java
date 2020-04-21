@@ -7,5 +7,5 @@ import com.stream.garden.framework.service.IBaseService;
  * @author garden
  * @date 2019-10-25 16:36
  */
-public interface IContentService extends IBaseService<Content, String> {
+public interface IContentService extends IBaseService<Content> {
 }

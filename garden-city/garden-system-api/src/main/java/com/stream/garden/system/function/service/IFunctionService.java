@@ -10,7 +10,7 @@ import java.util.List;
  * @author garden
  * @date 2019-07-20 15:45
  */
-public interface IFunctionService extends IBaseService<Function, String> {
+public interface IFunctionService extends IBaseService<Function> {
 
 
     List<Function> getRoleFunction() throws ApplicationException;

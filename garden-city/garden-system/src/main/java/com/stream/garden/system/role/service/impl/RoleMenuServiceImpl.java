@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @date 2019/8/25 20:48
  */
 @Service
-public class RoleMenuServiceImpl extends AbstractBaseService<RoleMenu, String, IRoleMenuDao> implements IRoleMenuService {
+public class RoleMenuServiceImpl extends AbstractBaseService<RoleMenu, IRoleMenuDao> implements IRoleMenuService {
 
     @Override
     public int deleteByRoleId(String roleId) throws ApplicationException {

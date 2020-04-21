@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-06-22 11:04
  */
 @Mapper
-public interface IGroupDao extends IBaseMapper<Group, String> {
+public interface IGroupDao extends IBaseMapper<Group> {
 }

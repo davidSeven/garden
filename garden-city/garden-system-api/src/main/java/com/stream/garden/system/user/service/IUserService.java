@@ -11,7 +11,7 @@ import java.util.List;
  * @author garden
  * @date 2019-06-19 11:27
  */
-public interface IUserService extends IBaseService<User, String> {
+public interface IUserService extends IBaseService<User> {
 
     /**
      * 根据用户编码查询用户

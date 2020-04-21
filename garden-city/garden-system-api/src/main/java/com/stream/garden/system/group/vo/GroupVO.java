@@ -6,6 +6,6 @@ import com.stream.garden.system.group.model.Group;
 /**
  * @author garden
  */
-public class GroupVO extends BasePageVO<Group, String> {
+public class GroupVO extends BasePageVO<Group> {
     private static final long serialVersionUID = 5752910368906633321L;
 }

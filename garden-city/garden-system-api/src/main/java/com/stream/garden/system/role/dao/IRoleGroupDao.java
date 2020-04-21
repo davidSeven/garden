@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-06-22 11:07
  */
 @Mapper
-public interface IRoleGroupDao extends IBaseMapper<RoleGroup, String> {
+public interface IRoleGroupDao extends IBaseMapper<RoleGroup> {
 }

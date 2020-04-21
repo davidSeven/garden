@@ -7,5 +7,5 @@ import com.stream.garden.system.organization.model.Organization;
  * @author garden
  * @date 2019/7/21 11:35
  */
-public interface IOrganizationService extends IBaseService<Organization, String> {
+public interface IOrganizationService extends IBaseService<Organization> {
 }

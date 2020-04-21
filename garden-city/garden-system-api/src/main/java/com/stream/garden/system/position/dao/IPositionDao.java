@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019/7/21 12:24
  */
 @Mapper
-public interface IPositionDao extends IBaseMapper<Position, String> {
+public interface IPositionDao extends IBaseMapper<Position> {
 }

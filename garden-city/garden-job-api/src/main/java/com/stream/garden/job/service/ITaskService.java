@@ -8,7 +8,7 @@ import com.stream.garden.job.model.Task;
  * @author garden
  * @date 2019-10-22 16:55
  */
-public interface ITaskService extends IBaseService<Task, String> {
+public interface ITaskService extends IBaseService<Task> {
 
     /**
      * 初始化任务

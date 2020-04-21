@@ -7,5 +7,5 @@ import com.stream.garden.system.function.model.FunctionField;
  * @author garden
  * @date 2020-01-22 11:02
  */
-public interface IFunctionFieldService extends IBaseService<FunctionField, String> {
+public interface IFunctionFieldService extends IBaseService<FunctionField> {
 }

@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-12-29 15:54
  */
 @Mapper
-public interface IStorageLocationDao extends IBaseMapper<StorageLocation, String> {
+public interface IStorageLocationDao extends IBaseMapper<StorageLocation> {
 }

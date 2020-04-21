@@ -23,7 +23,7 @@ import java.util.Set;
  * @date 2020-04-08 19:14
  */
 @Service
-public class FunctionFieldTypeServiceImpl extends AbstractBaseService<FunctionFieldType, String, IFunctionFieldTypeDao> implements IFunctionFieldTypeService {
+public class FunctionFieldTypeServiceImpl extends AbstractBaseService<FunctionFieldType, IFunctionFieldTypeDao> implements IFunctionFieldTypeService {
 
     @Autowired
     private IFunctionFieldService functionFieldService;

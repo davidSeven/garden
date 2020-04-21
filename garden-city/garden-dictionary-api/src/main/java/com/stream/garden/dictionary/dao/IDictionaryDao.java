@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-09-29 13:36
  */
 @Mapper
-public interface IDictionaryDao extends IBaseMapper<Dictionary, String> {
+public interface IDictionaryDao extends IBaseMapper<Dictionary> {
 }

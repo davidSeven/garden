@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2019-09-26 15:37
  */
 @Service
-public class FileInfoService extends AbstractBaseService<FileInfo, String, IFileInfoDao> implements IFileInfoService {
+public class FileInfoService extends AbstractBaseService<FileInfo, IFileInfoDao> implements IFileInfoService {
 
     @Autowired
     private FileConfig fileConfig;

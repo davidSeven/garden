@@ -8,12 +8,12 @@ import java.io.Serializable;
  * @param <T> 业务对象
  * @author city
  */
-public class BaseVO<T, ID> implements Serializable {
+public class BaseVO<T> implements Serializable {
 
     private static final long serialVersionUID = 48442414440502818L;
     private T data;
 
-    private ID[] ids;
+    private Serializable[] ids;
 
     public T getData() {
         return data;
@@ -23,8 +23,12 @@ public class BaseVO<T, ID> implements Serializable {
         this.data = data;
     }
 
-    public ID[] getIds() {
+    public Serializable[] getIds() {
         return ids;
+    }
+
+    public void setIds(Serializable[] ids) {
+        this.ids = ids;
     }
 
     public Long[] getLongIds() {
@@ -36,9 +40,5 @@ public class BaseVO<T, ID> implements Serializable {
             longs[i] = Long.valueOf((String) this.ids[i]);
         }
         return longs;
-    }
-
-    public void setIds(ID[] ids) {
-        this.ids = ids;
     }
 }

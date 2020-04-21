@@ -7,6 +7,6 @@ import com.stream.garden.i18n.model.I18n;
  * @author garden
  * @date 2019-10-24 17:14
  */
-public class I18nVO extends BasePageVO<I18n, String> {
+public class I18nVO extends BasePageVO<I18n> {
     private static final long serialVersionUID = 5108701624354910352L;
 }

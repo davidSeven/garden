@@ -7,5 +7,5 @@ import com.stream.garden.system.group.model.GroupUser;
  * @author garden
  * @date 2019-06-22 11:06
  */
-public interface IGroupUserService extends IBaseService<GroupUser, String> {
+public interface IGroupUserService extends IBaseService<GroupUser> {
 }

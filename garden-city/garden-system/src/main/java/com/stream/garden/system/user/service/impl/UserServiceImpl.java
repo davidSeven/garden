@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2019-06-19 11:36
  */
 @Service
-public class UserServiceImpl extends AbstractBaseService<User, String, IUserDao> implements IUserService {
+public class UserServiceImpl extends AbstractBaseService<User, IUserDao> implements IUserService {
 
     @Override
     public int insert(User user) throws ApplicationException {
@@ -82,7 +82,7 @@ public class UserServiceImpl extends AbstractBaseService<User, String, IUserDao>
     }
 
     @Override
-    public PageInfo<User> pageList(BasePageVO<User, String> pageVO) throws ApplicationException {
+    public PageInfo<User> pageList(BasePageVO<User> pageVO) throws ApplicationException {
         return super.pageList(pageVO);
     }
 

@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class FunctionFieldTypeVO extends BasePageVO<FunctionFieldType, String> {
+public class FunctionFieldTypeVO extends BasePageVO<FunctionFieldType> {
     private static final long serialVersionUID = -5297522303854402866L;
 }

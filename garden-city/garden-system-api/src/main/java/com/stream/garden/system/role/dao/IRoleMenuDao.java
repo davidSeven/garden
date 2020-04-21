@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019/8/25 20:17
  */
 @Mapper
-public interface IRoleMenuDao extends IBaseMapper<RoleMenu, String> {
+public interface IRoleMenuDao extends IBaseMapper<RoleMenu> {
 
     int deleteByRoleId(RoleMenu roleMenu);
 }

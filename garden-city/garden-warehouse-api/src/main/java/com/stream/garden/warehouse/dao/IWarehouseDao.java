@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-12-29 15:54
  */
 @Mapper
-public interface IWarehouseDao extends IBaseMapper<Warehouse, String> {
+public interface IWarehouseDao extends IBaseMapper<Warehouse> {
 
     Warehouse getLock(Warehouse warehouse);
 }

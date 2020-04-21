@@ -8,7 +8,7 @@ import com.stream.garden.warehouse.model.Warehouse;
  * @author garden
  * @date 2019-12-29 16:00
  */
-public interface IWarehouseService extends IBaseService<Warehouse, String> {
+public interface IWarehouseService extends IBaseService<Warehouse> {
 
     void addQuantityLock(String id, int quantity) throws ApplicationException;
 

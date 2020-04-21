@@ -4,17 +4,18 @@ import com.stream.garden.framework.api.exception.ApplicationException;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.vo.BasePageVO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author garden
  * @param <T> 实体对象
- * @param <ID> id类型
+ * @author garden
  */
-public interface IBaseService<T, ID> {
+public interface IBaseService<T> {
 
     /**
      * insert
+     *
      * @param t t
      * @return int
      * @throws ApplicationException exception
@@ -31,29 +32,31 @@ public interface IBaseService<T, ID> {
 
     /**
      * delete
+     *
      * @param ids id
      * @return int
      * @throws ApplicationException exception
      */
-    public int delete(ID... ids) throws ApplicationException;
+    public int delete(Serializable... ids) throws ApplicationException;
 
-    public int disable(ID... ids) throws ApplicationException;
+    public int disable(Serializable... ids) throws ApplicationException;
 
-    public int enable(ID... ids) throws ApplicationException;
+    public int enable(Serializable... ids) throws ApplicationException;
 
-    public T get(ID id) throws ApplicationException;
+    public T get(Serializable id) throws ApplicationException;
 
-    public List<T> getByIds(ID... ids) throws ApplicationException;
+    public List<T> getByIds(Serializable... ids) throws ApplicationException;
 
     public List<T> list(T t) throws ApplicationException;
 
     /**
      * pageList
+     *
      * @param pageVO pageVO
      * @return pageInfo
      * @throws ApplicationException exception
      */
-    public PageInfo<T> pageList(BasePageVO<T, ID> pageVO) throws ApplicationException;
+    public PageInfo<T> pageList(BasePageVO<T> pageVO) throws ApplicationException;
 
     public boolean exists(T t) throws ApplicationException;
 }

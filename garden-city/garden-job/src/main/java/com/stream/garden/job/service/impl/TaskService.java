@@ -14,6 +14,7 @@ import com.stream.garden.job.service.ITaskService;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
  * @date 2019-10-23 11:01
  */
 @Service
-public class TaskService extends AbstractBaseService<Task, String, ITaskDao> implements ITaskService {
+public class TaskService extends AbstractBaseService<Task, ITaskDao> implements ITaskService {
 
     @Override
     public int insert(Task task) throws ApplicationException {
@@ -115,10 +116,10 @@ public class TaskService extends AbstractBaseService<Task, String, ITaskDao> imp
     }
 
     @Override
-    public int delete(String... ids) throws ApplicationException {
+    public int delete(Serializable... ids) throws ApplicationException {
         try {
             int i = 0;
-            for (String id : ids) {
+            for (Serializable id : ids) {
                 Task task = super.get(id);
                 if (null != task) {
                     i += super.delete(id);

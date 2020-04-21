@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2020-04-08 19:12
  */
 @Mapper
-public interface IFunctionFieldTypeDao extends IBaseMapper<FunctionFieldType, String> {
+public interface IFunctionFieldTypeDao extends IBaseMapper<FunctionFieldType> {
 
     /**
      * 根据functionId，type删除字段类型

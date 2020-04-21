@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2019-12-29 16:02
  */
 @Service
-public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, String, IWarehouseDao> implements IWarehouseService {
+public class WarehouseServiceImpl extends AbstractBaseService<Warehouse, IWarehouseDao> implements IWarehouseService {
     private Lock lock = new ReentrantLock();
 
     @Override

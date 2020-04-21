@@ -7,5 +7,5 @@ import com.stream.garden.system.role.model.Role;
  * @author garden
  * @date 2019-06-22 11:08
  */
-public interface IRoleService extends IBaseService<Role, String> {
+public interface IRoleService extends IBaseService<Role> {
 }

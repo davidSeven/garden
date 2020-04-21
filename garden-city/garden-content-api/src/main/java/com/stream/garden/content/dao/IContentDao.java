@@ -7,5 +7,5 @@ import com.stream.garden.framework.jdbc.mapper.IBaseMapper;
  * @author garden
  * @date 2019-10-25 16:36
  */
-public interface IContentDao extends IBaseMapper<Content, String> {
+public interface IContentDao extends IBaseMapper<Content> {
 }

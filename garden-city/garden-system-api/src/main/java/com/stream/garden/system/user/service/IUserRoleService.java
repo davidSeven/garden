@@ -8,7 +8,7 @@ import com.stream.garden.system.user.model.UserRole;
  * @author garden
  * @date 2019-06-22 11:00
  */
-public interface IUserRoleService extends IBaseService<UserRole, String> {
+public interface IUserRoleService extends IBaseService<UserRole> {
 
     /**
      * 设置角色

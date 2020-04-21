@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author garden
  */
-public interface IMenuService extends IBaseService<Menu, String> {
+public interface IMenuService extends IBaseService<Menu> {
 
     /**
      * 获取用户菜单

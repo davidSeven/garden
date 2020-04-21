@@ -7,6 +7,6 @@ import com.stream.garden.system.position.model.Position;
  * @author garden
  * @date 2019/7/21 12:24
  */
-public class PositionVO extends BasePageVO<Position, String> {
+public class PositionVO extends BasePageVO<Position> {
     private static final long serialVersionUID = -891395644386756779L;
 }

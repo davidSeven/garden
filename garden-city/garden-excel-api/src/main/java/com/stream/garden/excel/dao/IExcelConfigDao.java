@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-11-04 16:07
  */
 @Mapper
-public interface IExcelConfigDao extends IBaseMapper<ExcelConfig, String> {
+public interface IExcelConfigDao extends IBaseMapper<ExcelConfig> {
 }
