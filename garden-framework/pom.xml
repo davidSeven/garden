@@ -18,6 +18,7 @@
         <module>garden-framework-log</module>
         <module>garden-framework-cache</module>
         <module>garden-framework-limit</module>
+        <module>garden-framework-graphql</module>
     </modules>
 
     <properties>
