@@ -5,6 +5,7 @@ import com.stream.garden.framework.service.AbstractBaseService;
 import com.stream.garden.framework.util.CollectionUtil;
 import com.stream.garden.system.constant.SystemConstant;
 import com.stream.garden.system.function.model.Function;
+import com.stream.garden.system.function.service.IFunctionFieldService;
 import com.stream.garden.system.function.service.IFunctionService;
 import com.stream.garden.system.menu.model.Menu;
 import com.stream.garden.system.menu.service.IMenuService;
@@ -40,6 +41,8 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, I
     private IRoleMenuService roleMenuService;
     @Autowired
     private IRoleFunctionFieldService roleFunctionFieldService;
+    @Autowired
+    private IFunctionFieldService functionFieldService;
 
     @Override
     public int deleteByRoleId(String roleId) throws ApplicationException {
@@ -86,6 +89,9 @@ public class RoleFunctionServiceImpl extends AbstractBaseService<RoleFunction, I
         // 查询配置的功能信息
         Function paramsFunction = new Function();
         List<Function> functionList = functionService.list(paramsFunction);
+
+        // 查询字段信息
+
 
         // 查询当前角色已经设置的菜单信息
         List<RoleMenu> roleMenuList = this.roleMenuService.list(new RoleMenu(roleId));

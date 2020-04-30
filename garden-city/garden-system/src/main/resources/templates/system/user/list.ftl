@@ -69,13 +69,16 @@
 
         <div class="layui-card-body">
             <div class="tool-btn">
-                <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                <button id="addBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list has-permission"
+                        permission="system:user:add"
                         data-type="add"
                         data-url="/system/user/toEdit">添加</button>
-                <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                <button id="deleteBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list has-permission"
+                        permission="system:user:del"
                         data-type="batchdel"
                         data-url="/system/user/delete">删除</button>
-                <button id="setRoleBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
+                <button id="setRoleBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list has-permission"
+                        permission="system:user:setRole"
                         data-type="setRole"
                         data-url="/system/user/toSetRole">设置角色</button>
                 <button id="testBtn" type="button" class="layui-btn layui-btn-small layui-btn-primary hidden-xs layuiadmin-btn-list"
@@ -83,10 +86,12 @@
                         data-url="/system/user/toSetRole">Test</button>
             </div>
             <script type="text/html" id="tableDataToolbar">
-                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs"
+                <a class="layui-btn layui-btn-small layui-btn-primary hidden-xs layui-btn-xs has-permission"
+                   permission="system:user:edit"
                    lay-event="edit"
                    data-url="/system/user/toEdit">编辑</a>
-                <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs"
+                <a class="layui-btn layui-btn-small layui-btn-danger hidden-xs layui-btn-xs has-permission"
+                   permission="system:user:del"
                    lay-event="del"
                    data-url="/system/user/delete">删除</a>
             </script>

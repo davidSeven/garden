@@ -14,4 +14,10 @@
     <delete id="deleteByRoleId">
         DELETE FROM SYS_ROLE_FUNCTION_FIELD_T WHERE ROLE_ID = #{roleId,jdbcType=VARCHAR}
     </delete>
+
+    <delete id="deleteByParams">
+        DELETE FROM SYS_ROLE_FUNCTION_FIELD_T
+        WHERE ROLE_ID = #{roleId,jdbcType=VARCHAR}
+        AND FUNCTION_ID = #{functionId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

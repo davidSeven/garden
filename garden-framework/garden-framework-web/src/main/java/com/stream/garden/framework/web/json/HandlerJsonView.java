@@ -12,6 +12,10 @@ public class HandlerJsonView<T> extends JsonView<T> {
         super(value);
     }
 
+    public HandlerJsonView(T value, Match match) {
+        super(value, match);
+    }
+
     public HandlerJsonViewFilter getHandlerJsonViewFilter() {
         return handlerJsonViewFilter;
     }

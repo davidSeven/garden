@@ -18,7 +18,7 @@ public class RoleFunctionField extends OrderBy implements Serializable {
     private String roleId;
     private String functionId;
     private String functionFieldId;
-    // 类型，1菜单，2功能
+    // 类型，10权限字段，20敏感字段
     private Integer type;
 
 }

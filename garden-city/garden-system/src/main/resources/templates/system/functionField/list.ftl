@@ -112,6 +112,9 @@
             functionId = params.data.id;
             functionData = params.data;
             $("input[name='data.functionId']").val(functionId);
+
+            // 加载表格
+            initTable(functionId);
         };
 
         // 新增，编辑后回调
@@ -120,63 +123,68 @@
             table.reload("tableData");
         };
 
-        table.render({
-            elem: '#tableData'
-            , url: '/system/function-field/pageList'
-            , data: []
-            , method: 'post'
-            , page: {
-                limit: 20
-                , limits: [10, 20, 50, 200]
-            }
-            //,height: '350'
-            , height: 'full-230'
-            , done: function (response, curr, count) {
-                //$(".layui-card-body").resetTableHeight();
-            }
-            , request: {
-                pageName: 'pageSize.page'
-                , limitName: 'pageSize.pageSize'
-            }
-            , parseData: function (response) {
-                return {
-                    "code": response.code,  //解析接口状态
-                    "msg": response.msg,    //解析提示文本
-                    "count": response.data ? response.data.rowTotal : 0,    //解析数据长度
-                    "data": response.data ? response.data.rows : []         //解析数据列表
-                };
-            }
-            // ,data: datas
-            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            , cols: [[
-                {type: 'numbers'}
-                , {type: 'checkbox'}
-                , {field: 'name', width: 120, title: '字段名称'}
-                , {field: 'code', width: 150, title: '字段编码', sort: true}
-                , {
-                    field: 'state', width: 120, title: '状态', align: 'center', templet: function (row) {
-                        if ("1" === row.state) {
-                            return '<span class="layui-badge layui-bg-blue">启用</span>';
-                        } else {
-                            return '<span class="layui-badge layui-bg-gray">禁用</span>';
+        function initTable(functionId) {
+            table.render({
+                elem: '#tableData'
+                , url: '/system/function-field/pageList'
+                , data: []
+                , method: 'post'
+                , page: {
+                    limit: 20
+                    , limits: [10, 20, 50, 200]
+                }
+                //,height: '350'
+                , height: 'full-230'
+                , done: function (response, curr, count) {
+                    //$(".layui-card-body").resetTableHeight();
+                }
+                , request: {
+                    pageName: 'pageSize.page'
+                    , limitName: 'pageSize.pageSize'
+                }
+                ,where: {
+                    "data.functionId": functionId
+                }
+                , parseData: function (response) {
+                    return {
+                        "code": response.code,  //解析接口状态
+                        "msg": response.msg,    //解析提示文本
+                        "count": response.data ? response.data.rowTotal : 0,    //解析数据长度
+                        "data": response.data ? response.data.rows : []         //解析数据列表
+                    };
+                }
+                // ,data: datas
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    {type: 'numbers'}
+                    , {type: 'checkbox'}
+                    , {field: 'name', width: 120, title: '字段名称'}
+                    , {field: 'code', width: 150, title: '字段编码', sort: true}
+                    , {
+                        field: 'state', width: 120, title: '状态', align: 'center', templet: function (row) {
+                            if ("1" === row.state) {
+                                return '<span class="layui-badge layui-bg-blue">启用</span>';
+                            } else {
+                                return '<span class="layui-badge layui-bg-gray">禁用</span>';
+                            }
                         }
                     }
-                }
-                , {field: 'createdByName', width: 120, title: '创建人'}
-                , {
-                    field: 'creationDate', width: 160, title: '创建时间', templet: function (row) {
-                        return formatDate(row.creationDate);
+                    , {field: 'createdByName', width: 120, title: '创建人'}
+                    , {
+                        field: 'creationDate', width: 160, title: '创建时间', templet: function (row) {
+                            return formatDate(row.creationDate);
+                        }
                     }
-                }
-                , {field: 'updatedByName', width: 120, title: '修改人'}
-                , {
-                    field: 'updationDate', width: 160, title: '修改时间', templet: function (row) {
-                        return formatDate(row.updationDate);
+                    , {field: 'updatedByName', width: 120, title: '修改人'}
+                    , {
+                        field: 'updationDate', width: 160, title: '修改时间', templet: function (row) {
+                            return formatDate(row.updationDate);
+                        }
                     }
-                }
-                , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 120}
-            ]]
-        });
+                    , {fixed: 'right', title: '操作', toolbar: '#tableDataToolbar', width: 120}
+                ]]
+            });
+        }
 
         function formatDate(value) {
             if (value) {

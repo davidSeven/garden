@@ -10,6 +10,7 @@ public enum ExceptionCode implements AppCode {
     UNKOWN_EXCEPTION(-1, "请求失败"),
     /** success */
     SUCCESS(0, "success"),
+    NO_PERMISSION(401, "无权访问"),
     TIME_OUT(408, "请求超时"),
 
     ADD_EXCEPTION(500, "新增异常"),

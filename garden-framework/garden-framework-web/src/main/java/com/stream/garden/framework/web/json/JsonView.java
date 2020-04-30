@@ -12,8 +12,13 @@ public class JsonView<T> {
     protected final T value;
     protected final Map<Class<?>, Match> matches = new HashMap<>();
 
-    public JsonView(T value) {
+    JsonView(T value) {
         this.value = value;
+    }
+
+    JsonView(T value, Match match) {
+        this.value = value;
+        matches.put(value.getClass(), match);
     }
 
     public static <E> JsonView<E> with(E value) {

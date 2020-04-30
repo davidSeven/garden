@@ -22,6 +22,7 @@
         </div>
         <div class="layui-col-xs7 layui-col-sm7">
             <form id="fieldForm" class="layui-form">
+                <input type="hidden" name="functionId"/>
                 <div class="layui-card">
                     <div class="layui-card-header">权限字段</div>
                     <div id="permissionDiv" class="layui-card-body">
@@ -135,7 +136,57 @@
             layui.refresh();
         };
 
+        // 字段缓存信息
+        var roleFunctionFieldMap = {
+            // functionId: [ {} ]
+        };
+
         layui.getRoleFunctionField = function (functionId) {
+            var $input = $("input[name='functionId']");
+            var currentFunctionId = $input.val();
+            if (null != currentFunctionId) {
+                var data = jsonData("fieldForm");
+                console.log(data);
+                var fieldList = [];
+                for (var key in data) {
+                    if (!data.hasOwnProperty(key)) {
+                        continue;
+                    }
+                    var values = data[key];
+                    var i;
+                    if (key.indexOf("p_") === 0) {
+                        for (i = 0; i < values.length; i++) {
+                            fieldList.push({
+                                fieldId: values[i],
+                                type: 10
+                            });
+                        }
+                    } else if (key.indexOf("s_") === 0) {
+                        for (i = 0; i < values.length; i++) {
+                            fieldList.push({
+                                fieldId: values[i],
+                                type: 20
+                            });
+                        }
+                    }
+                }
+                roleFunctionFieldMap[currentFunctionId] = fieldList;
+            }
+            // 设置functionId
+            $input.val(functionId);
+
+            function getFieldMap(fieldList, type) {
+                var map = {};
+                if (fieldList && fieldList.length) {
+                    for (var i = 0; i < fieldList.length; i++) {
+                        var field = fieldList[i];
+                        if (field.type === type) {
+                            map[field.fieldId] = 1;
+                        }
+                    }
+                }
+            }
+
             // 查询字段相关信息
             ajaxPost('/system/role/getRoleFunctionField', {roleId: roleId, functionId: functionId}, function (data) {
                 if (data.success) {
@@ -143,11 +194,21 @@
                     var permissionList = map[10];
                     var sensitiveList = map[20];
                     var $permissionDiv = $("#permissionDiv");
+                    // 获取缓存数据
+                    var fieldList = roleFunctionFieldMap[functionId];
+                    console.log(fieldList);
+                    var fieldMap10 = getFieldMap(fieldList, 10);
+                    var fieldMap20 = getFieldMap(fieldList, 20);
+                    var checked;
                     if (permissionList && permissionList.length) {
                         $permissionDiv.empty();
                         for (var i = 0; i < permissionList.length; i++) {
                             var p_field = permissionList[i];
-                            $permissionDiv.append('<input type="checkbox" name="p_fields" value="'+p_field.functionFieldId+'" lay-skin="primary" title="'+p_field.name+'" '+(p_field.checked ? 'checked=""':'')+'>');
+                            checked = p_field.checked;
+                            if (fieldMap10) {
+                                checked = fieldMap10.hasOwnProperty(p_field.functionFieldId);
+                            }
+                            $permissionDiv.append('<input type="checkbox" name="p_fields" value="'+p_field.functionFieldId+'" lay-skin="primary" title="'+p_field.name+'" '+(checked ? 'checked=""':'')+'>');
                         }
                     } else {
                         $permissionDiv.html('<span class="layui-badge layui-bg-gray">没有可以配置的字段</span>');
@@ -157,7 +218,11 @@
                         $sensitiveDiv.empty();
                         for (var j = 0; j < sensitiveList.length; j++) {
                             var s_field = sensitiveList[j];
-                            $sensitiveDiv.append('<input type="checkbox" name="s_fields" value="'+s_field.functionFieldId+'" lay-skin="primary" title="'+s_field.name+'" '+(s_field.checked ? 'checked=""':'')+'>');
+                            checked = s_field.checked;
+                            if (fieldMap20) {
+                                checked = fieldMap20.hasOwnProperty(s_field.functionFieldId);
+                            }
+                            $sensitiveDiv.append('<input type="checkbox" name="s_fields" value="'+s_field.functionFieldId+'" lay-skin="primary" title="'+s_field.name+'" '+(checked ? 'checked=""':'')+'>');
                         }
                     } else {
                         $sensitiveDiv.html('<span class="layui-badge layui-bg-gray">没有可以配置的字段</span>');
@@ -184,9 +249,29 @@
                    });
                 });
             }
+            var voFieldList = [];
+            for(var key in roleFunctionFieldMap) {
+                if (!roleFunctionFieldMap.hasOwnProperty(key)) {
+                    continue;
+                }
+                var fieldList = roleFunctionFieldMap[key];
+                if (fieldList && fieldList.length) {
+                    for (var i = 0; i < fieldList.length; i++) {
+                        var field = fieldList[i];
+                        voFieldList.push({
+                            roleId: roleId,
+                            functionId: key,
+                            functionFieldId: field.fieldId,
+                            type: field.type
+                        });
+                    }
+                }
+            }
+            // 保存对象
             var vo = {
                 roleId: roleId,
-                voList: voList
+                voList: voList,
+                fieldList: voFieldList
             };
             var url = '/system/role/saveRoleFunction';
             ajaxPost(url, {voJson: JSON.stringify(vo)}, function (data) {

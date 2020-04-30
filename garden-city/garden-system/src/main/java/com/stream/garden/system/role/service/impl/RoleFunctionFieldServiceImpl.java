@@ -88,11 +88,31 @@ public class RoleFunctionFieldServiceImpl extends AbstractBaseService<RoleFuncti
 
     @Override
     public void saveBatch(String roleId, List<RoleFunctionField> list) throws ApplicationException {
+        if (CollectionUtil.isNotEmpty(list)) {
+            Map<String, RoleFunctionField> deleteMap = new HashMap<>();
+            for (RoleFunctionField roleFunctionField : list) {
+                String key = roleId + roleFunctionField.getFunctionId();
+                if (!deleteMap.containsKey(key)) {
+                    deleteMap.put(key, roleFunctionField);
+                }
+            }
+            // 先删除
+            for (RoleFunctionField roleFunctionField : deleteMap.values()) {
+                RoleFunctionField params = new RoleFunctionField();
+                params.setRoleId(roleId);
+                params.setFunctionId(roleFunctionField.getFunctionId());
+                this.getMapper().deleteByParams(params);
+            }
+            // 保存
+            this.insertBatch(list);
+        }
         // 先删除
-        RoleFunctionField params = new RoleFunctionField();
+        /*RoleFunctionField params = new RoleFunctionField();
         params.setRoleId(roleId);
         this.getMapper().deleteByRoleId(params);
         // 保存
-        this.insertBatch(list);
+        if (CollectionUtil.isNotEmpty(list)) {
+            this.insertBatch(list);
+        }*/
     }
 }

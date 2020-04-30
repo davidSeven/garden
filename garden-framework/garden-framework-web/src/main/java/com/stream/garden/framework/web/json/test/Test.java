@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.BeanSerializer;
 import com.stream.garden.framework.util.EncryptUtils;
-import com.stream.garden.framework.web.json.HandlerJsonView;
-import com.stream.garden.framework.web.json.HandlerJsonViewFilter;
-import com.stream.garden.framework.web.json.HandlerJsonViewModule;
-import com.stream.garden.framework.web.json.HandlerJsonViewSerializer;
+import com.stream.garden.framework.web.json.*;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -54,7 +51,10 @@ public class Test {
         Set<String> sensitiveFieldSet = new HashSet<>();
         sensitiveFieldSet.add("email");
 
-        HandlerJsonView<User> handlerJsonView = new HandlerJsonView<>(user);
+        Match match = new Match();
+        match.exclude("gender");
+
+        HandlerJsonView<User> handlerJsonView = new HandlerJsonView<>(user, match);
         handlerJsonView.setHandlerJsonViewFilter(new HandlerJsonViewFilter() {
             @Override
             public boolean filter(String currentPath, String fieldName, Object value, JsonGenerator jgen) {

@@ -198,7 +198,7 @@
     <springProfile name="dev">
         <logger name="com.stream.garden" level="debug"/>
         <logger name="com.stream.garden.system.view" level="error"/>
-        <logger name="com.stream.garden.framework.jdbc" level="error"/>
+        <logger name="com.stream.garden.framework.jdbc" level="debug"/>
 
         <logger name="org.mybatis" level="debug"/>
         <logger name="org.mybatis.spring" level="error"/>

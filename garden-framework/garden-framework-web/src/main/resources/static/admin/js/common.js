@@ -198,7 +198,7 @@ function page(title, url, obj, w, h, params) {
                         console.log("--- 不存在iframe");
                     }
                 }
-            }, 10);
+            }, 30);
         } catch (e) {
             console.error(e);
         }
@@ -437,9 +437,24 @@ function jsonData(formId, data, isDebug) {
 
         function getValue(data, field) {
             var value = getElementValue(field);
-            if (value) {
-                data[field.name] = value;
+            if (!value) {
+                return;
             }
+            var name = field.name;
+            // 复选框特殊处理
+            if (isCheckbox(field)) {
+                if (data.hasOwnProperty(name)) {
+                    data[name].push(value);
+                } else {
+                    data[name] = [value];
+                }
+            } else {
+                data[name] = value;
+            }
+        }
+
+        function isCheckbox(field) {
+            return 'checkbox' === field.type;
         }
 
         function getElementValue(field) {

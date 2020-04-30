@@ -1,5 +1,8 @@
 package com.stream.garden.framework.web.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.stream.garden.framework.api.exception.ExceptionCode;
+import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.web.config.GlobalConfig;
 import com.stream.garden.framework.web.constant.GlobalConstant;
 import com.stream.garden.framework.web.permission.IPermissionData;
@@ -64,7 +67,15 @@ public class PermissionFilter extends ExcludeFilter implements Filter {
                 String urlCode = PermissionContext.getUrlCode(uri);
                 // 判断是否有权限
                 if (null != urlCode && null != permissionData && !permissionData.validPermission(urlCode)) {
-                    throw new ServletException("无权访问");
+                    if (RequestFilterUtils.isJsonRequest(request)) {
+                        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+                        Result<String> result = new Result<>();
+                        result.setAppCode(ExceptionCode.NO_PERMISSION);
+                        response.getWriter().append(JSONObject.toJSONString(result));
+                        return;
+                    } else {
+                        throw new ServletException(ExceptionCode.NO_PERMISSION.getMessage());
+                    }
                 }
             }
         }

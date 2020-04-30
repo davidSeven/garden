@@ -78,13 +78,16 @@ public class PermissionHandlerMethodReturnValueHandler implements HandlerMethodR
     /**
      * 字段强化
      *
-     * @param source
-     * @return
+     * @param source source
+     * @return boolean
      */
     private boolean fieldIntensify(Object source) {
         if (source instanceof Result) {
             Result<?> result = (Result<?>) source;
             Object data = result.getData();
+            if (null == data) {
+                return false;
+            }
             if (data instanceof PageInfo) {
                 PageInfo<?> pageInfo = (PageInfo<?>) data;
                 List<?> list = pageInfo.getRows();

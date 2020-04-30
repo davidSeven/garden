@@ -47,7 +47,11 @@ public class UserServiceImpl extends AbstractBaseService<User, IUserDao> impleme
             throw new ApplicationException(SystemExceptionCode.USER_CODE_REPEAT, user.getCode());
         }
         // 密码加密
-        encryptedPwd(user);
+        if (StringUtils.isNotEmpty(user.getPassword())) {
+            encryptedPwd(user);
+        } else {
+            user.setPassword(null);
+        }
         return super.updateSelective(user);
     }
 

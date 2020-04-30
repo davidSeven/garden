@@ -12,4 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IRoleFunctionFieldDao extends IBaseMapper<RoleFunctionField> {
 
     int deleteByRoleId(RoleFunctionField params);
+
+    int deleteByParams(RoleFunctionField params);
 }
