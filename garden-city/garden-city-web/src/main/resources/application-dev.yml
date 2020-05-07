@@ -86,6 +86,7 @@ garden:
   excludePath:
     - /favicon.ico
     - /static/**
+    - /vendor/**
     - /verifyCode
     - /safetyCheck
   login-path: /login
@@ -112,8 +113,8 @@ garden:
     # limit-rule: NONE
     # 1s
     period: 1
-    # 10次
-    count: 10
+    # 100次
+    count: 100
 
   # 任务调度
   job:

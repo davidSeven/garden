@@ -115,6 +115,7 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         logger.debug("---------------------------------------------");
         logger.debug("---------------------------------------------");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/vendor/**").addResourceLocations("classpath:/static/vendor/");
         // registry.addResourceHandler("/images2/**").addResourceLocations("file:D:/images/");
         String os = System.getProperty("os.name");
         String uploadPath = globalConfig.getUploadPath();
