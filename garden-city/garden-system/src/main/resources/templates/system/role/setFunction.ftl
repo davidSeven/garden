@@ -141,7 +141,8 @@
             // functionId: [ {} ]
         };
 
-        layui.getRoleFunctionField = function (functionId) {
+        // 处理字段信息
+        layui.handlerFieldMap = function() {
             var $input = $("input[name='functionId']");
             var currentFunctionId = $input.val();
             if (null != currentFunctionId) {
@@ -172,18 +173,23 @@
                 }
                 roleFunctionFieldMap[currentFunctionId] = fieldList;
             }
+        };
+
+        layui.getRoleFunctionField = function (functionId) {
+            layui.handlerFieldMap();
+            var $input = $("input[name='functionId']");
             // 设置functionId
             $input.val(functionId);
-
             function getFieldMap(fieldList, type) {
-                var map = {};
                 if (fieldList && fieldList.length) {
+                    var map = {};
                     for (var i = 0; i < fieldList.length; i++) {
                         var field = fieldList[i];
                         if (field.type === type) {
                             map[field.fieldId] = 1;
                         }
                     }
+                    return map;
                 }
             }
 
@@ -250,6 +256,8 @@
                 });
             }
             var voFieldList = [];
+            layui.handlerFieldMap();
+            console.log(roleFunctionFieldMap);
             for(var key in roleFunctionFieldMap) {
                 if (!roleFunctionFieldMap.hasOwnProperty(key)) {
                     continue;
