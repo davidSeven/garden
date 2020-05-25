@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# git log
+# git reset --hard commitId
+# git push --force
 push() {
     old_un=`git config user.name`
     old_ue=`git config user.email`
