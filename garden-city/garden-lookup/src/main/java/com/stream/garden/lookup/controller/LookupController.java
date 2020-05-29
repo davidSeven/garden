@@ -4,6 +4,8 @@ import com.stream.garden.framework.api.exception.ExceptionCode;
 import com.stream.garden.framework.api.model.PageInfo;
 import com.stream.garden.framework.api.model.Result;
 import com.stream.garden.framework.api.vo.Criteria;
+import com.stream.garden.framework.validator.groups.ValidationSaveGroup;
+import com.stream.garden.framework.validator.groups.ValidationUpdateGroup;
 import com.stream.garden.lookup.exception.LookupExceptionCode;
 import com.stream.garden.lookup.model.Lookup;
 import com.stream.garden.lookup.service.ILookupService;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,7 +69,7 @@ public class LookupController {
 
     @PostMapping(value = "/add")
     @ResponseBody
-    public Result<Integer> add(Lookup lookup) {
+    public Result<Integer> add(@Validated({ValidationSaveGroup.class}) Lookup lookup) {
         try {
             return new Result<Integer>().setData(lookupService.insert(lookup)).ok();
         } catch (Exception e) {
@@ -77,7 +80,7 @@ public class LookupController {
 
     @PostMapping(value = "/edit")
     @ResponseBody
-    public Result<Integer> edit(Lookup lookup) {
+    public Result<Integer> edit(@Validated({ValidationUpdateGroup.class}) Lookup lookup) {
         try {
             return new Result<Integer>().ok().setData(lookupService.update(lookup));
         } catch (Exception e) {

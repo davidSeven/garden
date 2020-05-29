@@ -23,7 +23,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label lay-required">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">

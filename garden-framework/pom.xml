@@ -19,6 +19,7 @@
         <module>garden-framework-cache</module>
         <module>garden-framework-limit</module>
         <module>garden-framework-graphql</module>
+        <module>garden-framework-validator</module>
     </modules>
 
     <properties>
@@ -119,6 +120,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-json</artifactId>
                 <version>${spring.boot.starter.web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
             </dependency>
 
             <dependency>
