@@ -198,7 +198,7 @@
     <springProfile name="dev">
         <logger name="com.stream.garden" level="debug"/>
         <logger name="com.stream.garden.system.view" level="error"/>
-        <logger name="com.stream.garden.framework.jdbc" level="debug"/>
+        <logger name="com.stream.garden.framework.jdbc" level="error"/>
 
         <logger name="org.mybatis" level="debug"/>
         <logger name="org.mybatis.spring" level="error"/>
@@ -216,7 +216,7 @@
         <!-- spring视图的日志级别 -->
         <logger name="org.springframework.web.servlet.view" level="debug"/>
 
-        <logger name="org.springframework.boot.autoconfigure.logging" level="debug"/>
+        <logger name="org.springframework.boot.autoconfigure.logging" level="error"/>
         <logger name="org.springframework.boot.context.logging" level="debug"/>
     </springProfile>
 
