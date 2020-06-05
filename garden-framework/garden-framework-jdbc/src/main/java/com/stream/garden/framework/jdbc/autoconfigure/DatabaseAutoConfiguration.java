@@ -1,5 +1,6 @@
 package com.stream.garden.framework.jdbc.autoconfigure;
 
+import com.stream.garden.framework.jdbc.interceptor.CommonInterceptor;
 import com.stream.garden.framework.jdbc.mybatis.CommonXMLMapperBuilder;
 import com.stream.garden.framework.jdbc.mybatis.KeyGenMode;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,8 @@ public class DatabaseAutoConfiguration {
     @Value("${mybatis.keyGenMode:IDENTITY}")
     private String keyGenMode;
 
+    @Autowired
+    private CommonInterceptor commonInterceptor;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
@@ -60,7 +63,25 @@ public class DatabaseAutoConfiguration {
         factory.setTypeHandlersPackage(this.properties.getTypeHandlersPackage());
         factory.setMapperLocations(builder.builderCommonMapper(this.properties.resolveMapperLocations()));
 //		factory.setMapperLocations(this.properties.resolveMapperLocations());
-
-        return factory.getObject();
+        SqlSessionFactory sqlSessionFactory = factory.getObject();
+        if (null != sqlSessionFactory) {
+            org.apache.ibatis.session.Configuration configuration = sqlSessionFactory.getConfiguration();
+            configuration.addInterceptor(commonInterceptor);
+        }
+        return sqlSessionFactory;
     }
+
+    /*@Override
+    public void afterPropertiesSet() throws Exception {
+        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
+            sqlSessionFactory.getConfiguration().addInterceptor(commonInterceptor);
+        }
+    }
+
+    @PostConstruct
+    public void addInterceptor() {
+        if (null != sqlSessionFactory) {
+            sqlSessionFactory.getConfiguration().addInterceptor(commonInterceptor);
+        }
+    }*/
 }
