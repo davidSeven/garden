@@ -1,5 +1,8 @@
 package com.stream.garden.framework.web.config;
 
+import com.stream.garden.framework.web.convert.ConverterBoolean;
+import com.stream.garden.framework.web.convert.ConverterDate;
+import com.stream.garden.framework.web.convert.ConverterTimestamp;
 import com.stream.garden.framework.web.filter.ContextFilter;
 import com.stream.garden.framework.web.filter.PermissionFilter;
 import com.stream.garden.framework.web.filter.RequestFilter;
@@ -13,6 +16,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -108,6 +112,13 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         registry.addInterceptor(new ContextInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/test");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new ConverterDate());
+        registry.addConverter(new ConverterTimestamp());
+        registry.addConverter(new ConverterBoolean());
     }
 
     @Override

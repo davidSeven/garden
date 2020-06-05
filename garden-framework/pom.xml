@@ -32,6 +32,7 @@
         <spring.boot.starter.web.version>2.0.2.RELEASE</spring.boot.starter.web.version>
         <spring.boot.starter.freemarker.version>2.0.2.RELEASE</spring.boot.starter.freemarker.version>
         <lobmok.version>1.18.8</lobmok.version>
+        <joda-time.version>2.9.9</joda-time.version>
     </properties>
 
     <dependencyManagement>
@@ -252,6 +253,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lobmok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
             </dependency>
 
         </dependencies>
