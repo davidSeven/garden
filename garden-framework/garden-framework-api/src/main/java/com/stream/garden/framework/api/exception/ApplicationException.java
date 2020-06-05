@@ -21,6 +21,10 @@ public class ApplicationException extends Exception {
         this.appCode = appCode;
     }
 
+    public ApplicationException(String code, String message) {
+        super(message);
+    }
+
     public ApplicationException(AppCode appCode, Object... arguments) {
         super(MessageFormat.format(appCode.getMessage(), arguments));
         this.appCode = appCode;

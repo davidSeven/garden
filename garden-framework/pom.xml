@@ -31,6 +31,7 @@
         <spring.version>5.0.6.RELEASE</spring.version>
         <spring.boot.starter.web.version>2.0.2.RELEASE</spring.boot.starter.web.version>
         <spring.boot.starter.freemarker.version>2.0.2.RELEASE</spring.boot.starter.freemarker.version>
+        <lobmok.version>1.18.8</lobmok.version>
     </properties>
 
     <dependencyManagement>
@@ -245,6 +246,12 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>20.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lobmok.version}</version>
             </dependency>
 
         </dependencies>
