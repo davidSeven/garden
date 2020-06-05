@@ -1,6 +1,5 @@
-package com.stream.garden.warehouse.service.impl;
+package com.stream.garden.framework.cache.locker;
 
-import com.stream.garden.warehouse.service.DistributedLocker;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
@@ -20,12 +19,6 @@ public class RedissonDistributedLocker implements DistributedLocker {
     }
 
     @Override
-    public void unlock(String lockKey) {
-        RLock lock = redissonClient.getLock(lockKey);
-        lock.unlock();
-    }
-
-    @Override
     public void lock(String lockKey, int leaseTime) {
         RLock lock = redissonClient.getLock(lockKey);
         lock.lock(leaseTime, TimeUnit.SECONDS);
@@ -35,6 +28,22 @@ public class RedissonDistributedLocker implements DistributedLocker {
     public void lock(String lockKey, TimeUnit unit, int timeout) {
         RLock lock = redissonClient.getLock(lockKey);
         lock.lock(timeout, unit);
+    }
+
+    @Override
+    public boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
+        RLock lock = redissonClient.getLock(lockKey);
+        try {
+            return lock.tryLock(waitTime, leaseTime, unit);
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void unlock(String lockKey) {
+        RLock lock = redissonClient.getLock(lockKey);
+        lock.unlock();
     }
 
     public void setRedissonClient(RedissonClient redissonClient) {

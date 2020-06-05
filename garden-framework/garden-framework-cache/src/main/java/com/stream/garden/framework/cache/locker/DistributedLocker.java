@@ -1,4 +1,4 @@
-package com.stream.garden.warehouse.service;
+package com.stream.garden.framework.cache.locker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,9 +10,11 @@ public interface DistributedLocker {
 
     void lock(String lockKey);
 
-    void unlock(String lockKey);
-
     void lock(String lockKey, int timeout);
 
     void lock(String lockKey, TimeUnit unit, int timeout);
+
+    boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime);
+
+    void unlock(String lockKey);
 }

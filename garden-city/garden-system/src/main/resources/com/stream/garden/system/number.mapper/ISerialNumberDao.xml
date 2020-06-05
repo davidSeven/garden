@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stream.garden.system.number.dao.ISerialNumberDao">
+    <resultMap id="BaseResultMap" type="com.stream.garden.system.number.model.SerialNumber">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="CODE" jdbcType="VARCHAR" property="code"/>
+        <result column="CURRENT_SEQUENCE" jdbcType="DECIMAL" property="currentSequence"/>
+        <result column="STEP" jdbcType="DECIMAL" property="step"/>
+        <result column="LENGTH" jdbcType="DECIMAL" property="length"/>
+        <result column="PREFIX" jdbcType="VARCHAR" property="prefix"/>
+        <result column="TYPE" jdbcType="DECIMAL" property="type"/>
+        <result column="TEMPLATE" jdbcType="VARCHAR" property="template"/>
+        <result column="CYCLE_FORMAT" jdbcType="VARCHAR" property="cycleFormat"/>
+        <result column="CURRENT_CYCLE" jdbcType="VARCHAR" property="currentCycle"/>
+        <result column="CACHE_SIZE" jdbcType="DECIMAL" property="cacheSize"/>
+        <result column="CONVERTS" jdbcType="VARCHAR" property="converts"/>
+        <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="CREATION_DATE" jdbcType="VARCHAR" property="creationDate"/>
+        <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="UPDATION_DATE" jdbcType="VARCHAR" property="updationDate"/>
+        <result column="ENABLED_FLAG" jdbcType="DECIMAL" property="enabledFlag"/>
+        <result column="TRACE_ID" jdbcType="VARCHAR" property="traceId"/>
+    </resultMap>
+    <sql id="BaseTable">
+        SYS_SERIAL_NUMBER
+    </sql>
+
+    <select id="getByCode" resultMap="BaseResultMap">
+        SELECT t.* FROM SYS_SERIAL_NUMBER t
+        WHERE t.CODE = #{code, jdbcType=VARCHAR}
+    </select>
+
+</mapper>
