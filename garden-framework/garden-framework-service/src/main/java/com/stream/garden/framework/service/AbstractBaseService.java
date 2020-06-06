@@ -145,7 +145,8 @@ public abstract class AbstractBaseService<T, M extends IBaseMapper<T>> implement
         if (null == t) {
             return;
         }
-        if (t instanceof BaseModel) {
+        // to see CommonInterceptor
+        /*if (t instanceof BaseModel) {
             BaseModel baseModel = (BaseModel) t;
             String userId = null;
             Context context = ContextUtil.getContext();
@@ -161,6 +162,6 @@ public abstract class AbstractBaseService<T, M extends IBaseMapper<T>> implement
                 baseModel.setUpdatedBy(userId);
                 baseModel.setUpdationDate(new Timestamp(System.currentTimeMillis()));
             }
-        }
+        }*/
     }
 }

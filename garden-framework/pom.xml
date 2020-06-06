@@ -33,6 +33,7 @@
         <spring.boot.starter.freemarker.version>2.0.2.RELEASE</spring.boot.starter.freemarker.version>
         <lobmok.version>1.18.8</lobmok.version>
         <joda-time.version>2.9.9</joda-time.version>
+        <redisson.version>3.13.0</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -240,7 +241,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
-                <version>3.13.0</version>
+                <version>${redisson.version}</version>
             </dependency>
 
             <dependency>

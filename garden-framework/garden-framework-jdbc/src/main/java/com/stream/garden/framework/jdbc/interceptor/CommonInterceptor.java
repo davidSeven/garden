@@ -116,10 +116,10 @@ public class CommonInterceptor implements Interceptor {
         // 删除columnName
         deleteInsertColumnAndExpressions(insert, columnName);
         List<Column> columns = insert.getColumns();
-        // 列 version
-        Column versionColumn = new Column();
-        versionColumn.setColumnName(columnName);
-        columns.add(versionColumn);
+        // 列
+        Column column = new Column();
+        column.setColumnName(columnName);
+        columns.add(column);
 
         ExpressionList expressionList = (ExpressionList) insert.getItemsList();
         List<Expression> expressions = expressionList.getExpressions();
@@ -158,10 +158,10 @@ public class CommonInterceptor implements Interceptor {
         // 删除columnName
         deleteUpdateColumnAndExpressions(update, columnName);
         List<Column> columns = update.getColumns();
-        // 列 version
-        Column versionColumn = new Column();
-        versionColumn.setColumnName(columnName);
-        columns.add(versionColumn);
+        // 列
+        Column column = new Column();
+        column.setColumnName(columnName);
+        columns.add(column);
 
         List<Expression> expressions = update.getExpressions();
         if (cla == Date.class) {
