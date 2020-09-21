@@ -1,0 +1,66 @@
+spring: 
+  redis2:
+    host: 112.35.123.178
+    port: 40197
+    password: redisroot
+#    host: 112.35.23.91
+#    port: 1525
+#    password: 123
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1  
+eureka:
+  instance:
+    status-page-url-path: /actuator/info
+    ## 指定此实例的IP，不绑IP默认用本机局域网IP
+    ip-address: 127.0.0.1
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.ip-address:${spring.cloud.client.ip-address}}:${server.port}
+    appname: ${spring.application.name}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 20
+    serviceUrl:
+      defaultZone: http://127.0.0.1:41578/eureka
+info:
+  config:
+    tmp: logs/tmp
+    loginUserId:
+    loginAddrCode:
+    loggerPath: logs/${spring.application.name}
+    loggerLevel: DEBUG
+    logstashHost:
+    logstashPort:
+    authWhiteNameListAddress: "\
+      172.16.133.177,\
+      172.16.133.178,\
+      172.16.136.118,\
+      172.16.136.119,\
+      112.35.32.77,\
+      192.168.0.3,\
+      127.0.0.1"
+    authWhiteNameListUriPath: "\
+      /g4TD/gateway/api-deploy/api/gitlab/v1/users,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/download/jar,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/download/tar,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/publish,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/requestId,\
+      /g4TD/gateway/api-deploy/api/log/v1/logs,\
+      /g4TD/gateway/api-deploy/api/log/v1/logs/**,\
+      /g4TD/gateway/api-monitor/api/monitor/v1/list,\
+      /g4TD/gateway/api-exchange/**"
+    authTokenSecret: 
+routes:
+  api:
+    - forest-system
+management: 
+  endpoints: 
+    web: 
+      exposure:
+        include: health 

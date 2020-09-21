@@ -1,0 +1,21 @@
+server:
+  port: 41578
+spring:
+  profiles:
+    active: dev
+  main:
+    banner-mode: "off"
+  application:
+    name: eureka
+  cloud:
+    inetutils:
+      ## 设置网络超时
+      timeout-seconds: 5
+      ## 忽略网卡
+      ignored-interfaces:
+        - VMware Virtual Ethernet Adapter for VMnet1
+        - VMware Virtual Ethernet Adapter for VMnet8
+        - VirtualBox Host-Only Ethernet Adapter
+app:
+  version: '@project.version@'
+  build: '@build.timestamp@'

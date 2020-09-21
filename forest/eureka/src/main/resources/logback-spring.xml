@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<springProperty scope="context" name="springAppName" source="spring.application.name" />
+	<springProperty scope="context" name="loggerPath" source="info.config.loggerPath" />
+	<springProperty scope="context" name="loggerLevel" source="info.config.loggerLevel" />
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d [%relative] [%level] [%thread] [%X{TID}] %logger --> %msg\r\n</pattern>
+		</encoder>
+	</appender>
+	<appender name="APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<fileNamePattern>${loggerPath}/${hostname}-${springAppName}-service-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<!--文件最多保留的天数 -->
+			<maxHistory>7</maxHistory>
+			<!--文件最大为多少 -->
+			<maxFileSize>5MB</maxFileSize>
+			<!--日志总的大小 -->
+			<totalSizeCap>2GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%relative] [%level] [%thread] [%X{TID}] %logger --> %msg\r\n</pattern>
+		</encoder>
+	</appender>
+	<appender name="ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<appender-ref ref="APPENDER"/>
+	</appender>
+	<logger name="com.stream" additivity="false">
+		<level value="${loggerLevel}" />
+		<appender-ref ref="ASYNC_APPENDER" />
+	</logger>
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="ASYNC_APPENDER" />
+	</root>
+</configuration>

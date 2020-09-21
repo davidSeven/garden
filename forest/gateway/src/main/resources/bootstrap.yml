@@ -1,0 +1,86 @@
+server:
+  port: 41579
+  servlet:
+    session:
+      cookie:
+        name: g4SessionId4GW
+        max-age: 86400s
+      timeout: 1440m
+  tomcat:
+    max-threads: 2000
+    accept-count: 10000
+    max-connections: 10000
+    min-spare-threads: 100
+spring:
+  profiles:
+    active: local
+  main:
+    banner-mode: "off"
+  application:
+    name: ${SERVICE_NAME:gateway}
+  cloud:
+    gateway:
+      discovery: 
+        locator: 
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+    loadbalancer:
+      retry:
+        enabled: true
+    inetutils:
+      ## 设置网络超时
+      timeout-seconds: 5
+      ## 忽略网卡
+      ignored-interfaces:
+        - VMware Virtual Ethernet Adapter for VMnet1
+        - VMware Virtual Ethernet Adapter for VMnet8
+        - VirtualBox Host-Only Ethernet Adapter
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    defaultPropertyInclusion: ALWAYS
+    serialization:
+      INDENT_OUTPUT: true
+  session:
+    store-type: none
+  resources:
+    ## 存储附件路径
+    static-locations:
+      - "classpath:/resources/"
+      - "classpath:/static/"
+      - "classpath:/public/"
+  mvc:
+    ## 配置映射地址
+    static-path-pattern: /**
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+ribbon:
+  ReadTimeout: 20000
+  SocketTimeout: 50000
+  ConnectTimeout: 50000
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 21000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+app:
+  version: '@project.version@'
+  build: '@build.timestamp@'

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>forest-system</artifactId>
+        <groupId>com.stream</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>forest-system-provider</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- framework -->
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-interceptor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stream</groupId>
+            <artifactId>forest-system-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stream</groupId>
+            <artifactId>forest-system-util</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

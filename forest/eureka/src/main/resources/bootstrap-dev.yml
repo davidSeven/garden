@@ -1,0 +1,27 @@
+eureka:
+  instance:
+    status-page-url-path: /actuator/info
+    ## 127.0.0.1
+    ip-address: 127.0.0.1
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.ip-address:${spring.cloud.client.ip-address}}:${server.port}
+    appname: ${spring.application.name}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 15
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 10000
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://127.0.0.1:41578/eureka
+info:
+  config:
+    tmp: /forest/eureka/tmp
+    loginUserId:
+    loginAddrCode:
+    loggerPath: /forest/eureka/logs/${spring.application.name}
+    loggerLevel: INFO
+    logstashHost:
+    logstashPort:
