@@ -19,9 +19,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.stream.framework</groupId>
+            <artifactId>framework-service</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.stream</groupId>
             <artifactId>forest-system-api</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
