@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>forest-system</artifactId>
-    <groupId>com.stream</groupId>
+    <groupId>com.forest</groupId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -28,68 +28,68 @@
         <dependencies>
             <!-- framework -->
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-api</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-common</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-config</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-dao</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-interceptor</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-redis</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-service</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-utils</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-validator</artifactId>
                 <version>${stream.framework.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.stream</groupId>
+                <groupId>com.forest</groupId>
                 <artifactId>forest-system-api</artifactId>
                 <version>${forest.system.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream</groupId>
+                <groupId>com.forest</groupId>
                 <artifactId>forest-system-client</artifactId>
                 <version>${forest.system.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream</groupId>
+                <groupId>com.forest</groupId>
                 <artifactId>forest-system-provider</artifactId>
                 <version>${forest.system.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream</groupId>
+                <groupId>com.forest</groupId>
                 <artifactId>forest-system-util</artifactId>
                 <version>${forest.system.version}</version>
             </dependency>

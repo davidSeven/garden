@@ -2,7 +2,7 @@ server:
   port: 41578
 spring:
   profiles:
-    active: dev
+    active: local
   main:
     banner-mode: "off"
   application:

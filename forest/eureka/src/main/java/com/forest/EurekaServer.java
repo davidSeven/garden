@@ -1,4 +1,4 @@
-package com.stream.forest;
+package com.forest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

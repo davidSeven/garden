@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>forest-system</artifactId>
-        <groupId>com.stream</groupId>
+        <groupId>com.forest</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,19 +15,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <commons.lang3>3.7</commons.lang3>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- commons-lang3 -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons.lang3}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <dependencies>
+    </dependencies>
 
     <build>
         <plugins>

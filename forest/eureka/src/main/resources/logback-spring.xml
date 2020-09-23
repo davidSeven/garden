@@ -28,12 +28,12 @@
 		<queueSize>512</queueSize>
 		<appender-ref ref="APPENDER"/>
 	</appender>
-	<logger name="com.stream" additivity="false">
+	<logger name="com.forest" additivity="false">
 		<level value="${loggerLevel}" />
 		<appender-ref ref="ASYNC_APPENDER" />
 	</logger>
 	<root>
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="ASYNC_APPENDER" />
 	</root>
 </configuration>

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.stream.framework</groupId>
+    <groupId>com.forest.framework</groupId>
     <artifactId>framework</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
@@ -32,10 +32,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <stream.framework.version>1.0.0</stream.framework.version>
+        <forest.framework.version>1.0.0</forest.framework.version>
         <spring-cloud.version>Finchley.SR2</spring-cloud.version>
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
-        <spring-context-support.version>5.0.10.RELEASE</spring-context-support.version>
         <validation.api.version>2.0.1.Final</validation.api.version>
         <fastjson.version>1.2.71</fastjson.version>
         <druid.version>1.1.12</druid.version>
@@ -85,55 +84,57 @@
         <dozer.version>5.5.1</dozer.version>
         <hibernate.validator.version>6.0.9.Final</hibernate.validator.version>
         <javaee.api.version>7.0</javaee.api.version>
+        <joda-time.version>2.9.9</joda-time.version>
+        <mysql.version>5.1.30</mysql.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- framework -->
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-api</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-common</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-config</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-dao</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-interceptor</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-redis</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-service</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-utils</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stream.framework</groupId>
+                <groupId>com.forest.framework</groupId>
                 <artifactId>framework-validator</artifactId>
-                <version>${stream.framework.version}</version>
+                <version>${forest.framework.version}</version>
             </dependency>
             <!-- spring cloud -->
             <dependency>
@@ -148,16 +149,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring-context-support.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${spring-context-support.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -496,6 +487,16 @@
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>${javaee.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
