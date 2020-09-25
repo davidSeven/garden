@@ -30,10 +30,12 @@
 	</appender>
 	<logger name="com.forest" additivity="false">
 		<level value="${loggerLevel}" />
+        <appender-ref ref="CONSOLE"/>
 		<appender-ref ref="ASYNC_APPENDER" />
 	</logger>
 	<root>
 		<level value="DEBUG" />
+        <appender-ref ref="CONSOLE"/>
 		<appender-ref ref="ASYNC_APPENDER" />
 	</root>
 </configuration>

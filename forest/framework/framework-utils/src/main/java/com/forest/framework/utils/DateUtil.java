@@ -2,7 +2,6 @@ package com.forest.framework.utils;
 
 import com.forest.framework.common.constant.CommonConstant;
 import lombok.SneakyThrows;
-import org.joda.time.DateTime;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -508,10 +507,6 @@ public final class DateUtil {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, num);
         return getYearMonthDay(cal.getTime());
-    }
-
-    public static String getCurrentDate(String aFormat) {
-        return new DateTime(Calendar.getInstance().getTimeInMillis()).toString(aFormat);
     }
 
     public static List<Integer> getYears(int duration) {

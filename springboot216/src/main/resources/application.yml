@@ -12,7 +12,7 @@ spring:
   main:
     banner-mode: "off"
   application:
-    name: forest-system
+    name: springboot216
   thymeleaf:
     prefix: classpath:/static/
   jackson:
@@ -59,9 +59,9 @@ management:
     health:
       show-details: always
 mybatis:
-  typeAliasesPackage: com.forest.*.*.dao
+  typeAliasesPackage: com.user
   mapperLocations:
-    - classpath*:com/forest/**/*.xml
+    - classpath*:com/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
 hystrix:

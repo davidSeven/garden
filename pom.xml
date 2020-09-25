@@ -15,7 +15,7 @@
         <module>garden-city</module>
         <module>forest</module>
         <module>springboot206</module>
-        <module>springboot230</module>
+        <module>springboot216</module>
     </modules>
 
     <properties>
