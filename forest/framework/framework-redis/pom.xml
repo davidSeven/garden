@@ -18,10 +18,9 @@
     </properties>
 
     <dependencies>
-        <!-- commons-lang3 -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>com.forest.framework</groupId>
+            <artifactId>framework-common</artifactId>
         </dependency>
     </dependencies>
 

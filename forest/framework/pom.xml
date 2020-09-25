@@ -298,6 +298,29 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <!-- quartz -->
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.zaxxer</groupId>
+                        <artifactId>HikariCP-java6</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>${quartz.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.zaxxer</groupId>
+                        <artifactId>HikariCP-java6</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!-- mybatis -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -331,17 +354,7 @@
                 <artifactId>validation-api</artifactId>
                 <version>${validation.api.version}</version>
             </dependency>
-            <!-- generator生成mybatis工具依赖 -->
-            <dependency>
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-core</artifactId>
-                <version>${mybatis-generator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>${mybatis-generator.version}</version>
-            </dependency>
+
             <!-- net.sf.dozer -->
             <dependency>
                 <groupId>net.sf.dozer</groupId>
