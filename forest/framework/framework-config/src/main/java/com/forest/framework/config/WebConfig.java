@@ -1,32 +1,22 @@
 package com.forest.framework.config;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.forest.framework.common.constant.CommonConstant;
 import com.forest.framework.interceptor.ContextInterceptor;
-import com.forest.framework.utils.DateUtilEnum;
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -34,8 +24,6 @@ import org.springframework.web.servlet.config.annotation.*;
 
 import javax.servlet.MultipartConfigElement;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,25 +44,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private ContextInterceptor contextInterceptor;
-
-    @Bean
-    public HttpMessageConverters httpMessageConverters() {
-        log.debug("WebConfig httpMessageConverters");
-        List<HttpMessageConverter<?>> messageConverters = getHttpMessageConverters();
-        return new HttpMessageConverters(true, messageConverters);
-    }
-
-    @Bean
-    public FilterRegistrationBean<CharacterEncodingFilter> characterEncodingFilter() {
-        log.debug("WebConfig characterEncodingFilter");
-        FilterRegistrationBean<CharacterEncodingFilter> reg = new FilterRegistrationBean<>();
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding(characterEncoding);
-        filter.setForceEncoding(true);
-        reg.setFilter(filter);
-        reg.addUrlPatterns("/*");
-        return reg;
-    }
 
     @Bean
     public RequestContextListener requestContextListener() {
@@ -109,46 +78,6 @@ public class WebConfig implements WebMvcConfigurer {
             factory.setLocation(location);
         }
         return factory.createMultipartConfig();
-    }
-
-    private List<HttpMessageConverter<?>> getHttpMessageConverters() {
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        // FastJsonHttpMessageConverter
-        FastJsonHttpMessageConverter fastJsonHttpMessageConverter = getFastJsonHttpMessageConverter();
-        Assert.notNull(fastJsonHttpMessageConverter, "fastJsonHttpMessageConverter is null");
-        messageConverters.add(fastJsonHttpMessageConverter);
-        // 覆盖GsonHttpMessageConverter之后swagger-ui不可用
-        // GsonHttpMessageConverter
-        GsonHttpMessageConverter gsonHttpMessageConverter = getGsonHttpMessageConverter();
-        Assert.notNull(gsonHttpMessageConverter, "gsonHttpMessageConverter is null");
-        return messageConverters;
-    }
-
-    private FastJsonHttpMessageConverter getFastJsonHttpMessageConverter() {
-        // 创建fastjson转换器实例
-        FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
-        // 配置对象
-        FastJsonConfig fastJsonConfig = fastJsonHttpMessageConverter.getFastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(
-                SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteNullListAsEmpty,
-                SerializerFeature.WriteMapNullValue);
-        if (StringUtils.isEmpty(dateFormat)) {
-            fastJsonConfig.setDateFormat(DateUtilEnum.DATE_FMT_Y_M_D_HMS.getValue());
-        } else {
-            fastJsonConfig.setDateFormat(dateFormat);
-        }
-        List<MediaType> mediaTypes = new ArrayList<>();
-        // json格式utf8中文编码
-        mediaTypes.add(CommonConstant.MEDIA_TYPE);
-        fastJsonHttpMessageConverter.setSupportedMediaTypes(mediaTypes);
-        return fastJsonHttpMessageConverter;
-    }
-
-    private GsonHttpMessageConverter getGsonHttpMessageConverter() {
-        GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        gsonHttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-        return gsonHttpMessageConverter;
     }
 
     @Override

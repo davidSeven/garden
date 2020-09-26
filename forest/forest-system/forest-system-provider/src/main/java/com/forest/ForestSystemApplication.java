@@ -1,4 +1,4 @@
-package com.forest.system;
+package com.forest;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
