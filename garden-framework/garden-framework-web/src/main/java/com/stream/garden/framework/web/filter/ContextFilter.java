@@ -47,8 +47,8 @@ public class ContextFilter extends ExcludeFilter implements Filter {
         final HttpServletResponse response = (HttpServletResponse) res;
 
         String uri = request.getRequestURI();
-        // logger.debug("-------------------------------------------");
-        // logger.debug("request uri: {}", uri);
+        logger.debug("-------------------------------------------");
+        logger.debug("request uri: {}", uri);
 
         boolean jump = super.exclude(uri);
 

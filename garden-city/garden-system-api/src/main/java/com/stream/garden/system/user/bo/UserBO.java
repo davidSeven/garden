@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author garden
@@ -22,4 +23,6 @@ public class UserBO extends User {
     private String roleState;
     // 用户菜单信息
     private List<MenuVO> menuList;
+    // 权限集合
+    private Set<String> permissionSet;
 }

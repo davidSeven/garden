@@ -34,6 +34,10 @@
         <lobmok.version>1.18.8</lobmok.version>
         <joda-time.version>2.9.9</joda-time.version>
         <redisson.version>3.13.0</redisson.version>
+
+        <swagger.version>2.9.2</swagger.version>
+        <swagger.annotations.version>1.5.14</swagger.annotations.version>
+        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
     </properties>
 
     <dependencyManagement>
@@ -260,6 +264,27 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger.bootstrap.ui.version}</version>
             </dependency>
 
         </dependencies>

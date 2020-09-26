@@ -99,4 +99,27 @@ public class EncryptCacheUtil {
             return rsaPassword;
         }
     }
+
+    /**
+     * 对密码进行加密
+     *
+     * @param password password
+     * @return String
+     */
+    public static String encryptRsaPassword(String password) {
+        try {
+            return EncryptUtils.encryptRSA(password, getRsaPublicKey());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return password;
+        }
+    }
+
+    public static void main(String[] args) {
+        reloadRsaPublicKey();
+        String rsaPassword = encryptRsaPassword("123456");
+        System.out.println(rsaPassword);
+        String pubPassword = decryptRsaPassword(rsaPassword);
+        System.out.println(pubPassword);
+    }
 }

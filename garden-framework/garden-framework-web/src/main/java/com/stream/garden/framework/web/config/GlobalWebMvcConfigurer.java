@@ -65,12 +65,10 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
         IPermissionData permissionData = null;
         if (null != applicationContext) {
             Map<String, IPermissionData> permissionDataMap = applicationContext.getBeansOfType(IPermissionData.class);
-            if (null != permissionDataMap) {
-                for (Map.Entry<String, IPermissionData> entry : permissionDataMap.entrySet()) {
-                    permissionData = entry.getValue();
-                    if (null != permissionData) {
-                        break;
-                    }
+            for (Map.Entry<String, IPermissionData> entry : permissionDataMap.entrySet()) {
+                permissionData = entry.getValue();
+                if (null != permissionData) {
+                    break;
                 }
             }
         }
@@ -145,5 +143,9 @@ public class GlobalWebMvcConfigurer implements WebMvcConfigurer, InitializingBea
             }
         }
         registry.addResourceHandler("/static/images/**").addResourceLocations("file:" + uploadPath);
+        // swagger配置
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
