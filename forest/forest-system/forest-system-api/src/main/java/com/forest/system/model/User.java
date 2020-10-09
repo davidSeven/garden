@@ -1,5 +1,6 @@
 package com.forest.system.model;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.forest.framework.model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +11,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class User extends BaseModel<User, String> {
+@TableName("user")
+public class User extends BaseModel<User, Long> {
     private static final long serialVersionUID = 1602139400880339940L;
 
     @ApiModelProperty(name = "帐号")

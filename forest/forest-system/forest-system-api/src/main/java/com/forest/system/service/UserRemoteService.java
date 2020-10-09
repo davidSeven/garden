@@ -1,8 +1,10 @@
 package com.forest.system.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forest.framework.dto.ResponseDto;
 import com.forest.system.dto.UserDto;
+import com.forest.system.model.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,8 +35,8 @@ public interface UserRemoteService {
      * 分页
      *
      * @param dto dto
-     * @return Page
+     * @return IPage
      */
     @PostMapping(value = "/system/user/page")
-    ResponseDto<Page<UserDto>> page(@RequestBody UserDto dto);
+    ResponseDto<IPage<User>> page(@RequestBody UserDto dto);
 }
