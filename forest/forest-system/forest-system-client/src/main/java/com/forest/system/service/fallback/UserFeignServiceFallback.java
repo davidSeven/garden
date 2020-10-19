@@ -1,11 +1,10 @@
 package com.forest.system.service.fallback;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forest.framework.dto.ResponseDto;
 import com.forest.system.dto.UserDto;
 import com.forest.system.model.User;
-import com.forest.system.service.UserFeignService;
+import com.forest.system.service.feign.UserFeignService;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
 

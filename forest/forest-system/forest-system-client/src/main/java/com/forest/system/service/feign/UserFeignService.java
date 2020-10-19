@@ -1,6 +1,7 @@
-package com.forest.system.service;
+package com.forest.system.service.feign;
 
 import com.forest.system.ForestInterface;
+import com.forest.system.service.UserRemoteService;
 import com.forest.system.service.fallback.UserFeignServiceFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 

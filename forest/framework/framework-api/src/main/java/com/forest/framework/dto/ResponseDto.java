@@ -89,4 +89,18 @@ public class ResponseDto<T> implements Serializable {
         String requestId = RequestContext.getCurrentContext().getRequestId();
         return new ResponseDto<>(CommonConstant.SUCCESS_CODE, CommonConstant.SUCCESS_MSG, requestId, data, null);
     }
+
+    /**
+     * 返回data
+     *
+     * @param responseDto responseDto
+     * @param <T>         T
+     * @return T
+     */
+    public static <T> T getData(ResponseDto<T> responseDto) {
+        if (null != responseDto) {
+            return responseDto.getData();
+        }
+        return null;
+    }
 }

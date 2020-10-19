@@ -42,7 +42,7 @@
         <swagger2.version>2.9.2</swagger2.version>
         <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
         <mybatis-spring-boot-starter.version>2.0.1</mybatis-spring-boot-starter.version>
-        <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.0.1</mybatis-plus-boot-starter.version>
         <ojdbc6.version>1.0</ojdbc6.version>
         <quartz.version>2.3.0</quartz.version>
         <poi.version>3.17</poi.version>
@@ -154,6 +154,11 @@
                 <artifactId>spring-boot-configuration-processor</artifactId>
                 <version>${spring-boot.version}</version>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!-- commons -->
             <dependency>

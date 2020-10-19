@@ -1,6 +1,6 @@
-package com.forest.system.service.impl;
+package com.forest.system.service.client.impl;
 
-import com.forest.system.service.UserClientService;
+import com.forest.system.service.client.UserClientService;
 import org.springframework.stereotype.Service;
 
 /**

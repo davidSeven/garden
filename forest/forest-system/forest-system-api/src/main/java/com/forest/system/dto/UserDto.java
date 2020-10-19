@@ -9,6 +9,15 @@ import lombok.Data;
 @Data
 public class UserDto {
 
+    @ApiModelProperty("id")
+    private Long id;
+
+    @ApiModelProperty(name = "帐号")
+    private String account;
+
     @ApiModelProperty(name = "名称")
     private String name;
+
+    @ApiModelProperty(name = "状态")
+    private String state;
 }
