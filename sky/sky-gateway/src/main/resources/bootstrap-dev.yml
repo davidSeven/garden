@@ -1,0 +1,63 @@
+spring: 
+  redis:
+    host: 112.35.123.178
+    port: 40197
+    password: redisroot
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1  
+eureka:
+  instance:
+    status-page-url-path: /actuator
+    ip-address: 112.35.32.77
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.ip-address:${spring.cloud.client.ip-address}}:${server.port}
+    appname: ${spring.application.name}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 15
+  client:
+    filter-only-up-instances: false
+    registry-fetch-interval-seconds: 20
+    serviceUrl:
+      defaultZone: http://112.35.32.77:41578/eureka
+info:
+  config:
+    tmp: /cmcc/scm_app/tmp
+    loginUserId:
+    loginAddrCode:
+    loggerPath: /cmcc/scm_app/logs/${spring.application.name}
+    loggerLevel: DEBUG
+    logstashHost:
+    logstashPort:
+    authWhiteNameListAddress: "\
+      172.16.133.177,\
+      172.16.133.178,\
+      172.16.136.118,\
+      172.16.136.119,\
+      112.35.32.77,\
+      192.168.0.3,\
+      127.0.0.1"
+    authWhiteNameListUriPath: "\
+      /g4TD/gateway/api-deploy/api/gitlab/v1/users,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/download/jar,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/download/tar,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/publish,\
+      /g4TD/gateway/api-deploy/api/deploy/v1/requestId,\
+      /g4TD/gateway/api-deploy/api/log/v1/logs,\
+      /g4TD/gateway/api-deploy/api/log/v1/logs/**,\
+      /g4TD/gateway/api-monitor/api/monitor/v1/list,\
+      /g4TD/gateway/api-exchange/**"
+    authTokenSecret: scmauthloginsso!
+routes:
+  api:
+    - forest-system
+management: 
+  endpoints: 
+    web: 
+      exposure:
+        include: health 

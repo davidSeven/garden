@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sky</groupId>
+    <artifactId>sky-framework</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>sky-framework-api</module>
+        <module>sky-framework-dao</module>
+        <module>sky-framework-interceptor</module>
+        <module>sky-framework-redis</module>
+        <module>sky-framework-service</module>
+        <module>sky-framework-utils</module>
+        <module>sky-framework-validator</module>
+    </modules>
+
+    <parent>
+        <groupId>com.sky</groupId>
+        <artifactId>sky</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <sky-framework.version>1.0-SNAPSHOT</sky-framework.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-api</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-dao</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-interceptor</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-redis</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-service</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-utils</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-validator</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

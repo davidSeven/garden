@@ -16,6 +16,7 @@
         <module>forest</module>
         <module>springboot206</module>
         <module>springboot216</module>
+        <module>sky</module>
     </modules>
 
     <properties>
