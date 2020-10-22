@@ -13,6 +13,7 @@
         <module>sky-eureka</module>
         <module>sky-framework</module>
         <module>sky-gateway</module>
+        <module>sky-system</module>
     </modules>
 
     <parent>
