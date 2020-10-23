@@ -1,8 +1,6 @@
 package com.forest.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.forest.framework.common.exception.CommonException;
 import com.forest.framework.utils.BeanHelpUtil;
 import com.forest.framework.utils.UUIDUtil;

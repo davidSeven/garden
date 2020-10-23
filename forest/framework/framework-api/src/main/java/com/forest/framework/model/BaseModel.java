@@ -42,4 +42,9 @@ public class BaseModel<T extends Model<?>, ID> extends Model<T> implements Seria
 
     @ApiModelProperty("日志ID")
     private String traceId;
+
+    @Override
+    protected Serializable pkVal() {
+        return null;
+    }
 }

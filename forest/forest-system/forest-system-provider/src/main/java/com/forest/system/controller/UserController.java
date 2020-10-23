@@ -1,5 +1,6 @@
 package com.forest.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forest.framework.dto.ResponseDto;
@@ -35,6 +36,7 @@ public class UserController implements UserRemoteService {
     @Override
     public ResponseDto<IPage<User>> page(@RequestBody UserDto dto) {
         IPage<User> iPage = new Page<>(1, 10);
-        return ResponseDto.getSuccessResponseDto(this.userService.page(iPage));
+        QueryWrapper<User> queryWrapper = null;
+        return ResponseDto.getSuccessResponseDto(this.userService.page(iPage, queryWrapper));
     }
 }
