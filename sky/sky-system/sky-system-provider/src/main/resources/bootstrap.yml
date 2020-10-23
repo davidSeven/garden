@@ -1,0 +1,85 @@
+server:
+  port: 18080
+  tomcat:
+    basedir: /info/tmp
+    max-threads: 2000
+    accept-count: 10000
+    max-connections: 10000
+    min-spare-threads: 100
+spring:
+  profiles:
+    active: local
+  main:
+    banner-mode: "off"
+  application:
+    name: forest-system
+  thymeleaf:
+    prefix: classpath:/static/
+  jackson:
+    # date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    defaultPropertyInclusion: ALWAYS
+    serialization:
+      INDENT_OUTPUT: true
+  cloud:
+    config:
+      enabled: false
+    inetutils:
+      ## 设置网络超时
+      timeout-seconds: 5
+      ## 忽略网卡
+      ignored-interfaces:
+        - VMware Virtual Ethernet Adapter for VMnet1
+        - VMware Virtual Ethernet Adapter for VMnet8
+        - VirtualBox Host-Only Ethernet Adapter
+  sleuth:
+    sampler:
+      probability: 1.0
+  resources:
+    ## 存储附件路径
+    static-locations:
+      - "classpath:/META-INF/resources/"
+      - "classpath:/resources/"
+      - "classpath:/static/"
+      - "classpath:/public/"
+      - file:${info.config.loggerPath}
+  mvc:
+    ## 配置映射地址
+    static-path-pattern: /**
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+mybatis:
+  typeAliasesPackage: com.sky.*.*.dao
+  mapperLocations:
+    - classpath*:com/sky/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+hystrix:
+  metrics:
+    enabled: true
+    polling-interval-ms: 10000
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+app:
+  version: '@project.version@'
+  build: '@build.timestamp@'
+

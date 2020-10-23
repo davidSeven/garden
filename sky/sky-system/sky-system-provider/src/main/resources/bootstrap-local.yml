@@ -1,0 +1,79 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/garden?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+    username: root
+    password: root
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      minimum-idle: 3
+      maximum-pool-size: 20
+      pool-name: ${spring.application.name}-CP
+      idle-timeout: 10000
+      leakDetectionThreshold: 2000
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1
+  zipkin:
+    base-url: http://localhost:40175
+    enabled: true
+    compression:
+      enabled: true
+  sleuth:
+    sampler:
+      probability: 1
+eureka:
+  instance:
+    status-page-url-path: /doc.html
+    ## 指定此实例的IP，不绑IP默认用本机局域网IP
+    ip-address: 127.0.0.1
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.ip-address:${spring.cloud.client.ip-address}}:${server.port}
+    appname: ${spring.application.name}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 20
+    serviceUrl:
+      defaultZone: http://localhost:41578/eureka
+feign:
+  hystrix:
+    enabled: true
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+hystrix:
+  threadpool:
+    api-rfc:
+      coreSize: 20
+      maximumSize: 50
+      keepAliveTimeMinutes: 3
+      allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    api-rfc:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #是否开启超时熔断
+          enabled: false
+        isolation:
+          thread:
+            timeoutInMilliseconds: 36000000 #断路器超时时间，
+ribbon:
+  ReadTimeout: 36000000
+  ConnectTimeout: 36000000
