@@ -28,6 +28,10 @@
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-validator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-utils</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -15,4 +15,22 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-dao</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>
