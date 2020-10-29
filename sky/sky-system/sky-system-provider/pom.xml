@@ -36,6 +36,11 @@
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-interceptor</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

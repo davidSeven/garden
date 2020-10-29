@@ -1,4 +1,4 @@
-package com.sky.system.client;
+package com.sky.system.api;
 
 /**
  * @date 2020-10-28 028 14:52

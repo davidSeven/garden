@@ -5,7 +5,7 @@ import com.sky.framework.api.dto.ResponseDto;
 import com.sky.system.api.dto.UserDto;
 import com.sky.system.api.dto.UserQueryDto;
 import com.sky.system.api.remote.UserRemoteService;
-import com.sky.system.client.SystemInterface;
+import com.sky.system.api.SystemInterface;
 import feign.hystrix.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
