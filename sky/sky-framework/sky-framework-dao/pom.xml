@@ -52,6 +52,16 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-utils</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

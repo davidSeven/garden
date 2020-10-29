@@ -1,20 +1,20 @@
-package com.sky.system.api.model;
+package com.sky.system.api.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.sky.framework.dao.model.BaseModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * @date 2020-10-23 023 13:54
+ * @date 2020-10-28 028 13:47
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("sys_user")
-public class User extends BaseModel<User> {
+@ApiModel(value = "UserDto", description = "用户信息")
+public class UserDto {
+
+    @ApiModelProperty(value = "ID")
+    private Long id;
 
     @ApiModelProperty(value = "编码")
     private String code;

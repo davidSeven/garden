@@ -4,7 +4,7 @@ import com.sky.framework.api.context.RequestContext;
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.framework.api.exception.AuthenticationException;
 import com.sky.framework.api.exception.CommonException;
-import com.sky.framework.api.exception.HystrixFeignException;
+import com.sky.framework.service.exception.HystrixFeignException;
 import feign.RetryableException;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;

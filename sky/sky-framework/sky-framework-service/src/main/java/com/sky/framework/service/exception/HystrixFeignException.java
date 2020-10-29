@@ -1,4 +1,4 @@
-package com.sky.framework.api.exception;
+package com.sky.framework.service.exception;
 
 import com.netflix.hystrix.exception.HystrixBadRequestException;
 

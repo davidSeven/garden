@@ -2,6 +2,8 @@ package com.sky.framework.dao.model;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.util.Date;
@@ -13,18 +15,25 @@ public class BaseModel<T extends Model<T>> extends Model<T> {
 
     private Long id;
 
+    @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
 
-    @TableField(fill = FieldFill.UPDATE)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateDate;
 
+    @Version
+    private int version;
+
+    @TableLogic(value = "0", delval = "1")
     private int deleted;
 
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String traceId;
 
     private String remark;
@@ -67,6 +76,14 @@ public class BaseModel<T extends Model<T>> extends Model<T> {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public int getDeleted() {

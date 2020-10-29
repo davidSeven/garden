@@ -12,7 +12,7 @@ spring:
   main:
     banner-mode: "off"
   application:
-    name: forest-system
+    name: sky-system
   thymeleaf:
     prefix: classpath:/static/
   jackson:

@@ -1,19 +1,3 @@
-spring: 
-  redis2:
-    host: 112.35.123.178
-    port: 40197
-    password: redisroot
-#    host: 112.35.23.91
-#    port: 1525
-#    password: 123
-    timeout: 5000
-    database: 0
-    jedis:
-      pool:
-        min-idle: 0
-        max-idle: 8
-        max-active: 8
-        max-wait: -1  
 eureka:
   instance:
     status-page-url-path: /actuator/info
@@ -27,7 +11,7 @@ eureka:
   client:
     registry-fetch-interval-seconds: 20
     serviceUrl:
-      defaultZone: http://127.0.0.1:41578/eureka
+      defaultZone: http://127.0.0.1:8761/eureka
 info:
   config:
     tmp: logs/tmp
@@ -55,10 +39,7 @@ info:
       /g4TD/gateway/api-deploy/api/log/v1/logs/**,\
       /g4TD/gateway/api-monitor/api/monitor/v1/list,\
       /g4TD/gateway/api-exchange/**"
-    authTokenSecret: 
-routes:
-  api:
-    - forest-system
+    authTokenSecret:
 management: 
   endpoints: 
     web: 

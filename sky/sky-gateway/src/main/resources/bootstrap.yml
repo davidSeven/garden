@@ -31,6 +31,14 @@ spring:
             allowedMethods:
               - GET
               - POST
+      routes:
+      - id: sky-system
+        uri: lb://sky-system
+        predicates:
+          - Path=/system/**
+        filters:
+          - SwaggerHeaderFilter
+          - StripPrefix=1
     loadbalancer:
       retry:
         enabled: true
