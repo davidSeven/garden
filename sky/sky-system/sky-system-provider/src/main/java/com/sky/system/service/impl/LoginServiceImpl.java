@@ -8,6 +8,7 @@ import com.sky.system.api.SystemInterface;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
+import com.sky.system.api.dto.VerifyCodeDto;
 import com.sky.system.api.model.User;
 import com.sky.system.service.LoginService;
 import com.sky.system.service.UserService;
@@ -32,16 +33,29 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public UserLoginDto login(LoginDto dto) {
         String vcToken = dto.getVcToken();
+        // 检测token不存在
         if (StringUtils.isEmpty(vcToken)) {
             throw new CommonException(500, "登录异常，请刷新后再操作");
         }
+        // 检测数据不存在
         String vcKey = vcTokenPrefix(vcToken);
-        Object vcValue = this.redisTemplate.opsForValue().get(vcKey);
-        if (Boolean.TRUE.toString().equals(vcValue)) {
+        VerifyCodeDto vcValue = (VerifyCodeDto) this.redisTemplate.opsForValue().get(vcKey);
+        if (null == vcValue) {
+            throw new CommonException(500, "登录异常，请刷新后再操作");
+        }
+        // 判断是否需要验证码
+        if (vcValue.isNeedVc()) {
+            if (StringUtils.isEmpty(vcValue.getVerifyCode())) {
+                throw new CommonException(500, "登录异常，请刷新后再操作");
+            }
             if (StringUtils.isEmpty(dto.getVerifyCode())) {
-                throw new CommonException(500, "用户名或密码错误");
+                throw new CommonException(500, "验证码不能为空");
+            }
+            if (!vcValue.getVerifyCode().equals(dto.getVerifyCode())) {
+                throw new CommonException(500, "验证码错误");
             }
         }
+        // 查询用户信息
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery(User.class);
         queryWrapper.eq(User::getCode, dto.getCode());
         User user = this.userService.getOne(queryWrapper);
@@ -94,12 +108,10 @@ public class LoginServiceImpl implements LoginService {
         }
         String key = vcTokenPrefix(token);
         // 判断要不要验证码
-        String value = "";
-        if (dto.isNeedVc()) {
-            value = Boolean.TRUE.toString();
-        }
+        VerifyCodeDto verifyCodeDto = new VerifyCodeDto();
+        verifyCodeDto.setNeedVc(dto.isNeedVc());
         // 3个小时
-        this.redisTemplate.opsForValue().set(key, value, 3 * 60 * 60, TimeUnit.SECONDS);
+        this.redisTemplate.opsForValue().set(key, verifyCodeDto, 3 * 60 * 60, TimeUnit.SECONDS);
         return dto;
     }
 
