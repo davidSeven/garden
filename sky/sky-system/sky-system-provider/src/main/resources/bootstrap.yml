@@ -61,7 +61,7 @@ management:
 mybatis:
   typeAliasesPackage: com.sky.*.*.dao
   mapperLocations:
-    - classpath*:com/sky/**/*.xml
+    - classpath*:/mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
 hystrix:
