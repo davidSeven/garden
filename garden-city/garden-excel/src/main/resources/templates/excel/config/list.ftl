@@ -40,14 +40,6 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">语言类型</label>
-                    <div class="layui-input-inline">
-                        <select name="data.languageType" class="lookup" lookupcode="LANGUAGE_TYPE">
-                            <option value="">请选择</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-inline">
                         <select name="data.state" class="lookup" lookupcode="COMMON_STATE">
