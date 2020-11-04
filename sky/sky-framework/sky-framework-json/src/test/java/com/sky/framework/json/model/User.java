@@ -13,6 +13,8 @@ public class User {
 
     private Date birthday;
 
+    private String remark;
+
     private Info info;
 
     public String getName() {
@@ -37,6 +39,14 @@ public class User {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Info getInfo() {

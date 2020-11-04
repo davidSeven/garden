@@ -421,7 +421,7 @@ public class JsonViewSerializer extends JsonSerializer<JsonView> {
 
                         // 字段强化操作
                         if (null != fieldExpandInterface) {
-                            fieldExpandInterface.fieldIntensify(name, val, jgen);
+                            fieldExpandInterface.fieldIntensify(currentPath, name, val, jgen);
                         }
                     }
                 } catch (IllegalArgumentException | IllegalAccessException e) {

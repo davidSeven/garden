@@ -28,9 +28,10 @@ public interface FieldExpandInterface {
     /**
      * 字段增强
      *
-     * @param fieldName 字段名称
-     * @param value     字段值
-     * @param jgen      jgen
+     * @param currentPath currentPath
+     * @param fieldName   字段名称
+     * @param value       字段值
+     * @param jgen        jgen
      */
-    void fieldIntensify(String fieldName, Object value, JsonGenerator jgen);
+    void fieldIntensify(String currentPath, String fieldName, Object value, JsonGenerator jgen);
 }

@@ -48,6 +48,7 @@ public class JsonViewSerializerTest {
         user.setName("名称");
         user.setAge(30);
         user.setBirthday(new Date());
+        user.setRemark("备注");
         user.setInfo(info);
 
         JsonView<User> jsonView = JsonView.with(user).onClass(User.class, Match.match()
@@ -77,9 +78,9 @@ public class JsonViewSerializerTest {
 
                     @Override
                     public boolean filter(String currentPath, String fieldName, Object value, JsonGenerator jgen) {
-
-                        System.out.println(currentPath + "." + fieldName);
-                        if ("name".equals(currentPath + fieldName)) {
+                        String prefix = handlerPrefix(currentPath, fieldName);
+                        System.out.println(prefix);
+                        if ("name".equals(prefix)) {
                             try {
                                 jgen.writeFieldName("name");
                                 jgen.writeString(value.toString() + "123456");
@@ -93,11 +94,13 @@ public class JsonViewSerializerTest {
                     }
 
                     @Override
-                    public void fieldIntensify(String fieldName, Object value, JsonGenerator jgen) {
+                    public void fieldIntensify(String currentPath, String fieldName, Object value, JsonGenerator jgen) {
                         if (null == value) {
                             return;
                         }
-                        if ("remark".equals(fieldName)) {
+                        String prefix = handlerPrefix(currentPath, fieldName);
+                        System.out.println(prefix);
+                        if ("remark".equals(prefix)) {
                             String text = (String) value;
                             if (StringUtils.isEmpty(text)) {
                                 return;
@@ -116,5 +119,10 @@ public class JsonViewSerializerTest {
 
         String writeValueAsString1 = sut.writeValueAsString(user);
         System.out.println(writeValueAsString1);
+    }
+
+    private String handlerPrefix(String currentPath, String fieldName) {
+        String prefix = currentPath.length() > 0 ? currentPath + "." : "";
+        return prefix + fieldName;
     }
 }
