@@ -41,6 +41,11 @@
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-redis</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-json</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -13,6 +13,7 @@
         <module>sky-framework-api</module>
         <module>sky-framework-dao</module>
         <module>sky-framework-interceptor</module>
+        <module>sky-framework-json</module>
         <module>sky-framework-redis</module>
         <module>sky-framework-service</module>
         <module>sky-framework-utils</module>
@@ -44,6 +45,11 @@
             <dependency>
                 <groupId>com.sky</groupId>
                 <artifactId>sky-framework-interceptor</artifactId>
+                <version>${sky-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-framework-json</artifactId>
                 <version>${sky-framework.version}</version>
             </dependency>
             <dependency>

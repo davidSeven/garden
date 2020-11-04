@@ -115,6 +115,11 @@ public class LoginServiceImpl implements LoginService {
         return dto;
     }
 
+    @Override
+    public String verifyCode(String verifyCodeToken) {
+        return null;
+    }
+
     private String createToken() {
         return UUIDUtil.uuid();
     }

@@ -1,6 +1,9 @@
 package com.sky.system.controller;
 
 import com.sky.framework.api.dto.ResponseDto;
+import com.sky.framework.json.JsonView;
+import com.sky.framework.json.Match;
+import com.sky.framework.json.spring.JsonResult;
 import com.sky.system.api.dto.DictionaryDto;
 import com.sky.system.api.remote.DictionaryRemoteService;
 import com.sky.system.service.DictionaryService;
@@ -40,7 +43,15 @@ public class DictionaryController implements DictionaryRemoteService {
     @ApiOperation(value = "列表")
     @Override
     public ResponseDto<List<DictionaryDto>> list() {
-        return new ResponseDto<List<DictionaryDto>>().ok().setData(this.dictionaryService.listDictionary());
+        ResponseDto<List<DictionaryDto>> responseDto = new ResponseDto<List<DictionaryDto>>().ok().setData(this.dictionaryService.listDictionary());
+
+        JsonResult jsonResult = JsonResult.instance();
+
+        return jsonResult.use(JsonView.with(responseDto)
+                .onClass(DictionaryDto.class, Match.match()
+                        .exclude("code", "name")
+                        .include("")))
+                .returnValue();
     }
 
     @ApiOperation(value = "删除")

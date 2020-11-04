@@ -31,4 +31,12 @@ public interface LoginService {
      * @return SafetyCheckDto
      */
     SafetyCheckDto safetyCheck(String ip);
+
+    /**
+     * 验证码
+     *
+     * @param verifyCodeToken 验证码 token
+     * @return 验证码
+     */
+    String verifyCode(String verifyCodeToken);
 }
