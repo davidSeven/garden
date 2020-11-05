@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sky.framework.api.exception.CommonException;
 import com.sky.framework.interceptor.util.UUIDUtil;
+import com.sky.framework.utils.VerifyCodeUtils;
 import com.sky.system.api.SystemInterface;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.dto.SafetyCheckDto;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,13 +68,44 @@ public class LoginServiceImpl implements LoginService {
             throw new CommonException(500, "用户未设置密码");
         }
         if (!user.getPassword().equals(dto.getPassword())) {
+            // 记录登录失败次数
+            User updateUser = new User();
+            updateUser.setId(user.getId());
+            Integer loginFailCount = user.getLoginFailCount();
+            if (null == loginFailCount) {
+                loginFailCount = 0;
+            }
+            loginFailCount++;
+            updateUser.setLoginIp(dto.getIp());
+            updateUser.setLoginDate(new Date());
+            updateUser.setLoginFailCount(loginFailCount);
+            this.userService.updateById(updateUser);
             throw new CommonException(500, "用户名或密码错误");
         }
+        // 更新用户信息
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setLoginIp(dto.getIp());
+        updateUser.setLoginDate(new Date());
+        // 登录失败次数清零
+        updateUser.setLoginFailCount(0);
+        this.userService.updateById(updateUser);
         // 登录成功后删除vcToken
         this.redisTemplate.delete(vcKey);
-
-
-        return null;
+        // 登录用户信息
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setId(user.getId());
+        userLoginDto.setCode(user.getCode());
+        userLoginDto.setName(user.getName());
+        userLoginDto.setLoginIp(updateUser.getLoginIp());
+        userLoginDto.setLoginDate(updateUser.getLoginDate());
+        // 处理token
+        String token = createToken();
+        String liKey = liTokenPrefix(token);
+        // 8个小时
+        this.redisTemplate.opsForValue().set(liKey, userLoginDto, 8 * 60 * 60, TimeUnit.SECONDS);
+        userLoginDto.setToken(token);
+        return userLoginDto;
     }
 
     @Override
@@ -101,7 +134,7 @@ public class LoginServiceImpl implements LoginService {
         queryWrapper.eq(User::getLoginIp, ip);
         int count = this.userService.count(queryWrapper);
         if (count == 0) {
-            dto.setNeedVc(false);
+            dto.setNeedVc(true);
         } else {
             // 小于5个ip
             dto.setNeedVc(count <= 5);
@@ -117,7 +150,25 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String verifyCode(String verifyCodeToken) {
-        return null;
+        // 验证vct是否有效
+        // 检测数据不存在
+        String vcKey = vcTokenPrefix(verifyCodeToken);
+        VerifyCodeDto vcValue = (VerifyCodeDto) this.redisTemplate.opsForValue().get(vcKey);
+        if (null == vcValue) {
+            // 操作异常
+            throw new CommonException(500, "登录异常，请刷新后再操作");
+        }
+        if (!vcValue.isNeedVc()) {
+            // 操作异常
+            throw new CommonException(500, "登录异常，请刷新后再操作");
+        }
+        // 生成验证码
+        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+        // 将验证设置到缓存中
+        vcValue.setVerifyCode(verifyCode);
+        // 更新缓存
+        this.redisTemplate.opsForValue().set(vcKey, vcValue);
+        return verifyCode;
     }
 
     private String createToken() {

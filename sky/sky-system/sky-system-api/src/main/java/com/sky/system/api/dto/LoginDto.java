@@ -27,4 +27,7 @@ public class LoginDto implements Serializable {
 
     @ApiModelProperty(value = "验证token")
     private String vcToken;
+
+    @ApiModelProperty(value = "登录IP")
+    private String ip;
 }
