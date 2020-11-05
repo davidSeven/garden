@@ -11,6 +11,7 @@ import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.api.dto.VerifyCodeDto;
 import com.sky.system.api.model.User;
+import com.sky.system.listeners.LoginLogListener;
 import com.sky.system.service.LoginService;
 import com.sky.system.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -80,6 +81,7 @@ public class LoginServiceImpl implements LoginService {
             updateUser.setLoginDate(new Date());
             updateUser.setLoginFailCount(loginFailCount);
             this.userService.updateById(updateUser);
+            LoginLogListener.loginFail(dto);
             throw new CommonException(500, "用户名或密码错误");
         }
         // 更新用户信息
@@ -105,15 +107,17 @@ public class LoginServiceImpl implements LoginService {
         // 8个小时
         this.redisTemplate.opsForValue().set(liKey, userLoginDto, 8 * 60 * 60, TimeUnit.SECONDS);
         userLoginDto.setToken(token);
+        LoginLogListener.login(dto, token);
         return userLoginDto;
     }
 
     @Override
-    public void logout(String token) {
+    public void logout(String token, String ip) {
         String key = liTokenPrefix(token);
         if (hasKey(key)) {
             this.redisTemplate.delete(key);
         }
+        LoginLogListener.logout(token, ip);
     }
 
     private boolean hasKey(String key) {
@@ -145,11 +149,25 @@ public class LoginServiceImpl implements LoginService {
         verifyCodeDto.setNeedVc(dto.isNeedVc());
         // 3个小时
         this.redisTemplate.opsForValue().set(key, verifyCodeDto, 3 * 60 * 60, TimeUnit.SECONDS);
+        LoginLogListener.safetyCheck(ip, dto);
         return dto;
     }
 
     @Override
-    public String verifyCode(String verifyCodeToken) {
+    public String verifyCode(String ip, String verifyCodeToken) {
+        String verifyCode = verifyCode(verifyCodeToken);
+        LoginLogListener.verifyCode(ip, verifyCode, verifyCodeToken, "S");
+        return verifyCode;
+    }
+
+    @Override
+    public String verifyCodeResponse(String ip, String verifyCodeToken) {
+        String verifyCode = verifyCode(verifyCodeToken);
+        LoginLogListener.verifyCode(ip, verifyCode, verifyCodeToken, "R");
+        return verifyCode;
+    }
+
+    private String verifyCode(String verifyCodeToken) {
         // 验证vct是否有效
         // 检测数据不存在
         String vcKey = vcTokenPrefix(verifyCodeToken);

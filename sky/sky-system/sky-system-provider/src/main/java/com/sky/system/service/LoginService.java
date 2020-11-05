@@ -21,8 +21,9 @@ public interface LoginService {
      * 登出
      *
      * @param token token
+     * @param ip    ip
      */
-    void logout(String token);
+    void logout(String token, String ip);
 
     /**
      * 安全检查
@@ -35,8 +36,18 @@ public interface LoginService {
     /**
      * 验证码
      *
+     * @param ip              ip
      * @param verifyCodeToken 验证码 token
      * @return 验证码
      */
-    String verifyCode(String verifyCodeToken);
+    String verifyCode(String ip, String verifyCodeToken);
+
+    /**
+     * 验证码
+     *
+     * @param ip              ip
+     * @param verifyCodeToken 验证码 token
+     * @return 验证码
+     */
+    String verifyCodeResponse(String ip, String verifyCodeToken);
 }

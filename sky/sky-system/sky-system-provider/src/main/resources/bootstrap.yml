@@ -64,6 +64,9 @@ mybatis:
     - classpath*:/mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 hystrix:
   metrics:
     enabled: true

@@ -50,7 +50,8 @@ public class LoginController {
         if (StringUtils.isEmpty(vcToken)) {
             throw new CommonException(500, "登录异常，请刷新后再操作");
         }
-        return new ResponseDto<String>().ok().setData(this.loginService.verifyCode(vcToken));
+        String ip = IpUtil.getClientRealAddress(request);
+        return new ResponseDto<String>().ok().setData(this.loginService.verifyCode(ip, vcToken));
     }
 
     @ApiOperation(value = "获取验证码")
@@ -61,9 +62,10 @@ public class LoginController {
         if (StringUtils.isEmpty(vcToken)) {
             throw new CommonException(500, "登录异常，请刷新后再操作");
         }
+        String ip = IpUtil.getClientRealAddress(request);
         OutputStream os = null;
         try {
-            String verifyCode = this.loginService.verifyCode(vcToken);
+            String verifyCode = this.loginService.verifyCodeResponse(ip, vcToken);
             os = response.getOutputStream();
             // 3.返回验证码图片
             VerifyCodeUtils.outputImage(100, 40, os, verifyCode);
@@ -105,7 +107,8 @@ public class LoginController {
     public void logout(HttpServletRequest request) {
         // 从header中获取token
         String token = request.getHeader(LoginConstant.AUTHORIZATION_TOKEN);
-        this.loginService.logout(token);
+        String ip = IpUtil.getClientRealAddress(request);
+        this.loginService.logout(token, ip);
     }
 
     private void validLoginRequestTime(String lrTime) {

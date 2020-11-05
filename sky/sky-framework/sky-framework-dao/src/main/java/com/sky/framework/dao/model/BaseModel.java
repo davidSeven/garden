@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class BaseModel<T extends Model<T>> extends Model<T> {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @TableField(fill = FieldFill.INSERT)
