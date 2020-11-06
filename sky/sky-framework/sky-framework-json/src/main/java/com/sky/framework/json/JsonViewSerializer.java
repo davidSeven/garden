@@ -380,7 +380,10 @@ public class JsonViewSerializer extends JsonSerializer<JsonView> {
 
             // 扩展
             MatchPrefixTuple tuple = getMatchPrefix(obj.getClass());
-            FieldExpandInterface fieldExpandInterface = tuple.match.getFieldExpandInterface();
+            FieldExpandInterface fieldExpandInterface = null;
+            if (null != tuple.match) {
+                fieldExpandInterface = tuple.match.getFieldExpandInterface();
+            }
 
             for (AccessibleProperty property : fields) {
                 try {
