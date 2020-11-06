@@ -117,7 +117,6 @@ public class LoginServiceImpl implements LoginService {
         if (hasKey(key)) {
             this.redisTemplate.delete(key);
         }
-        LoginLogListener.logout(token, ip);
     }
 
     private boolean hasKey(String key) {
@@ -149,21 +148,18 @@ public class LoginServiceImpl implements LoginService {
         verifyCodeDto.setNeedVc(dto.isNeedVc());
         // 3个小时
         this.redisTemplate.opsForValue().set(key, verifyCodeDto, 3 * 60 * 60, TimeUnit.SECONDS);
-        LoginLogListener.safetyCheck(ip, dto);
         return dto;
     }
 
     @Override
     public String verifyCode(String ip, String verifyCodeToken) {
         String verifyCode = verifyCode(verifyCodeToken);
-        LoginLogListener.verifyCode(ip, verifyCode, verifyCodeToken, "S");
         return verifyCode;
     }
 
     @Override
     public String verifyCodeResponse(String ip, String verifyCodeToken) {
         String verifyCode = verifyCode(verifyCodeToken);
-        LoginLogListener.verifyCode(ip, verifyCode, verifyCodeToken, "R");
         return verifyCode;
     }
 

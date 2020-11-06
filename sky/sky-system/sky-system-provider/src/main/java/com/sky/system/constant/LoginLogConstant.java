@@ -6,28 +6,11 @@ package com.sky.system.constant;
 public final class LoginLogConstant {
 
     /**
-     * 检查
+     * 成功
      */
-    public static final String STATE_SAFETY_CHECK = "SAFETY_CHECK";
+    public static final String STATE_SUCCESS = "SUCCESS";
     /**
-     * 验证码
+     * 失败
      */
-    public static final String STATE_VERIFY_CODE = "VERIFY_CODE";
-    /**
-     * 登录
-     */
-    public static final String STATE_LOGIN = "LOGIN";
-    /**
-     * 登出
-     */
-    public static final String STATE_LOGOUT = "LOGOUT";
-
-    /**
-     * 登录成功
-     */
-    public static final String LOGIN_RESULT_SUCCESS = "SUCCESS";
-    /**
-     * 登录失败
-     */
-    public static final String LOGIN_RESULT_FAIL = "FAIL";
+    public static final String STATE_FAIL = "FAIL";
 }

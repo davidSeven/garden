@@ -9,6 +9,7 @@ import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.constant.LoginConstant;
 import com.sky.system.service.LoginService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import java.io.OutputStream;
 /**
  * @date 2020-10-29 029 15:28
  */
+@Api(tags = "登录信息")
 @RestController
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);

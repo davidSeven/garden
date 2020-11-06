@@ -57,7 +57,6 @@ public class LoginControllerTest {
 
         String loginToken = userLoginDtoResponseDto.getData().getToken();
 
-        String asString4 = Request.Post(url + "/login/logout").addHeader("Authorization", loginToken).execute().returnContent().asString();
-        System.out.println(asString4);
+        Request.Post(url + "/login/logout").addHeader("Authorization", loginToken).execute().returnContent().asString();
     }
 }

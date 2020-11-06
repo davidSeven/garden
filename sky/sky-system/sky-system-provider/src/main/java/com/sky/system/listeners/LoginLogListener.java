@@ -2,7 +2,6 @@ package com.sky.system.listeners;
 
 import com.sky.framework.interceptor.util.ApplicationUtil;
 import com.sky.system.api.dto.LoginDto;
-import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.model.LoginLog;
 import com.sky.system.constant.LoginLogConstant;
 import com.sky.system.events.LoginLogEvent;
@@ -23,41 +22,18 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
     @Autowired
     private LoginLogService loginLogService;
 
-    public static void safetyCheck(String ip, SafetyCheckDto dto) {
-        LoginLog loginLog = new LoginLog();
-        loginLog.setState(LoginLogConstant.STATE_SAFETY_CHECK);
-        loginLog.setSafetyCheckIp(ip);
-        loginLog.setSafetyCheckTime(new Date());
-        loginLog.setSafetyCheckValue(String.valueOf(dto.isNeedVc()));
-        loginLog.setSafetyCheckToken(dto.getVcToken());
-        publishEvent(loginLog);
-    }
-
-    public static void verifyCode(String ip, String verifyCode, String verifyCodeToken, String type) {
-        LoginLog loginLog = new LoginLog();
-        loginLog.setState(LoginLogConstant.STATE_VERIFY_CODE);
-        loginLog.setVerifyCodeIp(ip);
-        loginLog.setVerifyCodeTime(new Date());
-        loginLog.setVerifyCodeValue(verifyCode);
-        loginLog.setVerifyCodeType(type);
-        loginLog.setVerifyCodeToken(verifyCodeToken);
-        publishEvent(loginLog);
-    }
-
     public static void login(LoginDto dto, String token) {
         LoginLog loginLog = new LoginLog();
-        loginLog.setState(LoginLogConstant.STATE_LOGIN);
+        loginLog.setState(LoginLogConstant.STATE_SUCCESS);
         copyLoginLog(loginLog, dto);
-        loginLog.setLoginResult(LoginLogConstant.LOGIN_RESULT_SUCCESS);
         loginLog.setLoginToken(token);
         publishEvent(loginLog);
     }
 
     public static void loginFail(LoginDto dto) {
         LoginLog loginLog = new LoginLog();
-        loginLog.setState(LoginLogConstant.STATE_LOGIN);
+        loginLog.setState(LoginLogConstant.STATE_FAIL);
         copyLoginLog(loginLog, dto);
-        loginLog.setLoginResult(LoginLogConstant.LOGIN_RESULT_FAIL);
         publishEvent(loginLog);
     }
 
@@ -67,16 +43,6 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         loginLog.setLoginCode(dto.getCode());
         loginLog.setLoginPassword(dto.getPassword());
         loginLog.setLoginVerifyCode(dto.getVerifyCode());
-        loginLog.setLoginSafetyCheckToken(dto.getVcToken());
-    }
-
-    public static void logout(String token, String ip) {
-        LoginLog loginLog = new LoginLog();
-        loginLog.setState(LoginLogConstant.STATE_LOGOUT);
-        loginLog.setLoginToken(token);
-        loginLog.setLogoutIp(ip);
-        loginLog.setLogoutTime(new Date());
-        publishEvent(loginLog);
     }
 
     private static void publishEvent(LoginLog loginLog) {
@@ -92,14 +58,6 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
             return;
         }
         LoginLog loginLog = (LoginLog) source;
-        if (LoginLogConstant.STATE_SAFETY_CHECK.equals(loginLog.getState())) {
-            this.loginLogService.safetyCheck(loginLog);
-        } else if (LoginLogConstant.STATE_VERIFY_CODE.equals(loginLog.getState())) {
-            this.loginLogService.verifyCode(loginLog);
-        } else if (LoginLogConstant.STATE_LOGIN.equals(loginLog.getState())) {
-            this.loginLogService.login(loginLog);
-        } else if (LoginLogConstant.STATE_LOGOUT.equals(loginLog.getState())) {
-            this.loginLogService.logout(loginLog);
-        }
+        this.loginLogService.login(loginLog);
     }
 }

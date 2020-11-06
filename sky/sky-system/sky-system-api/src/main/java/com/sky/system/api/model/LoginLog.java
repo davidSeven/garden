@@ -16,26 +16,10 @@ import java.util.Date;
 public class LoginLog extends BaseModel<LoginLog> {
 
     private String state;
-    private String safetyCheckIp;
-    private Date safetyCheckTime;
-    private String safetyCheckValue;
-    private String safetyCheckToken;
-    private String verifyCodeIp;
-    private Date verifyCodeTime;
-    private String verifyCodeValue;
-    private String verifyCodeType;
-    private Long verifyCodeCount;
-    private String verifyCodeToken;
     private String loginIp;
     private Date loginTime;
     private String loginCode;
     private String loginPassword;
     private String loginVerifyCode;
-    private String loginSafetyCheckToken;
-    private Long loginCount;
-    private Long loginFailCount;
-    private String loginResult;
     private String loginToken;
-    private String logoutIp;
-    private Date logoutTime;
 }
