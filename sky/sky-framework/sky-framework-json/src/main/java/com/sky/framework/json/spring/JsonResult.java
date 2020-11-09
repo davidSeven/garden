@@ -4,7 +4,7 @@ import com.sky.framework.json.JsonView;
 
 public class JsonResult {
     private static final JsonResult instance = new JsonResult();
-    private static final ThreadLocal<JsonView> current = new ThreadLocal<>();
+    private static final ThreadLocal<JsonView<?>> current = new ThreadLocal<>();
 
     private JsonResult() {
     }
@@ -13,7 +13,7 @@ public class JsonResult {
         return instance;
     }
 
-    static JsonView get() {
+    static JsonView<?> get() {
         return current.get();
     }
 
@@ -29,14 +29,13 @@ public class JsonResult {
      * @param <E>  Type of object being rendered
      * @return ResultWrapper to provide return value
      */
-    @SuppressWarnings("unchecked")
     public <E> ResultWrapper<E> use(JsonView<E> view) {
         current.set(view);
         return new ResultWrapper<>(view);
     }
 
     public static class ResultWrapper<T> {
-        private JsonView<T> obj;
+        private final JsonView<T> obj;
 
         private ResultWrapper(JsonView<T> obj) {
             this.obj = obj;

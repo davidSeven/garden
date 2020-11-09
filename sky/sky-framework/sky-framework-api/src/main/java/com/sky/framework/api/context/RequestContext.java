@@ -37,6 +37,8 @@ public class RequestContext {
 
     private Map<String, Object> parameterMap = new HashMap<>();
 
+    private JsonContent jsonContent;
+
     /**
      * RequestContext
      */
@@ -159,5 +161,13 @@ public class RequestContext {
 
     public void setParameterMap(Map<String, Object> parameterMap) {
         this.parameterMap = parameterMap;
+    }
+
+    public JsonContent getJsonContent() {
+        return jsonContent;
+    }
+
+    public void setJsonContent(JsonContent jsonContent) {
+        this.jsonContent = jsonContent;
     }
 }

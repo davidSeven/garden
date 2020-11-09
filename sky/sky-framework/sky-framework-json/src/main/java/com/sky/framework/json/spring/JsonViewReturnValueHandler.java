@@ -1,6 +1,9 @@
 package com.sky.framework.json.spring;
 
+import com.sky.framework.api.context.JsonContent;
+import com.sky.framework.api.context.RequestContext;
 import com.sky.framework.json.JsonView;
+import com.sky.framework.json.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -32,9 +35,9 @@ public class JsonViewReturnValueHandler implements HandlerMethodReturnValueHandl
         Object val = returnValue;
         if (JsonResultRetriever.hasValue()) {
             val = JsonResultRetriever.retrieve();
-            log.debug("Found [" + ((JsonView) val).getValue().getClass() + "] to serialize");
+            log.debug("Found [" + ((JsonView<?>) val).getValue().getClass() + "] to serialize");
         } else {
-            JsonView view = defaultView.getMatch(val);
+            JsonView<?> view = defaultView.getMatch(val);
             if (view != null) {
                 val = view;
                 log.debug("Default view found for " + val.getClass().getCanonicalName() + ", applied before serialization");
@@ -42,7 +45,22 @@ public class JsonViewReturnValueHandler implements HandlerMethodReturnValueHandl
                 log.debug("No JsonView found for thread, using returned value");
             }
         }
-
+        RequestContext context = RequestContext.getCurrentContext();
+        if (null != context) {
+            JsonContent jsonContent = context.getJsonContent();
+            if (null != jsonContent) {
+                // 返回值
+                JsonResult jsonResult = JsonResult.instance();
+                Object value = jsonResult.use(JsonView.with(val)
+                        .onClass(val.getClass(), Match.match()
+                                .exclude(jsonContent.getExcludes())
+                                .include(jsonContent.getIncludes())))
+                        .returnValue();
+                delegate.handleReturnValue(value, returnType, mavContainer, webRequest);
+                return;
+            }
+        }
+        // 获取到url,field字段等相关信息
         delegate.handleReturnValue(val, returnType, mavContainer, webRequest);
     }
 

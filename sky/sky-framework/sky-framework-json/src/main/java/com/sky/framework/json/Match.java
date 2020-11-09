@@ -30,6 +30,13 @@ public class Match {
         return this;
     }
 
+    public Match include(Set<String> fields) {
+        if (fields != null) {
+            includes.addAll(fields);
+        }
+        return this;
+    }
+
     /**
      * Mark fields for exclusion during serialization.
      *
@@ -39,6 +46,13 @@ public class Match {
     public Match exclude(String... fields) {
         if (fields != null) {
             excludes.addAll(Arrays.asList(fields));
+        }
+        return this;
+    }
+
+    public Match exclude(Set<String> fields) {
+        if (null != fields) {
+            excludes.addAll(fields);
         }
         return this;
     }
