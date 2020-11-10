@@ -2,6 +2,8 @@ package com.sky.framework.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+import java.util.Stack;
+
 /**
  * @date 2020-11-04 004 14:29
  */
@@ -10,9 +12,12 @@ public interface FieldExpandInterface {
     /**
      * 追加字段
      *
-     * @param jgen jgen
+     * @param currentPath currentPath
+     * @param path        path
+     * @param jgen        jgen
      */
-    void append(JsonGenerator jgen);
+    default void append(String currentPath, Stack<String> path, JsonGenerator jgen) {
+    }
 
     /**
      * 字段过滤

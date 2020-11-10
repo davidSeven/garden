@@ -8,11 +8,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public abstract class AbstractFieldExpandInterface implements FieldExpandInterface {
 
     @Override
-    public void append(JsonGenerator jgen) {
-
-    }
-
-    @Override
     public boolean filter(String currentPath, String fieldName, Object value, JsonGenerator jgen) {
         return false;
     }

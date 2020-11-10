@@ -48,6 +48,10 @@
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-utils</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

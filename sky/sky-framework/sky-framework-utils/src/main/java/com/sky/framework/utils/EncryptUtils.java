@@ -227,19 +227,31 @@ public final class EncryptUtils {
             String publicKey = wordwrap(KEY_MAP.get(0), lineLength);
             String privateKey = wordwrap(KEY_MAP.get(1), lineLength);
 
-            logger.info("随机生成的公钥为: \n{}", publicKey);
-            logger.info("随机生成的私钥为:\n{}", privateKey);
+            System.out.println("随机生成的公钥为: \n" + publicKey);
+            System.out.println("随机生成的私钥为:\n" + privateKey);
             System.out.println(privateKey.length());
-            logger.info("随机生成的私钥为:\n{}", unWordwrap(privateKey));
+            System.out.println("随机生成的私钥为:\n" + unWordwrap(privateKey));
             System.out.println(unWordwrap(privateKey).length());
             String messageEn = encryptRSA(message, KEY_MAP.get(0));
-            logger.info("加密前的字符串为:{}\n加密后的字符串为:{}", message, messageEn);
-            logger.info("私钥长度:{}", KEY_MAP.get(1).length());
-            logger.info("私钥长度:{}", unWordwrap(KEY_MAP.get(1)).length());
+            System.out.println("加密前的字符串为:" + message + "\n加密后的字符串为:" + messageEn);
+            System.out.println("私钥长度:" + KEY_MAP.get(1).length());
+            System.out.println("私钥长度:" + unWordwrap(KEY_MAP.get(1)).length());
             String messageDe = decryptRSA(messageEn, unWordwrap(privateKey));
-            logger.info("还原后的字符串为:{}", messageDe);
+            System.out.println("还原后的字符串为:" + messageDe);
+
+
+            // AES加密
+            System.out.println("============================================");
+            System.out.println("============================================");
+            System.out.println("AES加密");
+            String password = "123";
+            System.out.println("密码:" + password);
+            String encrypt = encrypt(message, password);
+            System.out.println("加密后字符串:" + encrypt);
+            String decrypt = decrypt(encrypt, password);
+            System.out.println("解密后字符串:" + decrypt);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 }

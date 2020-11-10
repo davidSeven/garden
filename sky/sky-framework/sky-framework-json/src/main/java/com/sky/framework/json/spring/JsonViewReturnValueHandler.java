@@ -2,6 +2,7 @@ package com.sky.framework.json.spring;
 
 import com.sky.framework.api.context.JsonContent;
 import com.sky.framework.api.context.RequestContext;
+import com.sky.framework.json.JsonIntensifyFieldExpandInterface;
 import com.sky.framework.json.JsonView;
 import com.sky.framework.json.Match;
 import org.slf4j.Logger;
@@ -54,7 +55,8 @@ public class JsonViewReturnValueHandler implements HandlerMethodReturnValueHandl
                 Object value = jsonResult.use(JsonView.with(val)
                         .onClass(val.getClass(), Match.match()
                                 .exclude(jsonContent.getExcludes())
-                                .include(jsonContent.getIncludes())))
+                                .include(jsonContent.getIncludes())
+                                .fieldExpandInterface(new JsonIntensifyFieldExpandInterface(jsonContent))))
                         .returnValue();
                 delegate.handleReturnValue(value, returnType, mavContainer, webRequest);
                 return;

@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Stack;
 
 /**
  * @date 2020-11-04 004 13:50
@@ -67,12 +68,22 @@ public class JsonViewSerializerTest {
                 })
                 .fieldExpandInterface(new FieldExpandInterface() {
                     @Override
-                    public void append(JsonGenerator jgen) {
+                    public void append(String currentPath, Stack<String> path, JsonGenerator jgen) {
+                        System.out.println(currentPath);
+                        System.out.println(path);
                         try {
                             jgen.writeFieldName("expandField");
                             jgen.writeString("测试追加字段");
                         } catch (IOException e) {
                             e.printStackTrace();
+                        }
+                        if ("info".equals(currentPath)) {
+                            try {
+                                jgen.writeFieldName("expandField2");
+                                jgen.writeString("测试追加字段2");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 
@@ -108,6 +119,13 @@ public class JsonViewSerializerTest {
                             try {
                                 jgen.writeFieldName(fieldName + "Intensify");
                                 jgen.writeString(text);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if ("info.remark".equals(prefix)) {
+                            try {
+                                jgen.writeFieldName("remarkExpand");
+                                jgen.writeString("动态扩展字段");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
