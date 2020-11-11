@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
-public class ApplicationUtil implements ApplicationContextAware {
+public class ApplicationBeanUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext = null;
 
@@ -36,7 +36,7 @@ public class ApplicationUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ApplicationUtil.applicationContext = applicationContext;
+        ApplicationBeanUtil.applicationContext = applicationContext;
     }
 
     public static String getProperty(String key) {

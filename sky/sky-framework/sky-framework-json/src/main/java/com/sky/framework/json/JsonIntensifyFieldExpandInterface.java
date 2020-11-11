@@ -3,7 +3,7 @@ package com.sky.framework.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.sky.framework.api.context.JsonContent;
 import com.sky.framework.api.context.JsonIntensify;
-import com.sky.framework.json.util.ApplicationUtil;
+import com.sky.framework.json.util.ApplicationBeanUtil;
 import com.sky.framework.utils.EncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +146,7 @@ public class JsonIntensifyFieldExpandInterface implements FieldExpandInterface {
     private JsonIntensifyConvert loadSpringClassConvert(String classPath) {
         JsonIntensifyConvert jsonIntensifyConvert = null;
         try {
-            jsonIntensifyConvert = ApplicationUtil.getBean(classPath, JsonIntensifyConvert.class);
+            jsonIntensifyConvert = ApplicationBeanUtil.getBean(classPath, JsonIntensifyConvert.class);
         } catch (Exception e) {
             logger.error("获取springBean失败", e);
         }
