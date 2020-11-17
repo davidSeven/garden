@@ -1,0 +1,3 @@
+
+# 指定模块打包
+mvn clean install -pl com.sky:sky-system-provider -am -Dmaven.test.skip=true -Pdev
