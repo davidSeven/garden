@@ -2,6 +2,7 @@ package com.sky.framework.dao.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.sky.framework.dao.plugins.SqlContextInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +24,10 @@ public class MyBatisPlusConfig {
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
         mybatisPlusInterceptor.addInnerInterceptor(optimisticLockerInnerInterceptor());
         return mybatisPlusInterceptor;
+    }
+
+    @Bean
+    public SqlContextInterceptor sqlContextInterceptor() {
+        return new SqlContextInterceptor();
     }
 }
