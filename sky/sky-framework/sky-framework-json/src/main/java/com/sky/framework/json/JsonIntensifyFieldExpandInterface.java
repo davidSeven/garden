@@ -1,7 +1,7 @@
 package com.sky.framework.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.sky.framework.api.context.JsonContent;
+import com.sky.framework.api.context.JsonContext;
 import com.sky.framework.api.context.JsonIntensify;
 import com.sky.framework.json.util.ApplicationBeanUtil;
 import com.sky.framework.utils.EncryptUtils;
@@ -31,10 +31,10 @@ public class JsonIntensifyFieldExpandInterface implements FieldExpandInterface {
     // 转换器
     private ConcurrentMap<String, JsonIntensifyConvert> convertMap;
 
-    public JsonIntensifyFieldExpandInterface(JsonContent jsonContent) {
-        this.sensitives = jsonContent.getSensitives();
-        this.encrypts = jsonContent.getEncrypts();
-        this.jsonIntensifyMap = jsonContent.getJsonIntensifyMap();
+    public JsonIntensifyFieldExpandInterface(JsonContext jsonContext) {
+        this.sensitives = jsonContext.getSensitives();
+        this.encrypts = jsonContext.getEncrypts();
+        this.jsonIntensifyMap = jsonContext.getJsonIntensifyMap();
         // 加载转换器
         loadConvert();
     }

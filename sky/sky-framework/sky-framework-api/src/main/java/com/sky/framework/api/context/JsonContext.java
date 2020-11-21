@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @date 2020-11-09 009 14:56
  */
-public class JsonContent {
+public class JsonContext {
 
     private Set<String> includes = new HashSet<>();
     private Set<String> excludes = new HashSet<>();
@@ -19,15 +19,15 @@ public class JsonContent {
     // 增强字段
     private Map<String, JsonIntensify> jsonIntensifyMap = new HashMap<>();
 
-    public JsonContent() {
+    public JsonContext() {
     }
 
-    public JsonContent(Set<String> includes, Set<String> excludes) {
+    public JsonContext(Set<String> includes, Set<String> excludes) {
         this.includes = includes;
         this.excludes = excludes;
     }
 
-    public JsonContent(Set<String> includes, Set<String> excludes, Set<String> sensitives, Set<String> encrypts, Map<String, JsonIntensify> jsonIntensifyMap) {
+    public JsonContext(Set<String> includes, Set<String> excludes, Set<String> sensitives, Set<String> encrypts, Map<String, JsonIntensify> jsonIntensifyMap) {
         this.includes = includes;
         this.excludes = excludes;
         this.sensitives = sensitives;

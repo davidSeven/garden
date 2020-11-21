@@ -1,6 +1,6 @@
 package com.sky.framework.json.spring;
 
-import com.sky.framework.api.context.JsonContent;
+import com.sky.framework.api.context.JsonContext;
 import com.sky.framework.api.context.RequestContext;
 import com.sky.framework.json.JsonIntensifyFieldExpandInterface;
 import com.sky.framework.json.JsonView;
@@ -48,15 +48,15 @@ public class JsonViewReturnValueHandler implements HandlerMethodReturnValueHandl
         }
         RequestContext context = RequestContext.getCurrentContext();
         if (null != context) {
-            JsonContent jsonContent = context.getJsonContent();
-            if (null != jsonContent) {
+            JsonContext jsonContext = context.getJsonContext();
+            if (null != jsonContext) {
                 // 返回值
                 JsonResult jsonResult = JsonResult.instance();
                 Object value = jsonResult.use(JsonView.with(val)
                         .onClass(val.getClass(), Match.match()
-                                .exclude(jsonContent.getExcludes())
-                                .include(jsonContent.getIncludes())
-                                .fieldExpandInterface(new JsonIntensifyFieldExpandInterface(jsonContent))))
+                                .exclude(jsonContext.getExcludes())
+                                .include(jsonContext.getIncludes())
+                                .fieldExpandInterface(new JsonIntensifyFieldExpandInterface(jsonContext))))
                         .returnValue();
                 delegate.handleReturnValue(value, returnType, mavContainer, webRequest);
                 return;

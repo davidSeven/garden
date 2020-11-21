@@ -37,7 +37,9 @@ public class RequestContext {
 
     private Map<String, Object> parameterMap = new HashMap<>();
 
-    private JsonContent jsonContent;
+    private JsonContext jsonContext;
+
+    private SqlContext sqlContext;
 
     /**
      * RequestContext
@@ -163,11 +165,19 @@ public class RequestContext {
         this.parameterMap = parameterMap;
     }
 
-    public JsonContent getJsonContent() {
-        return jsonContent;
+    public JsonContext getJsonContext() {
+        return jsonContext;
     }
 
-    public void setJsonContent(JsonContent jsonContent) {
-        this.jsonContent = jsonContent;
+    public void setJsonContext(JsonContext jsonContext) {
+        this.jsonContext = jsonContext;
+    }
+
+    public SqlContext getSqlContext() {
+        return sqlContext;
+    }
+
+    public void setSqlContext(SqlContext sqlContext) {
+        this.sqlContext = sqlContext;
     }
 }
