@@ -13,6 +13,7 @@
         <module>sky-eureka</module>
         <module>sky-framework</module>
         <module>sky-gateway</module>
+        <module>sky-generator</module>
         <module>sky-system</module>
     </modules>
 
@@ -93,6 +94,11 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
                 <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
             <dependency>

@@ -59,3 +59,21 @@ CREATE TABLE `sys_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户';
 
+CREATE TABLE `sys_menu` (
+  `name` varchar(64) DEFAULT '' COMMENT '名称',
+  `path` varchar(64) DEFAULT '' COMMENT '地址',
+  `sort` int(11) DEFAULT '0' COMMENT '顺序',
+  `parent_id` int(11) DEFAULT '0' COMMENT '父级id',
+  `icon` varchar(64) DEFAULT '' COMMENT '图标',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单管理';
+

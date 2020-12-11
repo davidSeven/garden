@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * @author zhangyuyuan
  * @date 2020-12-11 011 8:50
  */
 public class TestSqlValid {

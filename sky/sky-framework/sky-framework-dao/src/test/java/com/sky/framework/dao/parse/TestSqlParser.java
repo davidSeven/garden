@@ -12,7 +12,6 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
 /**
- * @author zhangyuyuan
  * @date 2020-12-10 010 19:45
  */
 public class TestSqlParser {
