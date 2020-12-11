@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author zhangyuyuan
  * @date 2020-12-10 010 10:15
  */
 public class TestSensitiveWordsSearch {
