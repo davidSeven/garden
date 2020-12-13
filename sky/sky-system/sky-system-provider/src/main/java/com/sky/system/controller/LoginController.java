@@ -106,11 +106,12 @@ public class LoginController {
 
     @ApiOperation(value = "登出")
     @PostMapping("/login/logout")
-    public void logout(HttpServletRequest request) {
+    public ResponseDto<String> logout(HttpServletRequest request) {
         // 从header中获取token
         String token = request.getHeader(LoginConstant.AUTHORIZATION_TOKEN);
         String ip = IpUtil.getClientRealAddress(request);
         this.loginService.logout(token, ip);
+        return new ResponseDto<String>().ok();
     }
 
     private void validLoginRequestTime(String lrTime) {
