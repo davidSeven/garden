@@ -11,6 +11,7 @@
 
     <modules>
         <module>sky-eureka</module>
+        <module>sky-file</module>
         <module>sky-framework</module>
         <module>sky-gateway</module>
         <module>sky-generator</module>
