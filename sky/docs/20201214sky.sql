@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2020-12-14 14:50:38
+Date: 2020-12-14 19:10:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -122,6 +122,7 @@ CREATE TABLE `sys_login_log` (
   `login_time` datetime DEFAULT NULL COMMENT '登录时间',
   `login_code` varchar(100) DEFAULT '' COMMENT '登录帐号',
   `login_password` varchar(100) DEFAULT '' COMMENT '登录密码',
+  `login_verify_code_token` varchar(32) DEFAULT '' COMMENT '验证码token',
   `login_verify_code` varchar(20) DEFAULT '' COMMENT '登录验证码',
   `login_token` varchar(32) DEFAULT '' COMMENT '登录token',
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -134,25 +135,28 @@ CREATE TABLE `sys_login_log` (
   `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
   `remark` varchar(255) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='登录日志';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='登录日志';
 
 -- ----------------------------
 -- Records of sys_login_log
 -- ----------------------------
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-06 13:50:13', 'admin', '123', 'XJ3y', 'a591d10ec3164c6cb5e5890865f0e6d0', '4', null, '2020-11-06 13:50:13', null, '2020-11-06 13:50:13', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:24:03', 'admin', '111111', 'djDA', '', '5', null, '2020-11-09 14:24:03', null, '2020-11-09 14:24:03', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:24:34', 'admin', '123456', 'djDA', '3169f1ac180546d195c47fe9eac84834', '6', null, '2020-11-09 14:24:34', null, '2020-11-09 14:24:34', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:26:01', 'admin', '111111', 'KMrl', '', '7', null, '2020-11-09 14:26:01', null, '2020-11-09 14:26:01', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:26:28', 'admin', '123456', 'WBGJ', 'ae61f4271b3642b4be41c2704babd391', '8', null, '2020-11-09 14:26:28', null, '2020-11-09 14:26:28', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:29:12', 'admin', '123456', 'KrL3', '5ae84a3ff04544eeb365221aba52997a', '9', null, '2020-11-09 14:29:12', null, '2020-11-09 14:29:12', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 11:53:30', 'admin', '123456', '6gGw', '461e54fb3b5b421b9127e7604f6736c4', '10', null, '2020-11-11 11:53:30', null, '2020-11-11 11:53:30', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:36:39', 'admin', '123456', 'xg4Y', 'b56adbc098614421a767c61ff9f37414', '11', null, '2020-11-11 13:36:39', null, '2020-11-11 13:36:39', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:41:40', 'admin', '123456', 'JjWx', '21e19d70a09d4b7d846ed87778b32a39', '12', null, '2020-11-11 13:41:40', null, '2020-11-11 13:41:40', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:51:23', 'admin', '123456', 'PB5A', '31765593b401478180dfcd1b9f8a8c51', '13', null, '2020-11-11 13:51:23', null, '2020-11-11 13:51:23', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:54:46', 'admin', '123456', 'ltUj', 'ea81b6223e024435bf6970aaf338d70f', '14', null, '2020-11-11 13:54:46', null, '2020-11-11 13:54:46', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:55:53', 'admin', '123456', 'ttsu', 'ba59818100d94f5c9b68af994ac98719', '15', null, '2020-11-11 13:55:53', null, '2020-11-11 13:55:53', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:56:37', 'admin', '123456', 'ySHx', '4302561564c34fc0b61b103816d6f801', '16', null, '2020-11-11 13:56:37', null, '2020-11-11 13:56:37', '0', '0', null, '');
-INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 14:01:10', 'admin', '123456', 'yuGM', '449f085f251241abae22f9f5986188a6', '17', null, '2020-11-11 14:01:10', null, '2020-11-11 14:01:10', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-06 13:50:13', 'admin', '123', '', 'XJ3y', 'a591d10ec3164c6cb5e5890865f0e6d0', '4', null, '2020-11-06 13:50:13', null, '2020-11-06 13:50:13', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:24:03', 'admin', '111111', '', 'djDA', '', '5', null, '2020-11-09 14:24:03', null, '2020-11-09 14:24:03', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:24:34', 'admin', '123456', '', 'djDA', '3169f1ac180546d195c47fe9eac84834', '6', null, '2020-11-09 14:24:34', null, '2020-11-09 14:24:34', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:26:01', 'admin', '111111', '', 'KMrl', '', '7', null, '2020-11-09 14:26:01', null, '2020-11-09 14:26:01', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:26:28', 'admin', '123456', '', 'WBGJ', 'ae61f4271b3642b4be41c2704babd391', '8', null, '2020-11-09 14:26:28', null, '2020-11-09 14:26:28', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:29:12', 'admin', '123456', '', 'KrL3', '5ae84a3ff04544eeb365221aba52997a', '9', null, '2020-11-09 14:29:12', null, '2020-11-09 14:29:12', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 11:53:30', 'admin', '123456', '', '6gGw', '461e54fb3b5b421b9127e7604f6736c4', '10', null, '2020-11-11 11:53:30', null, '2020-11-11 11:53:30', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:36:39', 'admin', '123456', '', 'xg4Y', 'b56adbc098614421a767c61ff9f37414', '11', null, '2020-11-11 13:36:39', null, '2020-11-11 13:36:39', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:41:40', 'admin', '123456', '', 'JjWx', '21e19d70a09d4b7d846ed87778b32a39', '12', null, '2020-11-11 13:41:40', null, '2020-11-11 13:41:40', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:51:23', 'admin', '123456', '', 'PB5A', '31765593b401478180dfcd1b9f8a8c51', '13', null, '2020-11-11 13:51:23', null, '2020-11-11 13:51:23', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:54:46', 'admin', '123456', '', 'ltUj', 'ea81b6223e024435bf6970aaf338d70f', '14', null, '2020-11-11 13:54:46', null, '2020-11-11 13:54:46', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:55:53', 'admin', '123456', '', 'ttsu', 'ba59818100d94f5c9b68af994ac98719', '15', null, '2020-11-11 13:55:53', null, '2020-11-11 13:55:53', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:56:37', 'admin', '123456', '', 'ySHx', '4302561564c34fc0b61b103816d6f801', '16', null, '2020-11-11 13:56:37', null, '2020-11-11 13:56:37', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 14:01:10', 'admin', '123456', '', 'yuGM', '449f085f251241abae22f9f5986188a6', '17', null, '2020-11-11 14:01:10', null, '2020-11-11 14:01:10', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-12-14 17:43:04', 'admin', '123456', '', 'l24u', 'b7a7fb0e76ac4528ad75137aae5e2671', '18', null, '2020-12-14 17:43:04', null, '2020-12-14 17:43:04', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-12-14 17:47:41', 'admin', '123456', '4df89ac7072d4ba2b5db3195ceb17ae6', 'yPfa', '0e8a0fd63c8e424faa990ea74ff34e9f', '19', null, '2020-12-14 17:47:41', null, '2020-12-14 17:47:41', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-12-14 17:48:53', 'admin', '123456', '69bddd8202b84d54a11938766a271279', '28Ut', 'c78d6096a56e40bc8d13b46ac69ed07c', '20', null, '2020-12-14 17:48:53', null, '2020-12-14 17:48:53', '0', '0', null, '');
 
 -- ----------------------------
 -- Table structure for sys_login_visit_log
@@ -174,11 +178,18 @@ CREATE TABLE `sys_login_visit_log` (
   `remark` varchar(255) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`),
   KEY `sys_login_visit_log_token` (`token`) USING HASH COMMENT 'token'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录访问日志';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='登录访问日志';
 
 -- ----------------------------
 -- Records of sys_login_visit_log
 -- ----------------------------
+INSERT INTO `sys_login_visit_log` VALUES ('9066336d178d44eda1ba6cc35e3bf1e5', '127.0.0.1', '1', 'l24u', '1', null, '2020-12-14 17:41:01', null, '2020-12-14 17:41:01', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('4df89ac7072d4ba2b5db3195ceb17ae6', '127.0.0.1', '1', 'yPfa', '2', null, '2020-12-14 17:47:38', null, '2020-12-14 17:47:38', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('21f17b46510d4f6fa546de2776308adf', '127.0.0.1', '1', 'rawa', '3', null, '2020-12-14 17:48:35', null, '2020-12-14 17:48:35', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('9842e8297d93409986523cf5dea56c83', '127.0.0.1', '1', 'elR4', '4', null, '2020-12-14 17:48:36', null, '2020-12-14 17:48:36', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('d13a93fdb9f446e18980a43cac154425', '127.0.0.1', '1', 'KuBR', '5', null, '2020-12-14 17:48:37', null, '2020-12-14 17:48:37', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('aa3f62dae2ad47639f3fcadcc00cf2ff', '127.0.0.1', '1', 'ck4t', '6', null, '2020-12-14 17:48:38', null, '2020-12-14 17:48:38', '0', '0', null, '');
+INSERT INTO `sys_login_visit_log` VALUES ('69bddd8202b84d54a11938766a271279', '127.0.0.1', '1', '28Ut', '7', null, '2020-12-14 17:48:39', null, '2020-12-14 17:48:39', '0', '0', null, '');
 
 -- ----------------------------
 -- Table structure for sys_menu
