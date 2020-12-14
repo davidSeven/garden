@@ -1,14 +1,10 @@
 package com.sky.generator;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
@@ -21,6 +17,18 @@ import java.util.List;
 public class GeneratorUtil {
 
     public static void main(String[] args) {
+        String apiOutputDir = "D://workspace/spring-boot-mybatis/src/main/java/com/sky/system/api";
+        String outputDir = "D://workspace/spring-boot-mybatis/src/main/java";
+
+        String tablePrefix = "sys_";
+        String tableName = "sys_menu";
+
+        String packageName = "com.sky.system";
+
+        doGenerator(apiOutputDir, outputDir, tablePrefix, tableName, packageName);
+    }
+
+    public static void doGenerator(String apiOutputDir, String outputDir, String tablePrefix, String tableName, String packageName) {
         AutoGenerator mpg = new AutoGenerator();
         // 选择 freemarker 引擎，默认 Veloctiy
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
@@ -28,7 +36,7 @@ public class GeneratorUtil {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         gc.setAuthor("");
-        gc.setOutputDir("D://workspace/spring-boot-mybatis/src/main/java");
+        gc.setOutputDir(outputDir);
         gc.setFileOverride(false);// 是否覆盖同名文件，默认是false
         gc.setActiveRecord(true);// 不需要ActiveRecord特性的请改为false
         gc.setEnableCache(false);// XML 二级缓存
@@ -61,9 +69,10 @@ public class GeneratorUtil {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-        strategy.setTablePrefix(new String[]{"sys_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{tablePrefix});// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sys_menu"}); // 需要生成的表
+        strategy.setInclude(new String[]{tableName}); // 需要生成的表
+        strategy.setRestControllerStyle(true);
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -87,7 +96,7 @@ public class GeneratorUtil {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.mht.springbootmybatis");
+        pc.setParent(packageName);
 //        pc.setModuleName("test");
         mpg.setPackageInfo(pc);
 
@@ -112,32 +121,39 @@ public class GeneratorUtil {
 //        mpg.setCfg(cfg);
 //
 //        // 调整 xml 生成目录演示
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        String templatePath = "/templates/mapper.xml.ftl";
+        focList.add(new FileOutConfig(templatePath) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper.xml";
+                return gc.getOutputDir() + "/mapper/" + tableInfo.getEntityName() + "Mapper.xml";
+            }
+        });
+        focList.add(new FileOutConfig("/templates/entity.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return apiOutputDir + "/" + tableInfo.getEntityName() + ".java";
             }
         });
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
         // 关闭默认 xml 生成，调整生成 至 根目录
-//        TemplateConfig tc = new TemplateConfig();
-//        tc.setXml(null);
-//        mpg.setTemplate(tc);
+        TemplateConfig tc = new TemplateConfig();
+        tc.setXml(null);
+        mpg.setTemplate(tc);
 
         // 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/templates 下面内容修改，
         // 放置自己项目的 src/main/resources/templates 目录下, 默认名称一下可以不配置，也可以自定义模板名称
-        TemplateConfig tc = new TemplateConfig();
+//        TemplateConfig tc = new TemplateConfig();
 //        tc.setController("...");
 //        tc.setEntity("...");
 //        tc.setMapper("...");
 //        tc.setXml("...");
 //        tc.setService("...");
 //        tc.setServiceImpl("...");
-        tc.setXml(null);
+//        tc.setXml(null);
         // 如上任何一个模块如果设置 空 OR Null 将不生成该模块。
-        mpg.setTemplate(tc);
+//        mpg.setTemplate(tc);
 
         // 执行生成
         mpg.execute();
