@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2020-12-14 19:10:41
+Date: 2020-12-14 20:01:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -50,6 +50,36 @@ INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '5', '0',
 INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '6', '0', '2020-11-06 09:17:34', '0', '2020-11-06 09:17:34', '0', '0', 'bc54a78bc5ae464e82e639997712fb4f', '');
 INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '7', '0', '2020-11-06 09:23:26', '0', '2020-11-06 09:23:26', '0', '0', 'dfb14001a9e14d408b3725c4d2a6d29e', '');
 INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '8', '0', '2020-11-20 10:26:15', '0', '2020-11-20 10:26:15', '0', '0', 'fde4c37a53b94c47a5e447fd080fcf89', '');
+
+-- ----------------------------
+-- Table structure for sys_file_info
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_file_info`;
+CREATE TABLE `sys_file_info` (
+  `biz_id` varchar(40) DEFAULT '' COMMENT '业务ID',
+  `biz_code` varchar(40) DEFAULT '' COMMENT '业务编码',
+  `original_name` varchar(200) DEFAULT '' COMMENT '原文件名称',
+  `extend_name` varchar(20) DEFAULT '' COMMENT '扩展名',
+  `name` varchar(200) DEFAULT '' COMMENT '文件名',
+  `physical_path` varchar(255) DEFAULT '' COMMENT '物理存储路径',
+  `visit_path` varchar(255) DEFAULT '' COMMENT '访问路径',
+  `size` int(11) DEFAULT '0' COMMENT '文件大小',
+  `content_type` varchar(100) DEFAULT '' COMMENT '文件头类型',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件信息';
+
+-- ----------------------------
+-- Records of sys_file_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_job
