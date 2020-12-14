@@ -14,8 +14,8 @@ import java.util.Optional;
 /**
  * @date 2020-10-29 029 13:57
  */
-//@RestController
-//@RequestMapping("/swagger-resources")
+@RestController
+@RequestMapping("/swagger-resources")
 public class SwaggerHandler {
 
     private final SwaggerResourcesProvider swaggerResources;

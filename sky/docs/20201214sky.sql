@@ -1,0 +1,236 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost-root
+Source Server Version : 50717
+Source Host           : localhost:3306
+Source Database       : sky
+
+Target Server Type    : MYSQL
+Target Server Version : 50717
+File Encoding         : 65001
+
+Date: 2020-12-14 14:50:38
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for sys_dictionary
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dictionary`;
+CREATE TABLE `sys_dictionary` (
+  `code` varchar(50) DEFAULT '' COMMENT '编码',
+  `name` varchar(50) DEFAULT '' COMMENT '名称',
+  `parent_id` int(11) DEFAULT '0' COMMENT '父级ID',
+  `parent_code` varchar(50) DEFAULT '' COMMENT '父级编码',
+  `parent_name` varchar(50) DEFAULT '' COMMENT '父级名称',
+  `state` varchar(20) DEFAULT '' COMMENT '状态',
+  `sort` int(11) DEFAULT '0' COMMENT '顺序',
+  `value` varchar(255) DEFAULT '' COMMENT '值',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='数据字典';
+
+-- ----------------------------
+-- Records of sys_dictionary
+-- ----------------------------
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '2', null, '2020-11-04 11:58:47', null, '2020-11-04 11:58:47', '0', '0', null, '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '3', null, '2020-11-05 17:52:34', null, '2020-11-05 17:52:34', '0', '0', null, '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '4', '0', '2020-11-05 17:56:18', '0', '2020-11-05 17:56:18', '0', '0', '0721b6c44ce649e989e0d7368da77b8f', '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '5', '0', '2020-11-05 17:56:33', '0', '2020-11-05 17:56:33', '0', '0', 'ee1bdde74ba64bc6aa5183b72a6bd89f', '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '6', '0', '2020-11-06 09:17:34', '0', '2020-11-06 09:17:34', '0', '0', 'bc54a78bc5ae464e82e639997712fb4f', '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '7', '0', '2020-11-06 09:23:26', '0', '2020-11-06 09:23:26', '0', '0', 'dfb14001a9e14d408b3725c4d2a6d29e', '');
+INSERT INTO `sys_dictionary` VALUES ('', '', '0', '', '', '', '0', '', '8', '0', '2020-11-20 10:26:15', '0', '2020-11-20 10:26:15', '0', '0', 'fde4c37a53b94c47a5e447fd080fcf89', '');
+
+-- ----------------------------
+-- Table structure for sys_job
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_job`;
+CREATE TABLE `sys_job` (
+  `task_name` varchar(100) DEFAULT '' COMMENT '任务名称',
+  `enable` int(1) DEFAULT '1' COMMENT '任务状态 1=启用 2=禁用',
+  `cron_time` varchar(200) DEFAULT '' COMMENT '表达式',
+  `has_redo` int(1) DEFAULT '0' COMMENT '是否启动重试机制',
+  `end_redo_times` int(2) DEFAULT '0' COMMENT '截止重新执行次数',
+  `current_redo_time` int(2) DEFAULT '0' COMMENT '当前第几次自动重试执行',
+  `process_status` int(1) DEFAULT '0' COMMENT '是否正在执行中,0--没有正在执行,1--正在手动/自动执行 2--执行失败',
+  `process_date` datetime DEFAULT NULL COMMENT '触发时间',
+  `process_end_date` datetime DEFAULT NULL COMMENT '结束时间',
+  `process_stamp` int(11) DEFAULT '0' COMMENT '耗时',
+  `process_msg` blob COMMENT '执行信息',
+  `task_group` varchar(100) DEFAULT '' COMMENT '任务分组',
+  `http_method` varchar(20) DEFAULT '' COMMENT '请求方式',
+  `timing_call_url` varchar(255) DEFAULT '' COMMENT '调用地址',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务调度';
+
+-- ----------------------------
+-- Records of sys_job
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_job_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_job_log`;
+CREATE TABLE `sys_job_log` (
+  `task_id` int(11) DEFAULT '0' COMMENT '任务ID',
+  `response_msg` blob COMMENT '响应信息',
+  `begin_time` datetime DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '结束时间',
+  `consume_time` int(11) DEFAULT '0' COMMENT '耗时',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务调度日志';
+
+-- ----------------------------
+-- Records of sys_job_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_login_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_log`;
+CREATE TABLE `sys_login_log` (
+  `state` varchar(20) DEFAULT '' COMMENT '状态',
+  `login_ip` varchar(20) DEFAULT '' COMMENT '登录IP',
+  `login_time` datetime DEFAULT NULL COMMENT '登录时间',
+  `login_code` varchar(100) DEFAULT '' COMMENT '登录帐号',
+  `login_password` varchar(100) DEFAULT '' COMMENT '登录密码',
+  `login_verify_code` varchar(20) DEFAULT '' COMMENT '登录验证码',
+  `login_token` varchar(32) DEFAULT '' COMMENT '登录token',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='登录日志';
+
+-- ----------------------------
+-- Records of sys_login_log
+-- ----------------------------
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-06 13:50:13', 'admin', '123', 'XJ3y', 'a591d10ec3164c6cb5e5890865f0e6d0', '4', null, '2020-11-06 13:50:13', null, '2020-11-06 13:50:13', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:24:03', 'admin', '111111', 'djDA', '', '5', null, '2020-11-09 14:24:03', null, '2020-11-09 14:24:03', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:24:34', 'admin', '123456', 'djDA', '3169f1ac180546d195c47fe9eac84834', '6', null, '2020-11-09 14:24:34', null, '2020-11-09 14:24:34', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('FAIL', '127.0.0.1', '2020-11-09 14:26:01', 'admin', '111111', 'KMrl', '', '7', null, '2020-11-09 14:26:01', null, '2020-11-09 14:26:01', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:26:28', 'admin', '123456', 'WBGJ', 'ae61f4271b3642b4be41c2704babd391', '8', null, '2020-11-09 14:26:28', null, '2020-11-09 14:26:28', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-09 14:29:12', 'admin', '123456', 'KrL3', '5ae84a3ff04544eeb365221aba52997a', '9', null, '2020-11-09 14:29:12', null, '2020-11-09 14:29:12', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 11:53:30', 'admin', '123456', '6gGw', '461e54fb3b5b421b9127e7604f6736c4', '10', null, '2020-11-11 11:53:30', null, '2020-11-11 11:53:30', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:36:39', 'admin', '123456', 'xg4Y', 'b56adbc098614421a767c61ff9f37414', '11', null, '2020-11-11 13:36:39', null, '2020-11-11 13:36:39', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:41:40', 'admin', '123456', 'JjWx', '21e19d70a09d4b7d846ed87778b32a39', '12', null, '2020-11-11 13:41:40', null, '2020-11-11 13:41:40', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:51:23', 'admin', '123456', 'PB5A', '31765593b401478180dfcd1b9f8a8c51', '13', null, '2020-11-11 13:51:23', null, '2020-11-11 13:51:23', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:54:46', 'admin', '123456', 'ltUj', 'ea81b6223e024435bf6970aaf338d70f', '14', null, '2020-11-11 13:54:46', null, '2020-11-11 13:54:46', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:55:53', 'admin', '123456', 'ttsu', 'ba59818100d94f5c9b68af994ac98719', '15', null, '2020-11-11 13:55:53', null, '2020-11-11 13:55:53', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 13:56:37', 'admin', '123456', 'ySHx', '4302561564c34fc0b61b103816d6f801', '16', null, '2020-11-11 13:56:37', null, '2020-11-11 13:56:37', '0', '0', null, '');
+INSERT INTO `sys_login_log` VALUES ('SUCCESS', '127.0.0.1', '2020-11-11 14:01:10', 'admin', '123456', 'yuGM', '449f085f251241abae22f9f5986188a6', '17', null, '2020-11-11 14:01:10', null, '2020-11-11 14:01:10', '0', '0', null, '');
+
+-- ----------------------------
+-- Table structure for sys_login_visit_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_visit_log`;
+CREATE TABLE `sys_login_visit_log` (
+  `token` varchar(32) NOT NULL DEFAULT '' COMMENT 'token',
+  `ip` varchar(20) DEFAULT '' COMMENT 'ip',
+  `need_verify_code` int(1) DEFAULT '0' COMMENT '是否需要验证码，0不需要，1需要',
+  `verify_code` varchar(20) DEFAULT '' COMMENT '验证码',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`),
+  KEY `sys_login_visit_log_token` (`token`) USING HASH COMMENT 'token'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录访问日志';
+
+-- ----------------------------
+-- Records of sys_login_visit_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_menu`;
+CREATE TABLE `sys_menu` (
+  `name` varchar(64) DEFAULT '' COMMENT '名称',
+  `path` varchar(64) DEFAULT '' COMMENT '地址',
+  `sort` int(11) DEFAULT '0' COMMENT '顺序',
+  `parent_id` int(11) DEFAULT '0' COMMENT '父级id',
+  `icon` varchar(64) DEFAULT '' COMMENT '图标',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单管理';
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_user
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user` (
+  `code` varchar(20) DEFAULT '' COMMENT '编码',
+  `name` varchar(100) DEFAULT '' COMMENT '名字',
+  `state` varchar(20) DEFAULT '' COMMENT '状态',
+  `password` varchar(255) DEFAULT '' COMMENT '密码',
+  `login_fail_count` int(4) DEFAULT '0' COMMENT '登录失败次数',
+  `login_ip` varchar(100) DEFAULT '' COMMENT '登录IP',
+  `login_date` datetime DEFAULT NULL COMMENT '登录时间',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `create_by` varchar(20) DEFAULT '' COMMENT '创建人',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `update_by` varchar(20) DEFAULT '' COMMENT '修改人',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `version` int(11) DEFAULT '0' COMMENT '版本号',
+  `deleted` int(1) DEFAULT '0' COMMENT '是否删除',
+  `trace_id` varchar(32) DEFAULT '' COMMENT '日志ID',
+  `remark` varchar(255) DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户';
+
+-- ----------------------------
+-- Records of sys_user
+-- ----------------------------
+INSERT INTO `sys_user` VALUES ('admin', '', '', '123456', '0', '127.0.0.1', '2020-11-05 11:56:56', '1', '', null, null, '2020-11-05 11:56:56', '1', '0', null, '');

@@ -20,6 +20,7 @@ public class LoginLog extends BaseModel<LoginLog> {
     private Date loginTime;
     private String loginCode;
     private String loginPassword;
+    private String loginVerifyCodeToken;
     private String loginVerifyCode;
     private String loginToken;
 }

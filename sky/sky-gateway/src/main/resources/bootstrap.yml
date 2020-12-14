@@ -62,6 +62,7 @@ spring:
     ## 存储附件路径
     static-locations:
       - "classpath:/resources/"
+      - "classpath:/META-INF/resources/"
       - "classpath:/static/"
       - "classpath:/public/"
   mvc:

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,14 +39,14 @@ public class LoginController {
     private LoginService loginService;
 
     @ApiOperation(value = "安全检查")
-    @PostMapping("/login/safetyCheck")
+    @GetMapping("/login/safetyCheck")
     public ResponseDto<SafetyCheckDto> safetyCheck(HttpServletRequest request) {
         String clientRealAddress = IpUtil.getClientRealAddress(request);
         return new ResponseDto<SafetyCheckDto>().ok().setData(this.loginService.safetyCheck(clientRealAddress));
     }
 
     @ApiOperation(value = "获取验证码")
-    @PostMapping("/login/verifyCode")
+    @GetMapping("/login/verifyCode")
     public ResponseDto<String> verifyCode(HttpServletRequest request) {
         // dto中不传，从header中获取
         String vcToken = request.getHeader(LoginConstant.VERIFY_CODE_TOKEN);
@@ -57,7 +58,7 @@ public class LoginController {
     }
 
     @ApiOperation(value = "获取验证码")
-    @PostMapping("/login/verifyCodeResponse")
+    @GetMapping("/login/verifyCodeResponse")
     public void verifyCodeResponse(HttpServletRequest request, HttpServletResponse response) {
         // dto中不传，从header中获取
         String vcToken = request.getHeader(LoginConstant.VERIFY_CODE_TOKEN);

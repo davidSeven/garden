@@ -42,6 +42,7 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         loginLog.setLoginTime(new Date());
         loginLog.setLoginCode(dto.getCode());
         loginLog.setLoginPassword(dto.getPassword());
+        loginLog.setLoginVerifyCodeToken(dto.getVcToken());
         loginLog.setLoginVerifyCode(dto.getVerifyCode());
     }
 

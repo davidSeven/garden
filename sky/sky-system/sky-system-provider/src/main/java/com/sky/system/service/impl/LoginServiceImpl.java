@@ -10,9 +10,11 @@ import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.api.dto.VerifyCodeDto;
+import com.sky.system.api.model.LoginVisitLog;
 import com.sky.system.api.model.User;
 import com.sky.system.listeners.LoginLogListener;
 import com.sky.system.service.LoginService;
+import com.sky.system.service.LoginVisitLogService;
 import com.sky.system.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class LoginServiceImpl implements LoginService {
     private UserService userService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private LoginVisitLogService loginVisitLogService;
 
     @Override
     public UserLoginDto login(LoginDto dto) {
@@ -148,18 +152,29 @@ public class LoginServiceImpl implements LoginService {
         verifyCodeDto.setNeedVc(dto.isNeedVc());
         // 3个小时
         this.redisTemplate.opsForValue().set(key, verifyCodeDto, 3 * 60 * 60, TimeUnit.SECONDS);
+        // 增加访问日志
+        LoginVisitLog visitLog = new LoginVisitLog();
+        visitLog.setToken(token);
+        visitLog.setIp(ip);
+        visitLog.setNeedVerifyCode(dto.isNeedVc() ? 1 : 0);
+        visitLog.setVerifyCode("");
+        this.loginVisitLogService.addLog(visitLog);
         return dto;
     }
 
     @Override
     public String verifyCode(String ip, String verifyCodeToken) {
         String verifyCode = verifyCode(verifyCodeToken);
+        // 更新访问日志
+        this.loginVisitLogService.updateVerifyCode(verifyCodeToken, verifyCode);
         return verifyCode;
     }
 
     @Override
     public String verifyCodeResponse(String ip, String verifyCodeToken) {
         String verifyCode = verifyCode(verifyCodeToken);
+        // 更新访问日志
+        this.loginVisitLogService.updateVerifyCode(verifyCodeToken, verifyCode);
         return verifyCode;
     }
 
