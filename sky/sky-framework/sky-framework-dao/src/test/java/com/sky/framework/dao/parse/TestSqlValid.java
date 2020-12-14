@@ -14,7 +14,7 @@ public class TestSqlValid {
 
     @Test
     public void testSqlValid() {
-        String sqls = "select ID from BCP_Prize; select name from BCP_Prize and 1 = 1";
+        String sqls = "select ID from BCP_Prize";
         MySqlStatementParser parser = new MySqlStatementParser(sqls);
         List<SQLStatement> stmtList = parser.parseStatementList();
 
