@@ -2,10 +2,10 @@ package com.sky.system.client.feign;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sky.framework.api.dto.ResponseDto;
+import com.sky.system.api.SystemInterface;
 import com.sky.system.api.dto.UserDto;
 import com.sky.system.api.dto.UserQueryDto;
 import com.sky.system.api.remote.UserRemoteService;
-import com.sky.system.api.SystemInterface;
 import feign.hystrix.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * @date 2020-10-28 028 14:53
  */
-@FeignClient(name = SystemInterface.SERVICE, fallback = UserClientFeign.HystrixClientFallback.class)
+@FeignClient(contextId = "FeignClient.UserClientFeign", name = SystemInterface.SERVICE, fallback = UserClientFeign.HystrixClientFallback.class)
 public interface UserClientFeign extends UserRemoteService {
 
     @Component

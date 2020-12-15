@@ -1,5 +1,6 @@
 package com.sky.gateway.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
@@ -16,13 +17,12 @@ import java.util.List;
 @Component
 public class SwaggerProvider implements SwaggerResourcesProvider {
     public static final String API_URI = "/v2/api-docs";
-    private final RouteLocator routeLocator;
-    private final GatewayProperties gatewayProperties;
 
-    public SwaggerProvider(RouteLocator routeLocator, GatewayProperties gatewayProperties) {
-        this.routeLocator = routeLocator;
-        this.gatewayProperties = gatewayProperties;
-    }
+    @Autowired
+    private RouteLocator routeLocator;
+
+    @Autowired
+    private GatewayProperties gatewayProperties;
 
     @Override
     public List<SwaggerResource> get() {

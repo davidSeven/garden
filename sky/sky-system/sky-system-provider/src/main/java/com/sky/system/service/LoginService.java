@@ -3,6 +3,7 @@ package com.sky.system.service;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
+import com.sky.system.api.dto.VerificationDto;
 
 /**
  * @date 2020-10-29 029 15:29
@@ -50,4 +51,12 @@ public interface LoginService {
      * @return 验证码
      */
     String verifyCodeResponse(String ip, String verifyCodeToken);
+
+    /**
+     * 验证
+     *
+     * @param dto dto
+     * @return UserLoginDto
+     */
+    UserLoginDto verification(VerificationDto dto);
 }

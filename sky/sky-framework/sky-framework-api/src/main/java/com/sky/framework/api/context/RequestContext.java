@@ -11,12 +11,12 @@ public class RequestContext {
 
     // 允许通过HTTP HEADER传递的参数
     public static final String REQUEST_ID = "requestId";
-    public static final String USER_ID = "userId";
-    public static final String USER_CODE = "userCode";
-    public static final String USER_NAME = "userName";
-    public static final String TOKEN = "token";
+    public static final String USER_ID = "X-Access-Id";
+    public static final String USER_CODE = "X-Access-Code";
+    public static final String USER_NAME = "X-Access-Name";
+    public static final String TOKEN = "Authorization";
     public static final String REQUEST_START_TIME = "requestStartTime";
-    public static final String CLIENT_IP_ADDRESS = "clientIpAddress";
+    public static final String CLIENT_IP_ADDRESS = "X-Access-IP";
     public static final String ORIGIN_APP = "originApp";
     public static final String REFERER = "referer";
 

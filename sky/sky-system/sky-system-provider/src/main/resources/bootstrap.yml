@@ -58,15 +58,12 @@ management:
   endpoint:
     health:
       show-details: always
-mybatis:
-  typeAliasesPackage: com.sky.*.*.dao
-  mapperLocations:
-    - classpath*:/mappers/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  mapper-locations:
+    - classpath*:/mappers/*.xml
+  type-aliases-package: com.sky.**.model
 hystrix:
   metrics:
     enabled: true

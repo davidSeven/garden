@@ -48,8 +48,10 @@ public class ResponseDto<T> implements Serializable {
      * @param appCode 返回码
      */
     public ResponseDto(AppCode appCode) {
-        this.code = appCode.getCode();
-        this.message = appCode.getMessage();
+        if (null != appCode) {
+            this.code = appCode.getCode();
+            this.message = appCode.getMessage();
+        }
     }
 
     /**

@@ -34,4 +34,7 @@ public class UserLoginDto implements Serializable {
 
     @ApiModelProperty(value = "登录token")
     private String token;
+
+    @ApiModelProperty(value = "状态")
+    private String state;
 }

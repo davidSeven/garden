@@ -7,6 +7,9 @@ import org.springframework.context.ApplicationEvent;
  */
 public class LoginLogEvent extends ApplicationEvent {
 
+    private Long userId;
+    private Long leaseTime;
+
     /**
      * Create a new {@code ApplicationEvent}.
      *
@@ -15,5 +18,21 @@ public class LoginLogEvent extends ApplicationEvent {
      */
     public LoginLogEvent(Object source) {
         super(source);
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getLeaseTime() {
+        return leaseTime;
+    }
+
+    public void setLeaseTime(Long leaseTime) {
+        this.leaseTime = leaseTime;
     }
 }

@@ -1,4 +1,4 @@
-package com.sky.framework.dao.model;
+package com.sky.framework.api.model;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;

@@ -19,4 +19,14 @@ public final class LoginConstant {
      * 登录token
      */
     public static final String AUTHORIZATION_TOKEN = "Authorization";
+
+    /**
+     * 登录状态
+     */
+    public static final String LOGIN_STATE_ONLINE = "ONLINE";
+
+    /**
+     * 未登录状态
+     */
+    public static final String LOGIN_STATE_OFFLINE = "OFFLINE";
 }

@@ -3,9 +3,11 @@ package com.sky.system.listeners;
 import com.sky.framework.interceptor.util.ApplicationUtil;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.model.LoginLog;
+import com.sky.system.api.model.OnlineUser;
 import com.sky.system.constant.LoginLogConstant;
 import com.sky.system.events.LoginLogEvent;
 import com.sky.system.service.LoginLogService;
+import com.sky.system.service.OnlineUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
@@ -21,20 +23,22 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
 
     @Autowired
     private LoginLogService loginLogService;
+    @Autowired
+    private OnlineUserService onlineUserService;
 
-    public static void login(LoginDto dto, String token) {
+    public static void login(LoginDto dto, String token, Long userId, Long leaseTime) {
         LoginLog loginLog = new LoginLog();
         loginLog.setState(LoginLogConstant.STATE_SUCCESS);
         copyLoginLog(loginLog, dto);
         loginLog.setLoginToken(token);
-        publishEvent(loginLog);
+        publishEvent(loginLog, userId, leaseTime);
     }
 
     public static void loginFail(LoginDto dto) {
         LoginLog loginLog = new LoginLog();
         loginLog.setState(LoginLogConstant.STATE_FAIL);
         copyLoginLog(loginLog, dto);
-        publishEvent(loginLog);
+        publishEvent(loginLog, null, null);
     }
 
     private static void copyLoginLog(LoginLog loginLog, LoginDto dto) {
@@ -46,8 +50,10 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         loginLog.setLoginVerifyCode(dto.getVerifyCode());
     }
 
-    private static void publishEvent(LoginLog loginLog) {
+    private static void publishEvent(LoginLog loginLog, Long userId, Long leaseTime) {
         LoginLogEvent loginLogEvent = new LoginLogEvent(loginLog);
+        loginLogEvent.setUserId(userId);
+        loginLogEvent.setLeaseTime(leaseTime);
         ApplicationUtil.publishEvent(loginLogEvent);
     }
 
@@ -60,5 +66,16 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         }
         LoginLog loginLog = (LoginLog) source;
         this.loginLogService.login(loginLog);
+        if (LoginLogConstant.STATE_SUCCESS.equals(loginLog.getState())) {
+            OnlineUser onlineUser = new OnlineUser();
+            onlineUser.setUserId(event.getUserId());
+            onlineUser.setUserCode(loginLog.getLoginCode());
+            onlineUser.setLoginToken(loginLog.getLoginToken());
+            onlineUser.setLoginIp(loginLog.getLoginIp());
+            onlineUser.setLoginDate(loginLog.getLoginTime());
+            onlineUser.setLastVisitDate(loginLog.getLoginTime());
+            onlineUser.setLeaseTime(event.getLeaseTime());
+            this.onlineUserService.addOnlineUser(onlineUser);
+        }
     }
 }

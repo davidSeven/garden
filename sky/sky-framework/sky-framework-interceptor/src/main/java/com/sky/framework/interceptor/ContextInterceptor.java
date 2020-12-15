@@ -65,7 +65,10 @@ public class ContextInterceptor implements HandlerInterceptor {
             requestStartTime = new Timestamp(Long.parseLong(startTime));
         }
         // clientIpAddress
-        String clientIpAddress = IpUtil.getClientRealAddress(request);
+        String clientIpAddress = request.getHeader(RequestContext.CLIENT_IP_ADDRESS);
+        if (StringUtils.isEmpty(clientIpAddress)) {
+            clientIpAddress = IpUtil.getClientRealAddress(request);
+        }
         // token
         String token = request.getHeader(RequestContext.TOKEN);
         String userId = request.getHeader(RequestContext.USER_ID);

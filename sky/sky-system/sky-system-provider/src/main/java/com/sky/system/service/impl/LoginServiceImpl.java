@@ -6,15 +6,15 @@ import com.sky.framework.api.exception.CommonException;
 import com.sky.framework.interceptor.util.UUIDUtil;
 import com.sky.framework.utils.VerifyCodeUtils;
 import com.sky.system.api.SystemInterface;
-import com.sky.system.api.dto.LoginDto;
-import com.sky.system.api.dto.SafetyCheckDto;
-import com.sky.system.api.dto.UserLoginDto;
-import com.sky.system.api.dto.VerifyCodeDto;
+import com.sky.system.api.dto.*;
 import com.sky.system.api.model.LoginVisitLog;
+import com.sky.system.api.model.OnlineUser;
 import com.sky.system.api.model.User;
+import com.sky.system.constant.LoginConstant;
 import com.sky.system.listeners.LoginLogListener;
 import com.sky.system.service.LoginService;
 import com.sky.system.service.LoginVisitLogService;
+import com.sky.system.service.OnlineUserService;
 import com.sky.system.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +37,8 @@ public class LoginServiceImpl implements LoginService {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private LoginVisitLogService loginVisitLogService;
+    @Autowired
+    private OnlineUserService onlineUserService;
 
     @Override
     public UserLoginDto login(LoginDto dto) {
@@ -105,19 +108,26 @@ public class LoginServiceImpl implements LoginService {
         userLoginDto.setName(user.getName());
         userLoginDto.setLoginIp(updateUser.getLoginIp());
         userLoginDto.setLoginDate(updateUser.getLoginDate());
+        userLoginDto.setState(LoginConstant.LOGIN_STATE_ONLINE);
         // 处理token
         String token = createToken();
         String liKey = liTokenPrefix(token);
         // 8个小时
-        this.redisTemplate.opsForValue().set(liKey, userLoginDto, 8 * 60 * 60, TimeUnit.SECONDS);
+        long leaseTime = 8 * 60 * 60;
+        this.redisTemplate.opsForValue().set(liKey, userLoginDto, leaseTime, TimeUnit.SECONDS);
         userLoginDto.setToken(token);
-        LoginLogListener.login(dto, token);
+        LoginLogListener.login(dto, token, user.getId(), leaseTime);
         return userLoginDto;
     }
 
     @Override
     public void logout(String token, String ip) {
         String key = liTokenPrefix(token);
+        // 在线用户登出
+        OnlineUser onlineUser = new OnlineUser();
+        onlineUser.setLoginToken(token);
+        this.onlineUserService.logoutOnlineUser(onlineUser);
+        // 删除缓存
         if (hasKey(key)) {
             this.redisTemplate.delete(key);
         }
@@ -176,6 +186,18 @@ public class LoginServiceImpl implements LoginService {
         // 更新访问日志
         this.loginVisitLogService.updateVerifyCode(verifyCodeToken, verifyCode);
         return verifyCode;
+    }
+
+    @Override
+    public UserLoginDto verification(VerificationDto dto) {
+        String liKey = liTokenPrefix(dto.getAuthorization());
+        Object obj = this.redisTemplate.opsForValue().get(liKey);
+        if (Objects.isNull(obj)) {
+            return null;
+        } else if (obj instanceof UserLoginDto) {
+            return (UserLoginDto) obj;
+        }
+        return null;
     }
 
     private String verifyCode(String verifyCodeToken) {

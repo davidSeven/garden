@@ -2,7 +2,7 @@ package com.sky.file.api.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.sky.framework.dao.model.BaseModel;
+import com.sky.framework.api.model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -37,7 +37,6 @@ spring:
         predicates:
           - Path=/system/**
         filters:
-          - SwaggerHeaderFilter
           - StripPrefix=1
     loadbalancer:
       retry:
