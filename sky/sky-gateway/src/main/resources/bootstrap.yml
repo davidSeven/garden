@@ -20,8 +20,8 @@ spring:
     name: ${SERVICE_NAME:gateway}
   cloud:
     gateway:
-      discovery: 
-        locator: 
+      discovery:
+        locator:
           enabled: true
           lower-case-service-id: true
       globalcors:
@@ -32,12 +32,27 @@ spring:
               - GET
               - POST
       routes:
-      - id: sky-system
-        uri: lb://sky-system
-        predicates:
-          - Path=/system/**
-        filters:
-          - StripPrefix=1
+        # sky-system
+        - id: sky-system
+          uri: lb://sky-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        # sky-job
+        - id: sky-job
+          uri: lb://sky-job
+          predicates:
+            - Path=/job/**
+          filters:
+            - StripPrefix=1
+        # sky-file
+        - id: sky-file
+          uri: lb://sky-file
+          predicates:
+            - Path=/file/**
+          filters:
+            - StripPrefix=1
     loadbalancer:
       retry:
         enabled: true

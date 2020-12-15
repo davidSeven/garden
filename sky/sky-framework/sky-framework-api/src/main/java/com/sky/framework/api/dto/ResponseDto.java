@@ -2,6 +2,7 @@ package com.sky.framework.api.dto;
 
 import com.sky.framework.api.enums.AppCode;
 import com.sky.framework.api.enums.ExceptionCode;
+import com.sky.framework.api.exception.CommonException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -126,6 +127,45 @@ public class ResponseDto<T> implements Serializable {
             return responseDto.getData();
         }
         return false;
+    }
+
+    public static <T> T getDataAndException(ResponseDto<T> responseDto) {
+        if (null != responseDto) {
+            if (ExceptionCode.SUCCESS.getCode() == responseDto.getCode()) {
+                return responseDto.getData();
+            } else {
+                // 抛出接口返回的异常信息
+                throw new CommonException(responseDto.getCode(), responseDto.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public static boolean getDataBAndException(ResponseDto<Boolean> responseDto) {
+        if (null != responseDto) {
+            if (ExceptionCode.SUCCESS.getCode() == responseDto.getCode()) {
+                return responseDto.getData();
+            } else {
+                // 抛出接口返回的异常信息
+                throw new CommonException(responseDto.getCode(), responseDto.getMessage());
+            }
+        }
+        return false;
+    }
+
+    public static <T> ResponseDto<T> convertResultJson(Throwable throwable) {
+        ResponseDto<T> responseDto = new ResponseDto<>();
+        if (null == throwable) {
+            return responseDto;
+        }
+        if (throwable instanceof CommonException) {
+            CommonException commonException = (CommonException) throwable;
+            responseDto.setCode(commonException.getCode());
+            responseDto.setMessage(commonException.getMessage());
+        } else {
+            responseDto.setAppCode(ExceptionCode.UNKNOWN_EXCEPTION);
+        }
+        return responseDto;
     }
 
     /**
