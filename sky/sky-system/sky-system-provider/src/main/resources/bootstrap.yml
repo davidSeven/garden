@@ -6,6 +6,8 @@ server:
     accept-count: 10000
     max-connections: 10000
     min-spare-threads: 100
+  servlet:
+    context-path: /
 spring:
   profiles:
     active: local
@@ -60,7 +62,7 @@ management:
       show-details: always
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations:
     - classpath*:/mappers/*.xml
   type-aliases-package: com.sky.**.model

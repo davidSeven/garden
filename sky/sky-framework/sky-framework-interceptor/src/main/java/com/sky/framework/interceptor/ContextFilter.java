@@ -36,7 +36,7 @@ public class ContextFilter implements Filter {
 
         filterChain.doFilter(requestWrapper, responseWrapper);
 
-        if (logger.isDebugEnabled()) {
+        if (logger.isInfoEnabled()) {
             String requestBody = requestParam(requestWrapper);
             String responseBody = responseParam(responseWrapper);
 
@@ -53,7 +53,7 @@ public class ContextFilter implements Filter {
             }
             builder.append("{\"requestBody\":").append(requestBody).append(",");
             builder.append("\"responseBody\":").append(responseBody).append("}");
-            logger.debug(builder.toString());
+            logger.info(builder.toString());
         }
 
         long endTime = System.currentTimeMillis();

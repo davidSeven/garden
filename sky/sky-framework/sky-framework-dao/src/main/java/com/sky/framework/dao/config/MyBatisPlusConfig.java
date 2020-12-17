@@ -2,6 +2,7 @@ package com.sky.framework.dao.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.sky.framework.dao.plugins.SqlContextInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,13 @@ public class MyBatisPlusConfig {
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
         mybatisPlusInterceptor.addInnerInterceptor(optimisticLockerInnerInterceptor());
+        mybatisPlusInterceptor.addInnerInterceptor(paginationInnerInterceptor());
         return mybatisPlusInterceptor;
+    }
+
+    // @Bean
+    public PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor();
     }
 
     @Bean

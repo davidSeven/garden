@@ -1,18 +1,21 @@
-package com.sky.system.api.model;
+package com.sky.system.api.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.sky.framework.api.model.BaseModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * @date 2020-12-16 016 11:32
+ * @date 2020-12-17 017 17:55
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("sys_menu")
-public class Menu extends BaseModel<Menu> {
+@ApiModel(value = "LoginDto", description = "登录信息")
+public class MenuVO implements Serializable {
+
+    @ApiModelProperty(value = "id")
+    private Long id;
 
     @ApiModelProperty(value = "名字")
     private String name;
@@ -28,4 +31,7 @@ public class Menu extends BaseModel<Menu> {
 
     @ApiModelProperty(value = "图标")
     private String icon;
+
+    @ApiModelProperty(value = "子级")
+    private List<MenuVO> children;
 }
