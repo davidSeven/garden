@@ -113,16 +113,8 @@ public class MenuController {
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
-        List<MenuVO> treeList = new ArrayList<>();
         Long parentId = 0L;
-        for (Menu menu : list) {
-            if (parentId.equals(menu.getParentId())) {
-                MenuVO vo = BeanHelpUtil.convertDto(menu, MenuVO.class);
-                vo.setChildren(getChildren(vo.getId(), list));
-                treeList.add(vo);
-            }
-        }
-        return treeList;
+        return getChildren(parentId, list);
     }
 
     private List<MenuVO> getChildren(Long id, List<Menu> list) {
