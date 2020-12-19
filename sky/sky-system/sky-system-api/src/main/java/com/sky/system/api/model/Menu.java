@@ -20,6 +20,9 @@ public class Menu extends BaseModel<Menu> {
     @ApiModelProperty(value = "地址")
     private String path;
 
+    @ApiModelProperty(value = "组件名称")
+    private String component;
+
     @ApiModelProperty(value = "顺序")
     private Integer sort;
 
