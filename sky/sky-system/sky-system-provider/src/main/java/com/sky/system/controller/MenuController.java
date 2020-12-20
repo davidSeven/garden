@@ -122,7 +122,8 @@ public class MenuController {
         for (Menu menu : list) {
             if (id.equals(menu.getParentId())) {
                 MenuVO vo = BeanHelpUtil.convertDto(menu, MenuVO.class);
-                vo.setChildren(getChildren(vo.getId(), list));
+                vo.builderMeta(menu.getName(), menu.getIcon());
+                vo.setChildren(getChildren(menu.getId(), list));
                 children.add(vo);
             }
         }

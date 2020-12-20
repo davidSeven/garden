@@ -1,7 +1,14 @@
 package com.sky.framework.redis.config;
 
+import org.apache.commons.lang3.StringUtils;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -29,6 +36,9 @@ public class RedisAutoConfiguration {
     private static final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     public static long TIME_OUT = 1 * 24 * 60 * 60;
+
+    @Autowired
+    private RedisProperties redisProperties;
 
     @Bean
     public KeyGenerator customKeyGenerator() {
@@ -101,5 +111,19 @@ public class RedisAutoConfiguration {
 //        simpleCacheManager.setCaches(caffeineCaches);
 //        return simpleCacheManager;
 //    }
+
+    @Bean
+    public RedissonClient redissonSingle() {
+        String host = redisProperties.getHost();
+        int port = redisProperties.getPort();
+        String password = redisProperties.getPassword();
+        Config config = new Config();
+        SingleServerConfig serverConfig = config.useSingleServer()
+                .setAddress("redis://" + host + ":" + port);
+        if (StringUtils.isNotBlank(password)) {
+            serverConfig.setPassword(password);
+        }
+        return Redisson.create(config);
+    }
 
 }

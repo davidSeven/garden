@@ -11,11 +11,8 @@ import java.util.List;
  * @date 2020-12-17 017 17:55
  */
 @Data
-@ApiModel(value = "LoginDto", description = "登录信息")
+@ApiModel(value = "MenuVO", description = "MenuVO信息")
 public class MenuVO implements Serializable {
-
-    @ApiModelProperty(value = "id")
-    private Long id;
 
     @ApiModelProperty(value = "名字")
     private String name;
@@ -26,15 +23,13 @@ public class MenuVO implements Serializable {
     @ApiModelProperty(value = "组件名称")
     private String component;
 
-    @ApiModelProperty(value = "顺序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "父级id")
-    private Long parentId;
-
-    @ApiModelProperty(value = "图标")
-    private String icon;
+    @ApiModelProperty(value = "数据元")
+    private MenuMetaVO meta;
 
     @ApiModelProperty(value = "子级")
     private List<MenuVO> children;
+
+    public void builderMeta(String title, String icon) {
+        this.meta = new MenuMetaVO(title, icon);
+    }
 }

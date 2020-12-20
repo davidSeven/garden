@@ -3,7 +3,7 @@
 <mapper namespace="com.sky.job.dao.JobLogDao">
 
     <delete id="clearLogs">
-        delete from sys_job_log where create_time <![CDATA[<]]> #{date,jdbcType=DATE}
+        delete from sys_job_log where create_date <![CDATA[<]]> #{date,jdbcType=DATE}
     </delete>
 
 </mapper>

@@ -1,7 +1,8 @@
 package com.sky.job.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.job.api.dto.JobQueryDto;
@@ -10,6 +11,7 @@ import com.sky.job.service.JobService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,7 +80,10 @@ public class SysJobController {
     @PostMapping(value = "/page")
     public ResponseDto<IPage<Job>> pageList(@RequestBody JobQueryDto queryDto) {
         IPage<Job> page = new Page<>(queryDto.getPageNum(), queryDto.getPageSize());
-        QueryWrapper<Job> queryWrapper = new QueryWrapper<>(queryDto);
+        LambdaQueryWrapper<Job> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(queryDto.getTaskName())) {
+            queryWrapper.eq(Job::getTaskName, queryDto.getTaskName().trim());
+        }
         return new ResponseDto<IPage<Job>>().ok().setData(this.jobService.page(page, queryWrapper));
     }
 }

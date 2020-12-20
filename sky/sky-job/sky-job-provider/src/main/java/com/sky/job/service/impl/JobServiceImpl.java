@@ -1,6 +1,7 @@
 package com.sky.job.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.framework.api.exception.CommonException;
@@ -11,6 +12,8 @@ import com.sky.job.service.JobService;
 import com.sky.job.util.JobScheduler;
 import org.apache.commons.collections.CollectionUtils;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,6 +24,7 @@ import java.util.List;
  */
 @Service
 public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobService {
+    private Logger logger = LoggerFactory.getLogger(JobServiceImpl.class);
 
     @Override
     public void initJob() throws SchedulerException {
@@ -35,23 +39,23 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
                 JobScheduler.addJob(jobId, Job.getTaskGroup(), Job.getCronTime());
             }
         }
-        log.debug("---------------------------------------------------");
-        log.debug("---------------------------------------------------");
-        log.debug("任务调度完成初始化");
-        log.debug("---------------------------------------------------");
-        log.debug("---------------------------------------------------");
+        logger.info("---------------------------------------------------");
+        logger.info("---------------------------------------------------");
+        logger.info("任务调度完成初始化");
+        logger.info("---------------------------------------------------");
+        logger.info("---------------------------------------------------");
     }
 
     @Override
     public void begin(String jobId, Date processDate) {
         // 初始化任务执行信息
-        Job Job = new Job();
-        Job.setId(Long.valueOf(jobId));
+        LambdaUpdateWrapper<Job> updateWrapper = Wrappers.lambdaUpdate();
         // 初始化当前次数
-        Job.setCurrentRedoTime(0);
-        Job.setProcessStatus(JobConstant.JOB_TASK_PROCESS_STATUS_EXECUTING);
-        Job.setProcessDate(processDate);
-        super.updateById(Job);
+        updateWrapper.set(Job::getCurrentRedoTime, 0);
+        updateWrapper.set(Job::getProcessStatus, JobConstant.JOB_TASK_PROCESS_STATUS_EXECUTING);
+        updateWrapper.set(Job::getProcessDate, processDate);
+        updateWrapper.eq(Job::getId, jobId);
+        super.update(updateWrapper);
     }
 
     @Override
@@ -60,13 +64,13 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
     }
 
     private void end(String jobId, Date processDate, Date processEndDate, String processMsg, int processStatus) {
-        Job Job = new Job();
-        Job.setId(Long.valueOf(jobId));
-        Job.setProcessStatus(processStatus);
-        Job.setProcessEndDate(processEndDate);
-        Job.setProcessStamp(processEndDate.getTime() - processDate.getTime());
-        Job.setProcessMsg(processMsg);
-        super.updateById(Job);
+        LambdaUpdateWrapper<Job> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(Job::getProcessStatus, processStatus);
+        updateWrapper.set(Job::getProcessEndDate, processEndDate);
+        updateWrapper.set(Job::getProcessStamp, processEndDate.getTime() - processDate.getTime());
+        updateWrapper.set(Job::getProcessMsg, processMsg);
+        updateWrapper.eq(Job::getId, jobId);
+        super.update(updateWrapper);
     }
 
     @Override
@@ -76,11 +80,11 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
 
     @Override
     public void retry(String jobId, int redoTime, String processMsg) {
-        Job Job = new Job();
-        Job.setId(Long.valueOf(jobId));
-        Job.setProcessMsg(processMsg);
-        Job.setCurrentRedoTime(redoTime);
-        super.updateById(Job);
+        LambdaUpdateWrapper<Job> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(Job::getProcessMsg, processMsg);
+        updateWrapper.set(Job::getCurrentRedoTime, redoTime);
+        updateWrapper.eq(Job::getId, jobId);
+        super.update(updateWrapper);
     }
 
     @Override
@@ -99,6 +103,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
         Job updateJob = new Job();
         updateJob.setId(Job.getId());
         updateJob.setEnable(JobConstant.JOB_TASK_STATE_ENABLED);
+        updateJob.setVersion(Job.getVersion());
         boolean update = super.updateById(updateJob);
         // 添加到任务中
         try {
@@ -126,6 +131,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
         Job updateJob = new Job();
         updateJob.setId(Job.getId());
         updateJob.setEnable(JobConstant.JOB_TASK_STATE_DISABLED);
+        updateJob.setVersion(Job.getVersion());
         boolean update = super.updateById(updateJob);
         // 从任务中移除
         JobScheduler.deleteJob(String.valueOf(Job.getId()), Job.getTaskGroup());

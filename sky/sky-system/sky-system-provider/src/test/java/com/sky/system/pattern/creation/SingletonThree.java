@@ -3,7 +3,7 @@ package com.sky.system.pattern.creation;
 /**
  * @date 2020-12-19 019 16:35
  */
-public class SingletonThree implements SingletonInterFace {
+public class SingletonThree {
     private volatile static SingletonThree instance;
 
     private SingletonThree() {
@@ -20,8 +20,4 @@ public class SingletonThree implements SingletonInterFace {
         return instance;
     }
 
-    @Override
-    public SingletonInterFace newInstance() {
-        return getInstance();
-    }
 }

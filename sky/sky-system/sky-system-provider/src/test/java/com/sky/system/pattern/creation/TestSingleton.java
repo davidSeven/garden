@@ -14,14 +14,17 @@ public class TestSingleton {
 //        testThread(SingletonThree.getInstance());
 //        testThread(SingletonFour.getInstance());
 //        testThread(SingletonFives.INSTANCE);
-    }
 
-    public void testThread(Class<? extends SingletonInterFace> singletonInterFace) {
-        System.out.println("--------------------");
-        SingletonThread[] threads = new SingletonThread[10];
+        Thread[] threads = new Thread[10];
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new SingletonThread(singletonInterFace);
-            threads[i].run();
+            threads[i] = new SingletonThread();
+            threads[i].start();
+        }
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
