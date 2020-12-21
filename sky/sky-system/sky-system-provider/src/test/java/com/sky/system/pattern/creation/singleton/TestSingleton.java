@@ -1,4 +1,4 @@
-package com.sky.system.pattern.creation;
+package com.sky.system.pattern.creation.singleton;
 
 import org.junit.Test;
 
