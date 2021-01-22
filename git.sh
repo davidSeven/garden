@@ -58,6 +58,9 @@ usage() {
     pause
 }
 
+# set upstream to
+# git branch --set-upstream-to=origin/<remote_branch> your_branch
+
 echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 echo "current: $0"
 echo "params1: $1"
@@ -67,7 +70,8 @@ echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 if [ $2 != '' ] ; then
   branch=$2
 else
-  branch="master"
+  # branch="master"
+  branch=`git rev-parse --abbrev-ref HEAD`
 fi
 
 echo "branch:${branch}"
