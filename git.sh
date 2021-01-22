@@ -71,7 +71,7 @@ echo "params1: $1"
 echo "params*: $*"
 echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 
-if [ !$2 ] ; then
+if [ $2 != "" ] ; then
   branch=$2
 else
   # branch="master"
