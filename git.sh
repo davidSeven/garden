@@ -4,6 +4,9 @@
 # git reset --hard commitId
 # git push --force
 push() {
+
+    echo "branch:$*"
+
     old_un=`git config user.name`
     old_ue=`git config user.email`
 
@@ -47,4 +50,23 @@ function pause(){
         fi
 }
 
-$1
+# 使用说明，用来提示输入参数
+usage() {
+    echo "Usage: sh shell.sh [push]"
+    pause
+}
+
+echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+echo "current: $0"
+echo "params1: $1"
+echo "params*: $*"
+echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+
+case "$1" in
+  "push")
+    push
+    ;;
+  *)
+    usage
+    ;;
+esac
