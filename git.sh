@@ -71,11 +71,11 @@ echo "params1: $1"
 echo "params*: $*"
 echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 
-if [ $2 != "" ] ; then
-  branch=$2
-else
+if [ !$2 ] ; then
   # branch="master"
   branch=`git rev-parse --abbrev-ref HEAD`
+else
+  branch=$2
 fi
 
 echo "branch:${branch}"
