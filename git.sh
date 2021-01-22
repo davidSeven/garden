@@ -1,11 +1,13 @@
 #!/bin/sh
 
+branch=""
+
 # git log
 # git reset --hard commitId
 # git push --force
 push() {
 
-    echo "branch:$*"
+    echo "branch:${branch}"
 
     old_un=`git config user.name`
     old_ue=`git config user.email`
@@ -27,8 +29,8 @@ push() {
     echo "do git commit -a -m 'add'"
     git commit -a -m 'add'
 
-    echo "do git push origin master"
-    git push origin master
+    echo "do git push origin ${branch}"
+    git push origin $branch
 
     echo "switch..."
 
@@ -61,6 +63,14 @@ echo "current: $0"
 echo "params1: $1"
 echo "params*: $*"
 echo "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+
+if [ $2 != '' ] ; then
+  branch=$2
+else
+  branch="master"
+fi
+
+echo "branch:${branch}"
 
 case "$1" in
   "push")
