@@ -58,6 +58,10 @@ usage() {
     pause
 }
 
+# 合并分支
+# git merge <source_branch>
+# git push
+
 # set upstream to
 # git branch --set-upstream-to=origin/<remote_branch> your_branch
 
