@@ -1,7 +1,8 @@
 #!/bin/sh
 
+# git push --force
 git filter-branch --env-filter '
-CORRECT_NAME="小小小程序员"
+CORRECT_NAME="xxxcxy"
 CORRECT_EMAIL="yy_z3em@163.com"
 export GIT_COMMITTER_NAME="$CORRECT_NAME"
 export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
