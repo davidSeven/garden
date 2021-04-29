@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- *
+ * 验证码工具类
  */
 public final class VerifyCodeUtils {
 
