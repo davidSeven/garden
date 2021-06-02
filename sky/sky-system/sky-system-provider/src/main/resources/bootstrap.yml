@@ -52,6 +52,23 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  shardingsphere:
+    sharding:
+      default-database-strategy:
+        inline:
+          sharding-column: user_id
+          algorithm-expression: t_order_${user_id % 2 + 1}
+      broadcast-tables: t_user
+      binding-tables: t_order
+
+    datasource:
+      names: ds0
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/ds0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: root
 management:
   endpoints:
     web:
