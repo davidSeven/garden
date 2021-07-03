@@ -69,6 +69,19 @@ spring:
         jdbc-url: jdbc:mysql://localhost:3306/ds0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
         username: root
         password: root
+
+    shadow:
+      sharding-rule:
+        t_user:
+          actualDataNodes: t_user${0..1}
+          tableStrategy:
+            inline:
+              shardingColumn: user_id
+              algorithmExpression: t_order${order_id % 2}
+          key-generator:
+            column:
+            type:
+
 management:
   endpoints:
     web:
