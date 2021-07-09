@@ -68,7 +68,7 @@
         <dozer.version>5.5.1</dozer.version>
         <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
         <javaee.api.version>7.0</javaee.api.version>
-        <mysql.version>5.1.49</mysql.version>
+        <mysql.version>8.0.19</mysql.version>
         <jackson-databind.version>2.11.0</jackson-databind.version>
     </properties>
 

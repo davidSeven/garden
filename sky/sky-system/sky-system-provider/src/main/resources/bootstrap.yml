@@ -54,33 +54,60 @@ spring:
       max-request-size: 100MB
   shardingsphere:
     sharding:
+      # 未配置分片规则的表将通过默认数据源定位
+      default-data-source-name: ds0
+      # 默认数据库分库策略
       default-database-strategy:
         inline:
-          sharding-column: user_id
-          algorithm-expression: t_order_${user_id % 2 + 1}
-      broadcast-tables: t_user
-      binding-tables: t_order
-
+          # 分片列名称
+          sharding-column: id
+          # 分片算法行表达式，需符合groovy语法
+          algorithm-expression: ds0
+      tables:
+        # 用户表分片策略
+        sys_user:
+          # 基于ds0数据源分表策略
+          actual-data-nodes: ds0.sys_user$->{0..1}
+          # 分表策略
+          table-strategy:
+            standard:
+              sharding-column: id
+              # 精确分片算法类名称，用于=和IN。该类需实现PreciseShardingAlgorithm接口并提供无参数的构造器
+              precise-algorithm-class-name: com.sky.system.config.PreciseModuloTableShardingAlgorithm
+              # 范围分片算法类名称，用于BETWEEN，可选。该类需实现RangeShardingAlgorithm接口并提供无参数的构造器
+              range-algorithm-class-name: com.sky.system.config.RangeModuloTableShardingAlgorithm
+          # 分库策略
+          database-strategy:
+            inline:
+              sharding-column: id
+              # 默认使用ds0数据源
+              algorithm-expression: ds0
+      props:
+        sql.show: true
     datasource:
       names: ds0
       ds0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/ds0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
-        username: root
-        password: root
-
-    shadow:
-      sharding-rule:
-        t_user:
-          actualDataNodes: t_user${0..1}
-          tableStrategy:
-            inline:
-              shardingColumn: user_id
-              algorithmExpression: t_order${order_id % 2}
-          key-generator:
-            column:
-            type:
+        jdbc-url: jdbc:mysql://localhost:3306/sky?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+        username: sky
+        password: 123456
+        # hikari:
+        # 连接池中允许的最大连接数
+        maximum-pool-size: 20
+        # 连接池中允许的最小连接数
+        minimum-idle: 3
+        # 一个连接idle状态的最大时长（毫秒），超时则被释放（retired）
+        idle-timeout: 600000
+        # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired）
+        max-lifetime: 1800000
+        # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException
+        connection-timeout: 30000
+        # 数据库连接测试语句
+        connection-test-query: SELECT 1
+        # 连接池名字
+        pool-name: ${spring.application.name}-CP
+        leakDetectionThreshold: 2000
 
 management:
   endpoints:
