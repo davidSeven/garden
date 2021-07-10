@@ -118,8 +118,13 @@ public class RedisAutoConfiguration {
         int port = redisProperties.getPort();
         String password = redisProperties.getPassword();
         Config config = new Config();
+        config.setNettyThreads(8);
         SingleServerConfig serverConfig = config.useSingleServer()
                 .setAddress("redis://" + host + ":" + port);
+        // 最小连接数
+        serverConfig.setConnectionMinimumIdleSize(4);
+        serverConfig.setConnectionPoolSize(32);
+        serverConfig.setDatabase(redisProperties.getDatabase());
         if (StringUtils.isNotBlank(password)) {
             serverConfig.setPassword(password);
         }

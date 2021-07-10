@@ -2,6 +2,7 @@ package com.sky.framework.api.model;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import org.springframework.data.annotation.Transient;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  */
 public class BaseModel<T extends Model<T>> extends Model<T> {
 
+    @Transient
     @TableId(type = IdType.AUTO)
     private Long id;
 

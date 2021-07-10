@@ -36,4 +36,7 @@ public class UserDto {
 
     @ApiModelProperty(value = "登录时间")
     private Date loginDate;
+
+    @ApiModelProperty(value = "版本号")
+    private int version;
 }
