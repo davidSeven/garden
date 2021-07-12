@@ -37,7 +37,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         // 1. 获取token
         String authorization = request.getHeaders().getFirst("Authorization");
-        String ip = request.getHeaders().getFirst("X-Access-IP");
+        String ip = request.getHeaders().getFirst("Gateway-X-Access-IP");
 
         logger.info("当前请求的url:{}, method:{}, token:{}, ip:{}", request.getURI().getPath(), request.getMethodValue(), authorization, ip);
 

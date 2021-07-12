@@ -25,13 +25,11 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
         ServerHttpRequest request = exchange.getRequest();
         String ipAddress = getIpAddress(request);
         logger.info("当前请求的ip:{}", ipAddress);
-
         ServerHttpRequest host = exchange.getRequest().mutate()
-                .header("X-Access-IP", ipAddress)
+                .header("Gateway-X-Access-IP", ipAddress)
                 .build();
         ServerWebExchange build = exchange.mutate().request(host).build();
 
@@ -39,7 +37,6 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
     }
 
     /**
-     *  
      * 获取IP地址
      *
      * @param request request

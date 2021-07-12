@@ -28,10 +28,10 @@ public class BaseModel<T extends Model<T>> extends Model<T> {
     private Date updateDate;
 
     @Version
-    private int version;
+    private Integer version;
 
     @TableLogic(value = "0", delval = "1")
-    private int deleted;
+    private Integer deleted;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String traceId;
@@ -78,19 +78,19 @@ public class BaseModel<T extends Model<T>> extends Model<T> {
         this.updateDate = updateDate;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
-    public int getDeleted() {
+    public Integer getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(int deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 
