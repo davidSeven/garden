@@ -17,6 +17,7 @@
         <module>sky-generator</module>
         <module>sky-job</module>
         <module>sky-system</module>
+        <module>sky-oauth</module>
     </modules>
 
     <parent>
