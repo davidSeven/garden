@@ -1,6 +1,12 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   profiles:
     active: local
+  application:
+    name: sky-oauth
+
+management:
+  security:
+    enabled : false

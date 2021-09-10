@@ -2,6 +2,8 @@ package com.test;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.UUID;
+
 /**
  * @author zhangyuyuan
  * @date 2021-07-29 11:25
@@ -12,6 +14,10 @@ public class TestBCryptPasswordEncoder {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        System.out.println(passwordEncoder.encode("123456"));
+        String s = UUID.randomUUID().toString().replaceAll("-", "");
+
+        System.out.println(s);
+
+        System.out.println(passwordEncoder.encode(s));
     }
 }

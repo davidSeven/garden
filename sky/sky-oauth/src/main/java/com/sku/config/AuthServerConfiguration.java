@@ -28,6 +28,7 @@ public class AuthServerConfiguration extends AuthorizationServerConfigurerAdapte
 
     @Autowired
     protected TokenStore tokenStore;
+    //密码模式才需要配置,认证管理器
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -45,35 +46,51 @@ public class AuthServerConfiguration extends AuthorizationServerConfigurerAdapte
 
         defaultTokenServices.setTokenStore(tokenStore);
         defaultTokenServices.setAccessTokenValiditySeconds(300);
-        defaultTokenServices.setRefreshTokenValiditySeconds(300);
+        defaultTokenServices.setRefreshTokenValiditySeconds(1500);
         return defaultTokenServices;
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("permitAll()")
-                .allowFormAuthenticationForClients();
+        security.tokenKeyAccess("permitAll()") ///oauth/token_key公开
+                .checkTokenAccess("permitAll()") ///oauth/check_token公开
+                .allowFormAuthenticationForClients(); //允许表单认证
     }
 
+    // 配置客户端
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
+                // client的id和密码
                 .withClient("client1")
                 .secret(passwordEncoder.encode("123456"))
+
+                // 给client一个id,这个在client的配置里要用的
                 .resourceIds("resource1")
+
+                // 允许的申请token的方式,测试用例在test项目里都有.
+                // authorization_code授权码模式,这个是标准模式
+                // implicit简单模式,这个主要是给无后台的纯前端项目用的
+                // password密码模式,直接拿用户的账号密码授权,不安全
+                // client_credentials客户端模式,用clientid和密码授权,和用户无关的授权方式
+                // refresh_token使用有效的refresh_token去重新生成一个token,之前的会失效
                 .authorizedGrantTypes("password", "authorization_code", "client_credentials", "implicit", "refresh_token")
+
+                // 授权的范围,每个resource会设置自己的范围.
                 .scopes("scope1")
+
+                // 这个是设置要不要弹出确认授权页面的.
                 .autoApprove(true)
-                .authorities("admin")
+
+                // 这个相当于是client的域名,重定向给code的时候会跳转这个域名
                 .redirectUris("http://www.baidu.com");
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.authenticationManager(authenticationManager)
-                .authorizationCodeServices(new InMemoryAuthorizationCodeServices())
-                .tokenServices(tokenServices())
+        endpoints.authenticationManager(authenticationManager) //认证管理器
+                .authorizationCodeServices(new InMemoryAuthorizationCodeServices()) //授权码管理
+                .tokenServices(tokenServices()) //token管理
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 

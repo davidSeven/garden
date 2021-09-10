@@ -18,6 +18,7 @@
         <module>sky-job</module>
         <module>sky-system</module>
         <module>sky-oauth</module>
+        <module>sky-oauth-resource</module>
     </modules>
 
     <parent>
