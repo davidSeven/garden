@@ -1,0 +1,12 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: sky-oauth-resource
+
+management:
+  security:
+    enabled : false

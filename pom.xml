@@ -17,6 +17,7 @@
         <module>springboot206</module>
         <module>springboot216</module>
         <module>sky</module>
+        <module>example</module>
     </modules>
 
     <properties>
