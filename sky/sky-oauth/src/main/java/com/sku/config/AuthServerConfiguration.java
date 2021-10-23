@@ -91,7 +91,7 @@ public class AuthServerConfiguration extends AuthorizationServerConfigurerAdapte
         endpoints.authenticationManager(authenticationManager) //认证管理器
                 .authorizationCodeServices(new InMemoryAuthorizationCodeServices()) //授权码管理
                 .tokenServices(tokenServices()) //token管理
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
 }
