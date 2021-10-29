@@ -14,9 +14,10 @@
 
     <modules>
         <module>example-mybatis</module>
-        <module>example-zookeeper</module>
         <module>example-netty</module>
+        <module>example-spring</module>
         <module>example-util</module>
+        <module>example-zookeeper</module>
     </modules>
 
     <properties>
@@ -32,6 +33,9 @@
         <fastjson.version>1.2.78</fastjson.version>
         <netty.version>5.0.0.Alpha2</netty.version>
         <example.version>1.0-SNAPSHOT</example.version>
+        <spring.version>5.3.10</spring.version>
+        <aspectj.version>1.9.5</aspectj.version>
+        <apache.common.version>2.10.0</apache.common.version>
     </properties>
 
     <dependencyManagement>
@@ -88,6 +92,30 @@
                 <groupId>com.stream</groupId>
                 <artifactId>example-util</artifactId>
                 <version>${example.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${apache.common.version}</version>
             </dependency>
 
         </dependencies>
