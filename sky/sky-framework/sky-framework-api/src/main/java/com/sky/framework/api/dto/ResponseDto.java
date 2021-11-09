@@ -46,6 +46,15 @@ public class ResponseDto<T> implements Serializable {
     /**
      * 构造器
      *
+     * @param data 业务数据
+     */
+    public ResponseDto(T data) {
+        this.data = data;
+    }
+
+    /**
+     * 构造器
+     *
      * @param appCode 返回码
      */
     public ResponseDto(AppCode appCode) {
