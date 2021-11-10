@@ -10,6 +10,7 @@ import com.sky.system.service.SerialNumberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Api(tags = "流水号信息")
-// @ApiSort(100)
+@ApiSort(100)
 @RestController
 public class SerialNumberController implements SerialNumberRemoteService {
 
@@ -28,7 +29,8 @@ public class SerialNumberController implements SerialNumberRemoteService {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long")
     @Override
     public ResponseDto<SerialNumber> get(Long id) {
-        return new ResponseDto<>(this.serialNumberService.getById(id)).ok();
+        SerialNumber serialNumber = this.serialNumberService.getById(id);
+        return new ResponseDto<>(serialNumber).ok();
     }
 
     @ApiOperation(value = "保存", position = 2)

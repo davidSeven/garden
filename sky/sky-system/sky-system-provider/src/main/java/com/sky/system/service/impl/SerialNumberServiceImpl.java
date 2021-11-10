@@ -1,9 +1,13 @@
 package com.sky.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.framework.api.exception.CommonException;
+import com.sky.system.api.SystemInterface;
 import com.sky.system.api.dto.SerialNumberQueryDto;
 import com.sky.system.api.enums.SerialNumberTypeEnum;
 import com.sky.system.api.model.SerialNumber;
@@ -16,8 +20,15 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +38,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, SerialNumber> implements SerialNumberService {
+// @CacheConfig(cacheManager = "defaultCacheManager")
+public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, SerialNumber> implements SerialNumberService, KeyGenerator {
 
     private static final ConcurrentMap<String, MessageFormat> MSG_FORMAT_MAP = new ConcurrentHashMap<>();
 
@@ -35,10 +47,32 @@ public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, Serial
     private String applicationName;
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private RedisTemplate<String, Object> stringObjectRedisTemplate;
 
     @Override
     public IPage<SerialNumber> page(SerialNumberQueryDto dto) {
-        return null;
+        IPage<SerialNumber> iPage = new Page<>(dto.getPageNum(), dto.getPageSize());
+        LambdaQueryWrapper<SerialNumber> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(dto.getCode())) {
+            queryWrapper.eq(SerialNumber::getCode, dto.getCode());
+        }
+        if (null == dto.getType()) {
+            queryWrapper.eq(SerialNumber::getType, dto.getType());
+        }
+        return super.page(iPage, queryWrapper);
+    }
+
+    @Cacheable(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#id", condition = "#id != null")
+    @Override
+    public SerialNumber getById(Serializable id) {
+        return super.getById(id);
+    }
+
+    @CacheEvict(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#entity.code", condition = "#entity.code != null")
+    @Override
+    public boolean updateById(SerialNumber entity) {
+        return super.updateById(entity);
     }
 
     @Override
@@ -175,5 +209,12 @@ public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, Serial
             return builder.toString();
         }
         return str;
+    }
+
+    @Override
+    @NonNull
+    public Object generate(@NonNull Object target, @NonNull Method method, @NonNull Object... params) {
+
+        return null;
     }
 }

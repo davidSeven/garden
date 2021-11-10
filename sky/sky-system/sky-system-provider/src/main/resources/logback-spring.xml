@@ -165,9 +165,9 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="local">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
@@ -182,9 +182,9 @@
     </springProfile>
 
     <springProfile name="dev">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
@@ -200,14 +200,14 @@
 
     <!--生产环境:输出到文件-->
     <springProfile name="prod">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
 
-        <root level="INFO">
+        <root level="ERROR">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>
             <appender-ref ref="INFO_FILE"/>
