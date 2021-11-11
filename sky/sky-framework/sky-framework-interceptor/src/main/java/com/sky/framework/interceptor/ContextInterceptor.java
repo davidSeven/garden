@@ -43,19 +43,19 @@ public class ContextInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         String uri = request.getRequestURI();
-        logger.info(uri + " Start");
+        // logger.info(uri + " Start");
         // Reset pre-context
         RequestContext context = RequestContext.getCurrentContext();
         context.reset();
         // requestId
-        String requestId = MDC.get("traceId");
+        String requestId = MDC.get("X-requestId");
         if (StringUtils.isBlank(requestId)) {
             requestId = request.getHeader(RequestContext.REQUEST_ID);
         }
         if (StringUtils.isBlank(requestId)) {
             requestId = UUIDUtil.uuid();
         }
-        MDC.put("TID", requestId);
+        MDC.put("X-requestId", requestId);
         // requestStartTime
         Timestamp requestStartTime;
         String startTime = request.getHeader(RequestContext.REQUEST_START_TIME);
@@ -95,7 +95,7 @@ public class ContextInterceptor implements HandlerInterceptor {
         context.setToken(token);
         context.setClientIpAddress(clientIpAddress);
         context.setOriginApp(originApp);
-        logger.info("IP:{},UserCode:{}", context.getClientIpAddress(), context.getUserCode());
+        // logger.info("IP:{},UserCode:{}", context.getClientIpAddress(), context.getUserCode());
 
         // 禁用生产的swagger
         if (profile.equalsIgnoreCase("production")) {
@@ -129,7 +129,7 @@ public class ContextInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
         RequestContext.getCurrentContext().close();
-        logger.info(request.getRequestURI() + " End");
+        // logger.info(request.getRequestURI() + " End");
     }
 
     /**

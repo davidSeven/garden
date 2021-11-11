@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,7 +60,13 @@ public class ContextFilter implements Filter {
                         .replaceAll("\n", "")
                         .replaceAll("\r", "");
             }
-            builder.append("{\"requestBody\":").append(requestBody).append(",");
+
+            String requestHeader = requestHeader(requestWrapper);
+            String responseHeader = responseHeader(responseWrapper);
+
+            builder.append("{\"requestHeader\":").append(requestHeader).append(",");
+            builder.append("\"requestBody\":").append(requestBody).append(",");
+            builder.append("\"responseHeader\":").append(responseHeader).append(",");
             builder.append("\"responseBody\":").append(responseBody).append("}");
             logger.info(builder.toString());
         }
@@ -67,6 +76,18 @@ public class ContextFilter implements Filter {
         if (logger.isInfoEnabled()) {
             logger.info(">>>请求路径：{}[{}]，开始时间：{}，结束时间：{}，总耗时：{}", uri, method, startTime, endTime, times);
         }
+    }
+
+    private String requestHeader(ContextHttpServletRequestWrapper requestWrapper) {
+        Map<String, String> headerMap = new HashMap<>();
+        Enumeration<String> headerNames = requestWrapper.getHeaderNames();
+        if (null != headerNames) {
+            while (headerNames.hasMoreElements()) {
+                String key = headerNames.nextElement();
+                headerMap.put(key, requestWrapper.getHeader(key));
+            }
+        }
+        return JSON.toJSONString(headerMap);
     }
 
     private String requestParam(ContextHttpServletRequestWrapper requestWrapper) {
@@ -94,6 +115,17 @@ public class ContextFilter implements Filter {
             }
         }
         return body;
+    }
+
+    private String responseHeader(ContextHttpServletResponseWrapper responseWrapper) {
+        Map<String, String> headerMap = new HashMap<>();
+        Collection<String> headerNames = responseWrapper.getHeaderNames();
+        if (null != headerNames) {
+            for (String headerName : headerNames) {
+                headerMap.put(headerName, responseWrapper.getHeader(headerName));
+            }
+        }
+        return JSON.toJSONString(headerMap);
     }
 
     private String responseParam(ContextHttpServletResponseWrapper responseWrapper) {

@@ -172,6 +172,8 @@
             <appender-ref ref="SQL"/>
         </logger>
 
+        <logger name="com.netflix" level="ERROR"/>
+
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>
@@ -188,6 +190,8 @@
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
+
+        <logger name="com.netflix" level="ERROR"/>
 
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>

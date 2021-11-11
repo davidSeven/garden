@@ -10,13 +10,18 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
+        <module>sky-account</module>
+        <module>sky-delivery</module>
         <module>sky-eureka</module>
         <module>sky-file</module>
         <module>sky-framework</module>
         <module>sky-gateway</module>
         <module>sky-generator</module>
+        <module>sky-inventory</module>
         <module>sky-job</module>
+        <module>sky-receiver</module>
         <module>sky-system</module>
+
         <module>sky-oauth</module>
         <module>sky-oauth-resource</module>
     </modules>
