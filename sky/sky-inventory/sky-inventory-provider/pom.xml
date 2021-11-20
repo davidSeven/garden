@@ -40,6 +40,12 @@
         <dependency>
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

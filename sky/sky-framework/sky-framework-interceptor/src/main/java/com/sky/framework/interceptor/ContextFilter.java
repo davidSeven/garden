@@ -64,10 +64,12 @@ public class ContextFilter implements Filter {
             String requestHeader = requestHeader(requestWrapper);
             String responseHeader = responseHeader(responseWrapper);
 
-            builder.append("{\"requestHeader\":").append(requestHeader).append(",");
+            builder.append("{");
+            // builder.append("\"requestHeader\":").append(requestHeader).append(",");
             builder.append("\"requestBody\":").append(requestBody).append(",");
-            builder.append("\"responseHeader\":").append(responseHeader).append(",");
-            builder.append("\"responseBody\":").append(responseBody).append("}");
+            // builder.append("\"responseHeader\":").append(responseHeader).append(",");
+            builder.append("\"responseBody\":").append(responseBody);
+            builder.append("}");
             logger.info(builder.toString());
         }
 
