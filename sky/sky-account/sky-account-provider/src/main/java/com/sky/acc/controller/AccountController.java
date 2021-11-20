@@ -25,7 +25,7 @@ public class AccountController implements AccountRemoteService {
 
     @Override
     public ResponseDto<Boolean> in(AccountDto dto) {
-        return null;
+        return new ResponseDto<>(this.accountLockService.in(dto)).ok();
     }
 
     @Override

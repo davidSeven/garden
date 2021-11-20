@@ -3,9 +3,10 @@ package com.sky.acc.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Data
@@ -22,7 +23,8 @@ public class AccountDto {
     @ApiModelProperty(value = "币种", required = true)
     private String currency;
 
-    @Size(min = 1)
+    @Digits(integer = 20, fraction = 4, message = "金额格式不正确")
+    @DecimalMin(value = "1.0000", message = "金额不能小于1")
     @NotNull(message = "金额不能为空")
     @ApiModelProperty(value = "金额", required = true)
     private BigDecimal amount;
