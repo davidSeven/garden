@@ -37,4 +37,61 @@ public class InventoryWrapperServiceImpl implements InventoryWrapperService {
         }
         return true;
     }
+
+    @Override
+    public boolean out(List<InventoryStatementDto> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        for (InventoryStatementDto inventoryStatementDto : list) {
+            try {
+                this.inventoryLockService.out(inventoryStatementDto);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                if (e instanceof CommonException) {
+                    throw e;
+                }
+                throw new CommonException(500, "库存出库失败，" + e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean occ(List<InventoryStatementDto> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        for (InventoryStatementDto inventoryStatementDto : list) {
+            try {
+                this.inventoryLockService.occ(inventoryStatementDto);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                if (e instanceof CommonException) {
+                    throw e;
+                }
+                throw new CommonException(500, "库存占用失败，" + e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean unOcc(List<InventoryStatementDto> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        for (InventoryStatementDto inventoryStatementDto : list) {
+            try {
+                this.inventoryLockService.unOcc(inventoryStatementDto);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                if (e instanceof CommonException) {
+                    throw e;
+                }
+                throw new CommonException(500, "库存取消占用失败，" + e.getMessage());
+            }
+        }
+        return true;
+    }
 }

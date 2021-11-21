@@ -14,9 +14,9 @@ public interface InventoryService extends IService<Inventory> {
 
     boolean in(List<InventoryStatementDto> list);
 
-    boolean out(Inventory inventory);
+    void out(InventoryStatementDto inventoryStatementDto);
 
-    boolean occ(Inventory inventory);
+    void occ(InventoryStatementDto inventoryStatementDto);
 
-    boolean unOcc(Inventory inventory);
+    void unOcc(InventoryStatementDto inventoryStatementDto);
 }

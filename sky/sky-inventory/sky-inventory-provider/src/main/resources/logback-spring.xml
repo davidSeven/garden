@@ -167,7 +167,7 @@
     <springProfile name="local">
         <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
@@ -186,7 +186,7 @@
     <springProfile name="dev">
         <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
@@ -206,12 +206,12 @@
     <springProfile name="prod">
         <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
 
-        <root level="ERROR">
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>
             <appender-ref ref="INFO_FILE"/>

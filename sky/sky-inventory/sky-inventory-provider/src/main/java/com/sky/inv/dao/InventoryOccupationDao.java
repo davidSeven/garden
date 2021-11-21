@@ -1,7 +1,7 @@
 package com.sky.inv.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sky.framework.dao.mapper.MyBaseMapper;
 import com.sky.inv.api.model.InventoryOccupation;
 
-public interface InventoryOccupationDao extends BaseMapper<InventoryOccupation> {
+public interface InventoryOccupationDao extends MyBaseMapper<InventoryOccupation> {
 }
