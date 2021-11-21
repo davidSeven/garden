@@ -25,6 +25,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -63,11 +64,14 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
                 Inventory inventory = this.getOne(inventoryLambdaQueryWrapper);
                 if (null == inventory) {
                     Inventory insertInventory = BeanHelpUtil.convertDto(inventoryStatementDto, Inventory.class);
+                    insertInventory.setAvailableQuantity(insertInventory.getQuantity());
+                    insertInventory.setOccupationQuantity(BigDecimal.ZERO);
                     this.save(insertInventory);
                 } else {
                     Inventory updateInventory = new Inventory();
                     updateInventory.setId(inventory.getId());
                     updateInventory.setQuantity(inventory.getQuantity().add(inventoryStatementDto.getQuantity()));
+                    updateInventory.setAvailableQuantity(inventory.getAvailableQuantity().add(inventoryStatementDto.getQuantity()));
                     this.updateById(updateInventory);
                 }
                 // 新增流水
@@ -126,6 +130,16 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
             InventoryOccupation inventoryOccupation = this.inventoryOccupationService.getOne(inventoryOccupationLambdaQueryWrapper);
             if (null != inventoryOccupation) {
                 count = 1;
+                // 库存库存减少
+                Inventory inventory = this.getById(inventoryOccupation.getInventoryId());
+                if (null == inventory) {
+                    throw new CommonException(500, "出库失败，无库存信息");
+                }
+                Inventory updateInventory = new Inventory();
+                updateInventory.setId(inventory.getId());
+                updateInventory.setQuantity(inventory.getQuantity().subtract(inventoryOccupation.getQuantity()));
+                updateInventory.setOccupationQuantity(inventory.getOccupationQuantity().subtract(inventoryOccupation.getQuantity()));
+                this.updateById(updateInventory);
                 // 删除占用
                 this.inventoryOccupationService.physicalDeleteById(inventoryOccupation.getId());
                 // 新增流水
@@ -168,18 +182,21 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
                 inventoryLambdaQueryWrapper.eq(Inventory::getBatchNo, inventoryStatementDto.getBatchNo());
                 Inventory inventory = this.getOne(inventoryLambdaQueryWrapper);
                 if (null == inventory) {
-                    throw new CommonException(500, "占用失败，[" + inventoryStatementDto.getProductCode() + "]没有库存信息");
+                    throw new CommonException(500, "占用失败，[" + inventoryStatementDto.getProductCode() + "]无库存信息");
                 }
-                if (inventory.getQuantity().compareTo(inventoryStatementDto.getQuantity()) < 0) {
+                if (inventory.getAvailableQuantity().compareTo(inventoryStatementDto.getQuantity()) < 0) {
                     throw new CommonException(500, "占用失败，[" + inventoryStatementDto.getProductCode() + "]库存数量不足" + inventoryStatementDto.getQuantity());
                 }
+                // 修改占用数量
                 Inventory updateInventory = new Inventory();
                 updateInventory.setId(inventory.getId());
-                updateInventory.setQuantity(inventory.getQuantity().subtract(inventoryStatementDto.getQuantity()));
+                updateInventory.setOccupationQuantity(inventory.getOccupationQuantity().add(inventoryStatementDto.getQuantity()));
+                updateInventory.setAvailableQuantity(inventory.getAvailableQuantity().subtract(inventoryStatementDto.getQuantity()));
                 this.updateById(updateInventory);
-                // 新增占用
+                // 新增占用记录
                 InventoryOccupation inventoryOccupation = BeanHelpUtil.convertDto(inventoryStatementDto, InventoryOccupation.class);
                 inventoryOccupation.setBatchNo(inventory.getBatchNo());
+                inventoryOccupation.setInventoryId(inventory.getId());
                 this.inventoryOccupationService.save(inventoryOccupation);
             }
         } catch (Exception e) {
@@ -209,21 +226,15 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
             if (null != inventoryOccupation) {
                 count = 1;
                 // 查询库存
-                LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = Wrappers.lambdaQuery();
-                inventoryLambdaQueryWrapper.eq(Inventory::getCustomerCode, inventoryOccupation.getCustomerCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseCode, inventoryOccupation.getWarehouseCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getProductCode, inventoryOccupation.getProductCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getBatchNo, inventoryOccupation.getBatchNo());
-                Inventory inventory = this.getOne(inventoryLambdaQueryWrapper);
+                Inventory inventory = this.getById(inventoryOccupation.getInventoryId());
                 if (null == inventory) {
-                    Inventory insertInventory = BeanHelpUtil.convertDto(inventoryOccupation, Inventory.class);
-                    this.save(insertInventory);
-                } else {
-                    Inventory updateInventory = new Inventory();
-                    updateInventory.setId(inventory.getId());
-                    updateInventory.setQuantity(inventory.getQuantity().add(inventoryStatementDto.getQuantity()));
-                    this.updateById(updateInventory);
+                    throw new CommonException(500, "取消占用失败，无库存信息");
                 }
+                Inventory updateInventory = new Inventory();
+                updateInventory.setId(inventory.getId());
+                updateInventory.setOccupationQuantity(inventory.getOccupationQuantity().subtract(inventoryStatementDto.getQuantity()));
+                updateInventory.setAvailableQuantity(inventory.getAvailableQuantity().add(inventoryStatementDto.getQuantity()));
+                this.updateById(updateInventory);
                 // 删除占用
                 this.inventoryOccupationService.physicalDeleteById(inventoryOccupation.getId());
             }

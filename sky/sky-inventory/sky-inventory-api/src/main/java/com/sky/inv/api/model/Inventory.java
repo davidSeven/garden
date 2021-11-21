@@ -31,4 +31,10 @@ public class Inventory extends BaseModel<Inventory> {
 
     @ApiModelProperty(value = "批次号")
     private String batchNo;
+
+    @ApiModelProperty(value = "可用数量")
+    private BigDecimal availableQuantity;
+
+    @ApiModelProperty(value = "占用数量")
+    private BigDecimal occupationQuantity;
 }

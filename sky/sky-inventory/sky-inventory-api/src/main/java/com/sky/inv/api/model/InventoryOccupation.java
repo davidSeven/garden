@@ -39,4 +39,7 @@ public class InventoryOccupation extends BaseModel<InventoryOccupation> {
 
     @ApiModelProperty(value = "批次号")
     private String batchNo;
+
+    @ApiModelProperty(value = "库存ID")
+    private Long inventoryId;
 }

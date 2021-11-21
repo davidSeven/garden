@@ -213,16 +213,16 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">１</stringProp>
+          <stringProp name="LoopController.loops">10</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">１</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1.增加库存接口" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1.增加库存接口" enabled="false">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -314,11 +314,11 @@
 			&quot;batchNo&quot;: &quot;B00${__RandomString(1,123)}&quot;,&#xd;
 			&quot;customerCode&quot;: &quot;CU001&quot;,&#xd;
 			&quot;invoiceLineNo&quot;: &quot;1&quot;,&#xd;
-			&quot;invoiceNo&quot;: &quot;DEL001000&quot;,&#xd;
+			&quot;invoiceNo&quot;: &quot;DEL00${no}&quot;,&#xd;
 			&quot;invoiceType&quot;: &quot;OUT_ORDER&quot;,&#xd;
-			&quot;productCode&quot;: &quot;P003&quot;,&#xd;
+			&quot;productCode&quot;: &quot;P001&quot;,&#xd;
 			&quot;quantity&quot;: 1,&#xd;
-			&quot;warehouseCode&quot;: &quot;W003&quot;,&#xd;
+			&quot;warehouseCode&quot;: &quot;W001&quot;,&#xd;
 			&quot;warehouseDate&quot;: &quot;2021-11-19&quot;&#xd;
 		}&#xd;
 	]&#xd;
