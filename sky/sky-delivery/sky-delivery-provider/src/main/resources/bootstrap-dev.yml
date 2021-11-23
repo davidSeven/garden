@@ -2,9 +2,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sky?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=true&allowMultiQueries=true&serverTimezone=GMT%2B8
-    username: sky
-    password: 123456
+    url: jdbc:mysql://localhost:3306/garden?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+    username: root
+    password: root
     hikari:
       # 连接池中允许的最大连接数
       maximum-pool-size: 20
@@ -59,9 +59,7 @@ eureka:
   client:
     registry-fetch-interval-seconds: 20
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true
-    fetch-registry: true
+      defaultZone: http://localhost:41578/eureka
 feign:
   hystrix:
     enabled: true

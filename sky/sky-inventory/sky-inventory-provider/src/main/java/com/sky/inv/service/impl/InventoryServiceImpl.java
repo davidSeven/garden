@@ -15,6 +15,7 @@ import com.sky.inv.service.InventoryOccupationService;
 import com.sky.inv.service.InventoryService;
 import com.sky.inv.service.InventoryStatementService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,10 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
     @Transactional
     @Override
     public void in(InventoryStatementDto inventoryStatementDto) {
+        // 行号默认1
+        if (StringUtils.isEmpty(inventoryStatementDto.getInvoiceLineNo())) {
+            inventoryStatementDto.setInvoiceLineNo("1");
+        }
         int count = 0;
         try {
             // 处理接口幂等
@@ -116,6 +121,10 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
     @Transactional
     @Override
     public void out(InventoryStatementDto inventoryStatementDto) {
+        // 行号默认1
+        if (StringUtils.isEmpty(inventoryStatementDto.getInvoiceLineNo())) {
+            inventoryStatementDto.setInvoiceLineNo("1");
+        }
         int count = 0;
         try {
             // 处理接口幂等
@@ -161,6 +170,10 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
     @Transactional
     @Override
     public void occ(InventoryStatementDto inventoryStatementDto) {
+        // 行号默认1
+        if (StringUtils.isEmpty(inventoryStatementDto.getInvoiceLineNo())) {
+            inventoryStatementDto.setInvoiceLineNo("1");
+        }
         int count = 0;
         try {
             // 处理接口幂等
@@ -174,13 +187,33 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
             inventoryOccupationLambdaQueryWrapper.eq(InventoryOccupation::getInvoiceLineNo, inventoryStatementDto.getInvoiceLineNo());
             count = this.inventoryOccupationService.count(inventoryOccupationLambdaQueryWrapper);
             if (count == 0) {
-                // 查询库存
-                LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = Wrappers.lambdaQuery();
-                inventoryLambdaQueryWrapper.eq(Inventory::getCustomerCode, inventoryStatementDto.getCustomerCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseCode, inventoryStatementDto.getWarehouseCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getProductCode, inventoryStatementDto.getProductCode());
-                inventoryLambdaQueryWrapper.eq(Inventory::getBatchNo, inventoryStatementDto.getBatchNo());
-                Inventory inventory = this.getOne(inventoryLambdaQueryWrapper);
+                // 判断批次号是否为空
+                Inventory inventory;
+                if (StringUtils.isEmpty(inventoryStatementDto.getBatchNo())) {
+                    // 查询库存
+                    LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = Wrappers.lambdaQuery();
+                    inventoryLambdaQueryWrapper.eq(Inventory::getCustomerCode, inventoryStatementDto.getCustomerCode());
+                    inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseCode, inventoryStatementDto.getWarehouseCode());
+                    inventoryLambdaQueryWrapper.eq(Inventory::getProductCode, inventoryStatementDto.getProductCode());
+                    // 入库日期升序，最早的在最前面
+                    inventoryLambdaQueryWrapper.orderByAsc(Inventory::getWarehouseDate);
+                    // 库存大于0的
+                    inventoryLambdaQueryWrapper.gt(Inventory::getQuantity, 0);
+                    List<Inventory> inventoryList = this.list(inventoryLambdaQueryWrapper);
+                    if (CollectionUtils.isNotEmpty(inventoryList)) {
+                        inventory = inventoryList.get(0);
+                    } else {
+                        inventory = null;
+                    }
+                } else {
+                    // 查询库存
+                    LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = Wrappers.lambdaQuery();
+                    inventoryLambdaQueryWrapper.eq(Inventory::getCustomerCode, inventoryStatementDto.getCustomerCode());
+                    inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseCode, inventoryStatementDto.getWarehouseCode());
+                    inventoryLambdaQueryWrapper.eq(Inventory::getProductCode, inventoryStatementDto.getProductCode());
+                    inventoryLambdaQueryWrapper.eq(Inventory::getBatchNo, inventoryStatementDto.getBatchNo());
+                    inventory = this.getOne(inventoryLambdaQueryWrapper);
+                }
                 if (null == inventory) {
                     throw new CommonException(500, "占用失败，[" + inventoryStatementDto.getProductCode() + "]无库存信息");
                 }
@@ -211,6 +244,10 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryDao, Inventory> i
     @Transactional
     @Override
     public void unOcc(InventoryStatementDto inventoryStatementDto) {
+        // 行号默认1
+        if (StringUtils.isEmpty(inventoryStatementDto.getInvoiceLineNo())) {
+            inventoryStatementDto.setInvoiceLineNo("1");
+        }
         int count = 0;
         try {
             // 处理接口幂等

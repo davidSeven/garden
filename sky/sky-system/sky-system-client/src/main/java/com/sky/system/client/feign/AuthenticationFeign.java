@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * @date 2020-12-15 015 13:36
  */
-@FeignClient(contextId = "FeignClient.AuthenticationFeign" , name = SystemInterface.SERVICE, fallback = AuthenticationFeign.HystrixClientFallback.class)
+@FeignClient(contextId = "FeignClient.AuthenticationFeign" , name = SystemInterface.SERVICE, fallbackFactory = AuthenticationFeign.HystrixClientFallback.class)
 public interface AuthenticationFeign extends AuthenticationRemoteService {
 
     @Component

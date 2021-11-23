@@ -1,5 +1,5 @@
 server:
-  port: 18082
+  port: 18083
   tomcat:
     basedir: /info/tmp
     max-threads: 500
@@ -13,8 +13,9 @@ spring:
     active: local
   main:
     banner-mode: "off"
+    allow-bean-definition-overriding: true
   application:
-    name: sky-inventory
+    name: sky-delivery
   thymeleaf:
     prefix: classpath:/static/
   jackson:
@@ -52,7 +53,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-
 management:
   endpoints:
     web:

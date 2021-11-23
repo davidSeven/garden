@@ -1,5 +1,6 @@
 package com.sky.inv.api.dto;
 
+import com.sky.inv.api.dto.valid.InventoryStatementDtoGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class InventoryStatementBatchDto {
 
     @Valid
-    @NotNull(message = "集合不能为空")
+    @NotNull(message = "集合不能为空", groups = {InventoryStatementDtoGroup.Default.class})
     @ApiModelProperty(value = "集合")
     private List<InventoryStatementDto> list;
 }
