@@ -32,13 +32,13 @@ public class CallJob implements Job {
     private final JobService jobService;
     private final JobLogService jobLogService;
     private final RedissonClient redissonClient;
-    private final RestTemplate restTemplate;
+    private final RestTemplate jobRestTemplate;
 
     public CallJob() {
         this.jobService = ApplicationUtil.getBeans(JobService.class);
         this.jobLogService = ApplicationUtil.getBeans(JobLogService.class);
         this.redissonClient = ApplicationUtil.getBeans(RedissonClient.class);
-        this.restTemplate = ApplicationUtil.getBean("JobRestTemplate", RestTemplate.class);
+        this.jobRestTemplate = ApplicationUtil.getBean("jobRestTemplate", RestTemplate.class);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class CallJob implements Job {
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.set("Content-Type", "application/json;charset=utf-8");
         HttpEntity<?> httpEntity = new HttpEntity<>("{}", headers);
-        ResponseEntity<ResponseDto<?>> responseEntity = this.restTemplate.exchange(callUrl, hm, httpEntity, new DefaultTargetType<ResponseDto<?>>() {
+        ResponseEntity<ResponseDto<?>> responseEntity = this.jobRestTemplate.exchange(callUrl, hm, httpEntity, new DefaultTargetType<ResponseDto<?>>() {
         }.getClassType());
         ResponseDto<?> resultJson = responseEntity.getBody();
         if (null != resultJson) {
