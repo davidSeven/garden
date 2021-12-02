@@ -3,7 +3,7 @@ package com.sky.del.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sky.del.api.constant.OrderConstant;
+import com.sky.del.api.constant.DeliveryOrderConstant;
 import com.sky.del.api.dto.OrderDeleteDto;
 import com.sky.del.api.dto.OrderDetailDto;
 import com.sky.del.api.dto.OrderDto;
@@ -58,7 +58,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, Order> implements Or
         if (CollectionUtils.isEmpty(detailList)) {
             throw new CommonException(500, "明细不能为空");
         }
-        String orderNo = this.serialNumberClientService.generateNumber(OrderConstant.ORDER_NO);
+        String orderNo = this.serialNumberClientService.generateNumber(DeliveryOrderConstant.DELIVERY_ORDER_NO);
         // 订单信息
         Order order = BeanHelpUtil.convertDto(dto, Order.class);
         order.setOrderNo(orderNo);

@@ -1,0 +1,151 @@
+
+# 指定模块打包
+mvn clean install -pl com.sky:sky-system-provider -am -Dmaven.test.skip=true -Pdev
+
+mvn clean install -pl com.szmsd.oms:oms-business-servicecenter -am -Dmaven.test.skip=true -Pdev
+
+java -Xms1024m -Xmx2048m -Dfile.encoding=utf-8 -jar oms-business-servicecenter-1.0.0.jar --spring.profiles.active=local &
+
+java -Xms1024m -Xmx2048m -jar oms-business-servicecenter-1.0.0.jar --spring.profiles.active=local &
+
+nohup java -Xms1024m -Xmx2048m -jar /u01/www/mk/oms-business-servicecenter-1.0.0.jar --spring.profiles.active=test --server.port=9995 > /dev/null 2>&1 &
+
+# 服务启动
+nohup java -Xms512m -Xmx1024m -XX:+UseG1GC -XX:G1HeapRegionSize=n -XX:MaxGCPauseMillis=m -XX:ParallelGCThreads=n -XX:ConcGCThreads=n -jar $dir$project --spring.profiles.active=test --server.port=9995 >>nohup-oms-business-center.out &
+nohup java -Xms512m -Xmx1024m -jar $dir$project --spring.profiles.active=test --server.port=9995 >>nohup-oms-business-center.out &
+
+# 本地启动环境变量
+-Xms256m -Xmx512m -Dspring.profiles.active=local
+
+
+# sysbench测试mysql独写性能
+# 数据准备
+sysbench /usr/local/share/sysbench/oltp_write_only.lua --table-size=1000000 --tables=10 --threads=32 --db-driver=mysql --mysql-db=sysbench --mysql-host=127.0.0.1 --mysql-user=root --mysql-password=123456 prepare
+# 写
+sysbench /usr/local/share/sysbench/oltp_write_only.lua --table-size=1000000 --tables=10 --threads=32 --db-driver=mysql --mysql-db=sysbench --mysql-host=127.0.0.1 --mysql-user=root --mysql-password=123456 run > test_write.log
+# 清理
+sysbench /usr/local/share/sysbench/oltp_write_only.lua --table-size=1000000 --tables=10 --threads=32 --db-driver=mysql --mysql-db=sysbench --mysql-host=127.0.0.1 --mysql-user=root --mysql-password=123456 cleanup
+
+# 读
+sysbench /usr/local/share/sysbench/oltp_read_only.lua --range_size=100 --table-size=1000000 --tables=10 --threads=32 --db-driver=mysql --mysql-db=sysbench --mysql-host=127.0.0.1 --mysql-user=root --mysql-password=123456 --events=0 --time=120 --rand-type=uniform run > test_read.log
+# 读写
+sysbench /usr/local/share/sysbench/oltp_read_write.lua --range_size=100 --table-size=1000000 --tables=10 --threads=32 --db-driver=mysql --mysql-db=sysbench --mysql-host=127.0.0.1 --mysql-user=root --mysql-password=123456 --events=0 --time=120 --rand-type=uniform run > test_read_write.log
+
+-- 设置时间
+date -s 09/07/19
+date -s 15:44:00
+-- 查询系统时间，格式化
+date "+%Y-%m-%d %H:%M:%S"
+
+
+-- 防火墙
+-- 添加开放的端口
+firewall-cmd --zone=public --add-port=22/tcp --permanent
+-- 重新加载防火墙设置，使设置生效
+firewall-cmd --reload
+-- 查看端口是否生效
+firewall-cmd --zone=public --query-port=22/tcp
+-- 关闭端口
+firewall-cmd --zone=public --remove-port=22/tcp --permanent
+-- 查看所有端口
+firewall-cmd --zone=public --list-ports
+
+#firewalld配置
+systemctl start firewalld
+systemctl enable firewalld
+firewall-cmd --zone=public --add-port=22220-22240/tcp  --permanent &&
+firewall-cmd --zone=public --add-port=5910/tcp  --permanent &&
+firewall-cmd --zone=public --add-port=8485/tcp  --permanent
+systemctl restart firewalld
+
+firewall-cmd --zone=public --add-port=8848/tcp  --permanent &&
+firewall-cmd --zone=public --add-port=27017/tcp  --permanent
+
+-- systemctl 添加服务
+-- 系统的在/usr/lib/systemd/system目录下
+-- 管理添加的在/etc/systemd/system目录下
+systemctl daemon-reload
+
+
+[Unit]
+Description=fdfs_trackerd
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/etc/init.d/fdfs_trackerd start
+ExecReload=
+ExecStop=/etc/init.d/fdfs_trackerd start
+
+[Install]
+WantedBy=multi-user.target
+
+-- 删除目录和子目录下所有jpg文件，但是保留文件夹，命令如下
+find /fastdfs/storage/data/ -name "*.jpg" | xargs rm
+
+-- 查看磁盘占用空间
+df -h
+du -h -x --max-depth=1
+-- 查看文件已删除，进程还活着的进程
+lsof |grep delete
+kill -9 删除对应的进程
+-- 查看指定文件夹磁盘空间
+du -h --max-depth=1 /u01/mysql/mysql5810/
+-- 查看磁盘空间
+df -h
+
+netstat -anp
+iptables -L -n
+netstat -an | grep 11162
+-- 搜索历史
+history | grep xxx
+-- 查看路由
+route
+-- 添加路由
+route add -net 192.168.10.0/24 em1
+
+iptables -A INPUT -p tcp --dport 11162 -j ACCEPT
+iptables -A INPUT -m state --state NEW -p tcp --dport 11172 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 11162 -j ACCEPT
+
+service iptables save
+service iptables restart
+
+-- 添加表分区
+ALTER TABLE erp_request_log PARTITION by RANGE(to_days(request_time))
+(
+  PARTITION p211201 VALUES LESS THAN (to_days('2021-12-01')),
+  PARTITION p220101 VALUES LESS THAN (to_days('2022-01-01')),
+  PARTITION p220201 VALUES LESS THAN (to_days('2022-02-01')),
+  PARTITION p220301 VALUES LESS THAN (to_days('2022-03-01')),
+  PARTITION p220401 VALUES LESS THAN (to_days('2022-04-01')),
+  PARTITION p220501 VALUES LESS THAN (to_days('2022-05-01')),
+  PARTITION p220601 VALUES LESS THAN (to_days('2022-06-01')),
+  PARTITION p220701 VALUES LESS THAN (to_days('2022-07-01')),
+  PARTITION p220801 VALUES LESS THAN (to_days('2022-08-01')),
+  PARTITION p220901 VALUES LESS THAN (to_days('2022-09-01')),
+  PARTITION p221001 VALUES LESS THAN (to_days('2022-10-01')),
+  PARTITION p221101 VALUES LESS THAN (to_days('2022-11-01')),
+  PARTITION p221201 VALUES LESS THAN (to_days('2022-12-01')),
+  PARTITION p230101 VALUES LESS THAN (9223372036854775807)
+);
+
+-- 删除表分区
+ALTER TABLE erp_request_log REMOVE PARTITIONING ;
+
+-- 删除指定表分区
+ALTER TABLE erp_request_log DROP PARTITION p211201;
+ALTER TABLE erp_request_log DROP PARTITION p220101;
+ALTER TABLE erp_request_log DROP PARTITION p220201;
+ALTER TABLE erp_request_log DROP PARTITION p220301;
+ALTER TABLE erp_request_log DROP PARTITION p220401;
+ALTER TABLE erp_request_log DROP PARTITION p220501;
+ALTER TABLE erp_request_log DROP PARTITION p220601;
+ALTER TABLE erp_request_log DROP PARTITION p220701;
+ALTER TABLE erp_request_log DROP PARTITION p220801;
+ALTER TABLE erp_request_log DROP PARTITION p220901;
+ALTER TABLE erp_request_log DROP PARTITION p221001;
+ALTER TABLE erp_request_log DROP PARTITION p221101;
+ALTER TABLE erp_request_log DROP PARTITION p221201;
+ALTER TABLE erp_request_log DROP PARTITION p230101;
+

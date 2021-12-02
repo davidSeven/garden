@@ -54,7 +54,8 @@ public class SerialNumberController implements SerialNumberRemoteService {
         return new ResponseDto<>(this.serialNumberService.page(dto)).ok();
     }
 
-    @ApiOperation(value = "生成流水号", position = 5)
+    @ApiOperation(value = "生成流水号", position = 5, notes = "并发结果：40个线程，每个线程执行300次，执行时间30S<br/>" +
+            "样本：12000 平均值：50 中位数：45 90%百分位：89 95%百分位：93 99%百分位：100 最小值：4 最大值：180 异常%：0 吞吐量：268.6/sec")
     @ApiImplicitParam(name = "dto", value = "业务编号", required = true, dataType = "GenerateNumberDto")
     @Override
     public ResponseDto<String> generateNumber(@RequestBody GenerateNumberDto dto) {

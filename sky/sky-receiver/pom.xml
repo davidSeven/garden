@@ -46,6 +46,17 @@
                 <artifactId>sky-receiver-provider</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-inventory-client</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-system-client</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

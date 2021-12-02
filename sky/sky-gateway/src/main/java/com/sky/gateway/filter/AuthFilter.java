@@ -39,7 +39,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String authorization = request.getHeaders().getFirst("Authorization");
         String ip = request.getHeaders().getFirst("Gateway-X-Access-IP");
 
-        logger.info("当前请求的url:{}, method:{}, token:{}, ip:{}", request.getURI().getPath(), request.getMethodValue(), authorization, ip);
+        // logger.info("当前请求的url:{}, method:{}, token:{}, ip:{}", request.getURI().getPath(), request.getMethodValue(), authorization, ip);
 
         ServerWebExchange build = null;
         if (Strings.isNotEmpty(authorization)) {

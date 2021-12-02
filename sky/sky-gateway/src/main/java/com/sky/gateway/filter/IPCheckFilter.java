@@ -27,13 +27,24 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String ipAddress = getIpAddress(request);
-        logger.info("当前请求的ip:{}", ipAddress);
+        long startTime = System.currentTimeMillis();
+        // logger.info("当前请求的ip:{}", ipAddress);
         ServerHttpRequest host = exchange.getRequest().mutate()
                 .header("Gateway-X-Access-IP", ipAddress)
                 .build();
         ServerWebExchange build = exchange.mutate().request(host).build();
-
-        return chain.filter(build);
+        return chain.filter(build).then(Mono.fromRunnable(new Runnable() {
+            @Override
+            public void run() {
+                long endTime = System.currentTimeMillis();
+                long times = endTime - startTime;
+                String uri = request.getURI().getPath();
+                String method = request.getMethodValue();
+                // nginx配置的ip
+                String ip = request.getHeaders().getFirst("Gateway-X-Access-IP");
+                logger.info(">>>请求路径：{}[{}]，IP：{}，开始时间：{}，结束时间：{}，总耗时：{}", uri, method, ip, startTime, endTime, times);
+            }
+        }));
     }
 
     /**
