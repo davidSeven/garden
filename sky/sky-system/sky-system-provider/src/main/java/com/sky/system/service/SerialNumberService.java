@@ -33,4 +33,11 @@ public interface SerialNumberService extends IService<SerialNumber> {
      * @return string
      */
     List<String> generateNumbers(String code, int num);
+
+    /**
+     * 数据同步
+     *
+     * @return int
+     */
+    int asyncData();
 }

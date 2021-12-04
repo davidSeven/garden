@@ -28,4 +28,8 @@ public interface SerialNumberRemoteService {
 
     @PostMapping(value = "/serial-number/generateNumbers")
     ResponseDto<List<String>> generateNumbers(@RequestBody GenerateNumberDto dto);
+
+    @PostMapping(value = "/serial-number/generateNumber2")
+    ResponseDto<String> generateNumber2(@RequestBody GenerateNumberDto dto);
+
 }

@@ -164,7 +164,7 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="local">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
         <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE"/>

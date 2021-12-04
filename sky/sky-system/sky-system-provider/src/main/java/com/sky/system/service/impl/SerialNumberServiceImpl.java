@@ -7,25 +7,26 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.framework.api.exception.CommonException;
-import com.sky.system.api.SystemInterface;
 import com.sky.system.api.dto.SerialNumberQueryDto;
 import com.sky.system.api.enums.SerialNumberTypeEnum;
 import com.sky.system.api.model.SerialNumber;
 import com.sky.system.dao.SerialNumberDao;
+import com.sky.system.document.DocumentSerialNumber;
+import com.sky.system.service.MongoSerialNumberService;
 import com.sky.system.service.SerialNumberService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 // @CacheConfig(cacheManager = "defaultCacheManager")
 public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, SerialNumber> implements SerialNumberService, KeyGenerator {
-
+    private final Logger logger = LoggerFactory.getLogger(SerialNumberServiceImpl.class);
     private static final ConcurrentMap<String, MessageFormat> MSG_FORMAT_MAP = new ConcurrentHashMap<>();
 
     @Value("${spring.application.name}")
@@ -48,7 +49,7 @@ public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, Serial
     @Autowired
     private RedissonClient redissonClient;
     @Autowired
-    private RedisTemplate<String, Object> stringObjectRedisTemplate;
+    private MongoSerialNumberService mongoSerialNumberService;
 
     @Override
     public IPage<SerialNumber> page(SerialNumberQueryDto dto) {
@@ -57,22 +58,49 @@ public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, Serial
         if (StringUtils.isNotEmpty(dto.getCode())) {
             queryWrapper.eq(SerialNumber::getCode, dto.getCode());
         }
-        if (null == dto.getType()) {
+        if (null != dto.getType()) {
             queryWrapper.eq(SerialNumber::getType, dto.getType());
         }
         return super.page(iPage, queryWrapper);
     }
 
-    @Cacheable(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#id", condition = "#id != null")
+    // @Cacheable(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#id", condition = "#id != null")
     @Override
     public SerialNumber getById(Serializable id) {
         return super.getById(id);
     }
 
-    @CacheEvict(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#entity.code", condition = "#entity.code != null")
+    // @CacheEvict(value = {SystemInterface.SERVICE + ":SerialNumber"}, key = "#entity.code", condition = "#entity.code != null")
     @Override
     public boolean updateById(SerialNumber entity) {
-        return super.updateById(entity);
+        // 加锁处理
+        // key
+        String code = entity.getCode();
+        String key = applicationName + ":serialnumber:" + code;
+        RLock lock = redissonClient.getLock(key);
+        // time 5 seconds
+        long time = 5;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        try {
+            if (lock.tryLock(time, timeUnit)) {
+                // 读取mongodb的配置信息
+                DocumentSerialNumber documentSerialNumber = mongoSerialNumberService.getById(entity.getId());
+                if (null != documentSerialNumber) {
+                    entity.setCurrentSequence(documentSerialNumber.getCurrentSequence());
+                    entity.setCurrentCycle(documentSerialNumber.getCurrentCycle());
+                    // 删除mongodb的配置
+                    mongoSerialNumberService.removeById(entity.getId());
+                }
+                return super.updateById(entity);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+        return false;
     }
 
     @Override
@@ -107,6 +135,23 @@ public class SerialNumberServiceImpl extends ServiceImpl<SerialNumberDao, Serial
             lock.unlock();
         }
         return this.getSerialNumbers(serialNumber, num);
+    }
+
+    @Transactional
+    @Override
+    public int asyncData() {
+        List<DocumentSerialNumber> documentSerialNumberList = mongoSerialNumberService.findAll();
+        int updateCount = 0;
+        if (CollectionUtils.isNotEmpty(documentSerialNumberList)) {
+            for (DocumentSerialNumber documentSerialNumber : documentSerialNumberList) {
+                SerialNumber updateSerialNumber = new SerialNumber();
+                updateSerialNumber.setId(documentSerialNumber.getId());
+                updateSerialNumber.setCurrentSequence(documentSerialNumber.getCurrentSequence());
+                updateSerialNumber.setCurrentCycle(documentSerialNumber.getCurrentCycle());
+                updateCount += super.baseMapper.updateById(updateSerialNumber);
+            }
+        }
+        return updateCount;
     }
 
     private SerialNumber updateSerialNumber(String code, int num) {

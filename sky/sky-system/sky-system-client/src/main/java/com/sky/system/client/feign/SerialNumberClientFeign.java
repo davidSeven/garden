@@ -51,6 +51,11 @@ public interface SerialNumberClientFeign extends SerialNumberRemoteService {
                 public ResponseDto<List<String>> generateNumbers(GenerateNumberDto dto) {
                     return ResponseDto.convertResultJson(throwable);
                 }
+
+                @Override
+                public ResponseDto<String> generateNumber2(GenerateNumberDto dto) {
+                    return ResponseDto.convertResultJson(throwable);
+                }
             };
         }
     }

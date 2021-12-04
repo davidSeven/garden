@@ -31,4 +31,7 @@ public class Menu extends BaseModel<Menu> {
 
     @ApiModelProperty(value = "图标")
     private String icon;
+
+    @ApiModelProperty(value = "子级数量")
+    private Integer childrenSize;
 }
