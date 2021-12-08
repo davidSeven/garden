@@ -11,6 +11,7 @@
 
     <modules>
         <module>sky-account</module>
+        <module>sky-base</module>
         <module>sky-delivery</module>
         <module>sky-eureka</module>
         <module>sky-file</module>

@@ -111,6 +111,9 @@ iptables -A OUTPUT -p tcp --sport 11162 -j ACCEPT
 service iptables save
 service iptables restart
 
+-- 添加表分区前提条件
+1.分区字段必须是主键.
+2.如果是日期字段，日期字段类型必须是datetime.
 -- 添加表分区
 ALTER TABLE erp_request_log PARTITION by RANGE(to_days(request_time))
 (
