@@ -6,6 +6,7 @@ import com.sky.system.api.dto.UserDto;
 import com.sky.system.api.dto.UserQueryDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @date 2020-10-28 028 13:52
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserRemoteService {
 
     @PostMapping(value = "/user/get")
-    ResponseDto<UserDto> get(@RequestBody UserDto dto);
+    ResponseDto<UserDto> get(@RequestBody UserDto dto,
+                             @RequestParam(value = "code", required = false, defaultValue = "none") String code,
+                             @RequestParam(value = "id", required = false, defaultValue = "0") Long id);
 
     @PostMapping(value = "/user/save")
     ResponseDto<Boolean> save(@RequestBody UserDto dto);

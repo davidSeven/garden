@@ -1,5 +1,7 @@
 package com.sky.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.framework.utils.BeanHelpUtil;
 import com.sky.system.api.dto.DictionaryDto;
@@ -32,8 +34,14 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
     }
 
     @Override
-    public List<DictionaryDto> listDictionary() {
-        List<Dictionary> list = super.list();
+    public List<DictionaryDto> listDictionary(DictionaryDto dto) {
+        LambdaQueryWrapper<Dictionary> queryWrapper = Wrappers.lambdaQuery();
+        if (null == dto.getParentId()) {
+            queryWrapper.eq(Dictionary::getParentId, 0L);
+        } else {
+            queryWrapper.eq(Dictionary::getParentId, dto.getParentId());
+        }
+        List<Dictionary> list = super.list(queryWrapper);
         return BeanHelpUtil.convertDtoList(list, DictionaryDto.class);
     }
 

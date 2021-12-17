@@ -23,7 +23,7 @@ public interface UserClientFeign extends UserRemoteService {
         public UserClientFeign create(Throwable throwable) {
             return new UserClientFeign() {
                 @Override
-                public ResponseDto<UserDto> get(UserDto dto) {
+                public ResponseDto<UserDto> get(UserDto dto, String code, Long id) {
                     return null;
                 }
 

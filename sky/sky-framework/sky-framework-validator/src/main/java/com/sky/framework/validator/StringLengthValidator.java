@@ -27,9 +27,9 @@ public class StringLengthValidator implements ConstraintValidator<StringLength, 
             boolean b = length >= minLen && length <= maxLen;
             if (!b) {
                 // 自定义提示
-                context.disableDefaultConstraintViolation();
-                String message = stringLength.message();
-                context.buildConstraintViolationWithTemplate(message + ",最小长度:" + stringLength.minLength() + ",最大长度:" + stringLength.maxLength()).addConstraintViolation();
+                // context.disableDefaultConstraintViolation();
+                // String message = stringLength.message();
+                // context.buildConstraintViolationWithTemplate(message + ",最小长度:" + stringLength.minLength() + ",最大长度:" + stringLength.maxLength()).addConstraintViolation();
             }
             return b;
         }

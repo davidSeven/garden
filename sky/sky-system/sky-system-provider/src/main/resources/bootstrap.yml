@@ -109,6 +109,9 @@ spring:
         # 连接池名字
         pool-name: ${spring.application.name}-sharding-dp
         leakDetectionThreshold: 2000
+  # 国际化静态资源文件
+  messages:
+    basename: i18n/messages
 
 management:
   endpoints:

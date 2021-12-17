@@ -22,7 +22,7 @@ public class UserClientServiceImpl implements UserClientService {
     public UserDto get(Long id) {
         UserDto dto = new UserDto();
         dto.setId(id);
-        return ResponseDto.getData(this.userClientFeign.get(dto));
+        return ResponseDto.getData(this.userClientFeign.get(dto, null, null));
     }
 
     @Override

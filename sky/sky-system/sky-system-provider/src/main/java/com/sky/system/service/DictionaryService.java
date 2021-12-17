@@ -30,9 +30,10 @@ public interface DictionaryService extends IService<Dictionary> {
     /**
      * 查询
      *
+     * @param dto dto
      * @return DictionaryDto
      */
-    List<DictionaryDto> listDictionary();
+    List<DictionaryDto> listDictionary(DictionaryDto dto);
 
     /**
      * 物理删除
