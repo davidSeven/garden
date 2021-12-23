@@ -42,7 +42,7 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
         this.cacheMap.remove(locale);
         LambdaQueryWrapper<I18n> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.select(I18n::getCode, I18n::getValue);
-        queryWrapper.eq(I18n::getLanguageType, locale.toLanguageTag());
+        queryWrapper.eq(I18n::getLanguageType, locale.toString());
         queryWrapper.eq(I18n::getState, I18nConstant.State.$1.getCode());
         queryWrapper.last("limit " + this.cacheSize);
         List<I18n> i18nList = this.i18nService.list(queryWrapper);
@@ -140,8 +140,8 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
         resourceBundleMessageSource.setBasename("i18n/messages");
         resourceBundleMessageSource.setDefaultEncoding("utf-8");
         resourceBundleMessageSource.setFallbackToSystemLocale(true);
-        String message = resourceBundleMessageSource.getMessage("common.message", null, Locale.SIMPLIFIED_CHINESE);
         super.setParentMessageSource(resourceBundleMessageSource);
-        logger.info("common.message:" + message);
+        // String message = resourceBundleMessageSource.getMessage("common.message", null, Locale.SIMPLIFIED_CHINESE);
+        // logger.info("common.message:" + message);
     }
 }

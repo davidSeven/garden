@@ -1,18 +1,17 @@
-package com.sky.system.api.model;
+package com.sky.system.api.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.sky.framework.api.model.BaseModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-/**
- * @date 2020-11-03 003 9:56
- */
-@EqualsAndHashCode(callSuper = true)
+import java.util.List;
+
 @Data
-@TableName("sys_dictionary")
-public class Dictionary extends BaseModel<Dictionary> {
+@ApiModel(value = "DictionaryVO", description = "DictionaryVO信息")
+public class DictionaryVO {
+
+    @ApiModelProperty(value = "ID")
+    private Long id;
 
     @ApiModelProperty(value = "编码")
     private String code;
@@ -33,14 +32,15 @@ public class Dictionary extends BaseModel<Dictionary> {
     private String state;
 
     @ApiModelProperty(value = "顺序")
-    private Integer sort;
+    private Long sort;
 
     @ApiModelProperty(value = "值")
     private String value;
 
-    @ApiModelProperty(value = "路由")
-    private String route;
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
-    @ApiModelProperty(value = "子级数量")
-    private Integer childrenSize;
+    @ApiModelProperty(value = "子级")
+    private List<DictionaryVO> children;
+
 }

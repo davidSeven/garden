@@ -12,10 +12,7 @@ import com.sky.system.api.model.OnlineUser;
 import com.sky.system.api.model.User;
 import com.sky.system.constant.LoginConstant;
 import com.sky.system.listeners.LoginLogListener;
-import com.sky.system.service.LoginService;
-import com.sky.system.service.LoginVisitLogService;
-import com.sky.system.service.OnlineUserService;
-import com.sky.system.service.UserService;
+import com.sky.system.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,6 +36,8 @@ public class LoginServiceImpl implements LoginService {
     private LoginVisitLogService loginVisitLogService;
     @Autowired
     private OnlineUserService onlineUserService;
+    @Autowired
+    private DictionaryService dictionaryService;
 
     @Override
     public UserLoginDto login(LoginDto dto) {
@@ -118,6 +117,19 @@ public class LoginServiceImpl implements LoginService {
         userLoginDto.setToken(token);
         LoginLogListener.login(dto, token, user.getId(), leaseTime);
         return userLoginDto;
+    }
+
+    @Override
+    public LoginInfoDto info(String token) {
+        LoginInfoDto info = new LoginInfoDto();
+        String liKey = liTokenPrefix(token);
+        Object object = this.redisTemplate.opsForValue().get(liKey);
+        if (null != object) {
+            UserLoginDto user = (UserLoginDto) object;
+            info.setUser(user);
+        }
+        info.setLanguage(this.dictionaryService.getValue("system.language"));
+        return info;
     }
 
     @Override

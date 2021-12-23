@@ -9,6 +9,9 @@ import feign.RetryableException;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -39,6 +42,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * render
@@ -158,12 +164,17 @@ public class GlobalExceptionHandler {
         if (StringUtils.isEmpty(message)) {
             message = defaultMessage;
         } else {
-            if (message.contains("{}") && args != null && args.length > 0) {
-                for (Object arg : args) {
-                    if (message.contains("{}")) {
-                        message = message.replaceFirst("\\{}", String.valueOf(arg));
+            String sourceMessage = this.messageSource.getMessage(message, args, LocaleContextHolder.getLocale());
+            if (message.equals(sourceMessage)) {
+                if (message.contains("{}") && args != null && args.length > 0) {
+                    for (Object arg : args) {
+                        if (message.contains("{}")) {
+                            message = message.replaceFirst("\\{}", String.valueOf(arg));
+                        }
                     }
                 }
+            } else {
+                return sourceMessage;
             }
         }
         if (StringUtils.isEmpty(message) && !StringUtils.isEmpty(code)) {

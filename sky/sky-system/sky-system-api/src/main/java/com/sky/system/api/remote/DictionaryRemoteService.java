@@ -2,6 +2,7 @@ package com.sky.system.api.remote;
 
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.system.api.dto.DictionaryDto;
+import com.sky.system.api.vo.DictionaryVO;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,7 +22,10 @@ public interface DictionaryRemoteService {
     ResponseDto<Boolean> update(@RequestBody DictionaryDto dto);
 
     @PostMapping(value = "/dictionary/list")
-    ResponseDto<List<DictionaryDto>> list(@RequestBody DictionaryDto dto);
+    ResponseDto<List<DictionaryVO>> list(@RequestBody DictionaryDto dto);
+
+    @PostMapping(value = "/dictionary/tree")
+    ResponseDto<List<DictionaryVO>> tree(@RequestBody DictionaryDto dto);
 
     @DeleteMapping(value = "/dictionary")
     ResponseDto<Integer> delete(@RequestBody DictionaryDto dto);

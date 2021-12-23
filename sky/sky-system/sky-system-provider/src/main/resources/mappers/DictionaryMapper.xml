@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.system.dao.DictionaryDao">
+
+    <update id="increaseChildrenSize">
+        update sys_dictionary set children_size = children_size + 1 where id = #{id}
+    </update>
+
+    <update id="decreaseChildrenSize">
+        update sys_dictionary set children_size = children_size - 1 where id = #{id}
+    </update>
+
+</mapper>

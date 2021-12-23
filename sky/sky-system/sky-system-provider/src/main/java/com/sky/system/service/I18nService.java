@@ -13,7 +13,11 @@ public interface I18nService extends IService<I18n> {
 
     boolean create(I18nDto dto);
 
+    boolean create(List<I18nDto> list);
+
     boolean update(I18nDto dto);
+
+    boolean update(List<I18nDto> list);
 
     IPage<I18n> page(I18nQueryDto dto);
 

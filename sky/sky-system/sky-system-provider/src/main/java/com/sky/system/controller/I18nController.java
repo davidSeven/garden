@@ -24,42 +24,63 @@ public class I18nController implements I18nRemoteService {
     @Autowired
     private I18nService i18nService;
 
-    @ApiOperation(value = "根据ID查询", position = 1)
+    @ApiOperation(value = "根据ID查询", position = 10)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<I18n> get(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.getById(dto.getId()));
+        return new ResponseDto<>(this.i18nService.getById(dto.getId())).ok();
     }
 
-    @ApiOperation(value = "保存", position = 2)
+    @ApiOperation(value = "保存", position = 20)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> save(I18nDto dto) {
         return new ResponseDto<>(this.i18nService.create(dto));
     }
 
-    @ApiOperation(value = "修改", position = 3)
+    @ApiOperation(value = "批量保存", position = 21)
+    @ApiImplicitParam(name = "dto", value = "list", required = true, dataType = "I18nDto")
+    @Override
+    public ResponseDto<Boolean> saveBatch(List<I18nDto> list) {
+        return new ResponseDto<>(this.i18nService.create(list));
+    }
+
+    @ApiOperation(value = "修改", position = 30)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> update(I18nDto dto) {
         return new ResponseDto<>(this.i18nService.update(dto));
     }
 
-    @ApiOperation(value = "删除", position = 4)
+    @ApiOperation(value = "批量修改", position = 31)
+    @ApiImplicitParam(name = "dto", value = "list", required = true, dataType = "I18nDto")
+    @Override
+    public ResponseDto<Boolean> updateBatch(List<I18nDto> list) {
+        return new ResponseDto<>(this.i18nService.update(list));
+    }
+
+    @ApiOperation(value = "删除", position = 40)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> delete(I18nDto dto) {
         return new ResponseDto<>(this.i18nService.removeById(dto.getId()));
     }
 
-    @ApiOperation(value = "分页列表", position = 5)
+    @ApiOperation(value = "批量删除", position = 41)
+    @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
+    @Override
+    public ResponseDto<Boolean> deleteBatch(I18nDto dto) {
+        return new ResponseDto<>(this.i18nService.removeByIds(dto.getIds()));
+    }
+
+    @ApiOperation(value = "分页列表", position = 50)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nQueryDto")
     @Override
     public ResponseDto<IPage<I18n>> page(I18nQueryDto dto) {
         return new ResponseDto<>(this.i18nService.page(dto));
     }
 
-    @ApiOperation(value = "列表", position = 6)
+    @ApiOperation(value = "列表", position = 60)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<List<I18n>> list(I18nDto dto) {

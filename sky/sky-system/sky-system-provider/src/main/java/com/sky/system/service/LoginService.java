@@ -1,9 +1,6 @@
 package com.sky.system.service;
 
-import com.sky.system.api.dto.LoginDto;
-import com.sky.system.api.dto.SafetyCheckDto;
-import com.sky.system.api.dto.UserLoginDto;
-import com.sky.system.api.dto.VerificationDto;
+import com.sky.system.api.dto.*;
 
 /**
  * @date 2020-10-29 029 15:29
@@ -17,6 +14,14 @@ public interface LoginService {
      * @return UserLoginDto
      */
     UserLoginDto login(LoginDto dto);
+
+    /**
+     * 登录信息
+     *
+     * @param token token
+     * @return LoginInfoDto
+     */
+    LoginInfoDto info(String token);
 
     /**
      * 登出

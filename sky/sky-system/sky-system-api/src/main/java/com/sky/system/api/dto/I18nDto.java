@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @ApiModel(value = "I18nDto", description = "I18nDto信息")
 public class I18nDto {
@@ -25,5 +27,8 @@ public class I18nDto {
 
     @ApiModelProperty(value = "值")
     private String value;
+
+    @ApiModelProperty(value = "IDS")
+    private List<Long> ids;
 
 }

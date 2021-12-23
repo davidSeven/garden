@@ -20,11 +20,20 @@ public interface I18nRemoteService {
     @PostMapping(value = "/i18n")
     ResponseDto<Boolean> save(@RequestBody I18nDto dto);
 
+    @PostMapping(value = "/i18n/batch")
+    ResponseDto<Boolean> saveBatch(@RequestBody List<I18nDto> list);
+
     @PutMapping(value = "/i18n")
     ResponseDto<Boolean> update(@RequestBody I18nDto dto);
 
+    @PutMapping(value = "/i18n/batch")
+    ResponseDto<Boolean> updateBatch(@RequestBody List<I18nDto> list);
+
     @DeleteMapping(value = "/i18n")
     ResponseDto<Boolean> delete(@RequestBody I18nDto dto);
+
+    @DeleteMapping(value = "/i18n/batch")
+    ResponseDto<Boolean> deleteBatch(@RequestBody I18nDto dto);
 
     @PostMapping(value = "/i18n/page")
     ResponseDto<IPage<I18n>> page(@RequestBody I18nQueryDto dto);

@@ -5,6 +5,7 @@ import com.sky.framework.api.exception.CommonException;
 import com.sky.framework.interceptor.util.IpUtil;
 import com.sky.framework.utils.VerifyCodeUtils;
 import com.sky.system.api.dto.LoginDto;
+import com.sky.system.api.dto.LoginInfoDto;
 import com.sky.system.api.dto.SafetyCheckDto;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.constant.LoginConstant;
@@ -103,6 +104,13 @@ public class LoginController {
         // 处理请求数据
         dto.setVcToken(vcToken);
         return new ResponseDto<UserLoginDto>().ok().setData(this.loginService.login(dto));
+    }
+
+    @ApiOperation(value = "登录信息")
+    @GetMapping("/login/info")
+    public ResponseDto<LoginInfoDto> info(HttpServletRequest request) {
+        String token = request.getHeader(LoginConstant.AUTHORIZATION_TOKEN);
+        return new ResponseDto<>(this.loginService.info(token));
     }
 
     @ApiOperation(value = "登出")

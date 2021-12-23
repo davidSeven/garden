@@ -3,6 +3,7 @@ package com.sky.system.controller;
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.system.api.dto.DictionaryDto;
 import com.sky.system.api.remote.DictionaryRemoteService;
+import com.sky.system.api.vo.DictionaryVO;
 import com.sky.system.service.DictionaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,8 +42,15 @@ public class DictionaryController implements DictionaryRemoteService {
     @ApiOperation(value = "列表")
     @ApiImplicitParam(name = "dto", value = "数据字典信息", required = true, dataType = "DictionaryDto")
     @Override
-    public ResponseDto<List<DictionaryDto>> list(@RequestBody DictionaryDto dto) {
-        return new ResponseDto<List<DictionaryDto>>().ok().setData(this.dictionaryService.listDictionary(dto));
+    public ResponseDto<List<DictionaryVO>> list(@RequestBody DictionaryDto dto) {
+        return new ResponseDto<>(this.dictionaryService.listDictionary(dto)).ok();
+    }
+
+    @ApiOperation(value = "树列表")
+    @ApiImplicitParam(name = "dto", value = "数据字典信息", required = true, dataType = "DictionaryDto")
+    @Override
+    public ResponseDto<List<DictionaryVO>> tree(DictionaryDto dto) {
+        return new ResponseDto<>(this.dictionaryService.tree(dto)).ok();
     }
 
     @ApiOperation(value = "删除")
