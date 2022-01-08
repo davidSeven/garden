@@ -181,3 +181,53 @@ app:
   version: '@project.version@'
   build: '@build.timestamp@'
 
+json-context:
+  values:
+    # 接口uri
+    "[/user/pageList]":
+      # 排除的字段，响应的数据对象中，不会包含此字段，如果此字段配置在include中，则优先include
+      excludes:
+        - data.records.password
+      # 包含的字段
+      includes:
+        - code
+      # 敏感字段，原字段的值会变成***，但是提供了解密的密文（原字段+Sensitive，如果是字段是code密文字段就是codeSensitive），可以通过密文请求后端接口返回明文信息
+      # 如果在加密字段中也配置了此字段，优先敏感字段
+      sensitives:
+        - data.records.loginIp
+      # 加密字段，原字段的值会变成***，以达到加密的特性
+      encrypts:
+        - data.records.version
+      # 字段增强，配置了敏感字段和加密字段之后不会执行字段增强
+      jsonIntensifyMap:
+        "[data.records.code]":
+          # 需要增强的字段名称，这里名称要和key一样，名称可以不写。默认就是key
+          fieldName: data.records.code
+          # 增强之后字段的名称
+          fieldIntensifyName: codeName
+          # 增强的实现方式，class普通类，spring类
+          loadClassType: class
+          # 如果是class就需要类的全路径，如果是spring类就是springBean的名称
+          loadClassPath: com.sky.framework.json.JsonIntensifyConvert$OriginalJsonIntensifyConvert
+        "[data.records.createBy]":
+          fieldIntensifyName: createByName
+          loadClassType: spring
+          loadClassPath: InternalUserNameJsonIntensifyConvert
+        "[data.records.updateBy]":
+          fieldIntensifyName: updateByName
+          loadClassType: spring
+          loadClassPath: InternalUserNameJsonIntensifyConvert
+      # 值转换
+      transformMap:
+        # 将这个字段的值换成另外一个值
+        "[data.records.id]":
+          loadClassType: class
+          loadClassPath: com.sky.framework.json.JsonIntensifyConvert$WrapJsonIntensifyConvert
+      # 添加字段
+      appendMap:
+        # 在data.records这个对象里面添加字段。如果配置了，但是没写字段名称，字段默认_append
+        "[data.records]":
+          # 添加的字段名称，不写默认_append
+          fieldIntensifyName: _append
+          loadClassType: class
+          loadClassPath: com.sky.framework.json.JsonIntensifyAppend$OriginalJsonIntensifyAppend

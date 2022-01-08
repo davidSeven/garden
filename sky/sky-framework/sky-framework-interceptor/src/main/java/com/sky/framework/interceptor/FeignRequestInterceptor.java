@@ -27,29 +27,28 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        logger.trace(template.bodyTemplate());
-        logger.trace(template.method());
-        logger.trace(template.url());
+        logger.info(template.bodyTemplate());
+        logger.info(template.method());
+        logger.info(template.url());
         // 这里不能强制设置Accept和Content-Type，不然通过feign的方式调附件上传接口会丢失file
         // template.header("Accept", MediaType.ALL_VALUE);
         // template.header("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         // 获取header中的属性
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null) {
-            return;
-        }
-        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-        Enumeration<String> headerNames = request.getHeaderNames();
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                String name = headerNames.nextElement();
-                Enumeration<String> values = request.getHeaders(name);
-                while (values.hasMoreElements()) {
-                    String value = values.nextElement();
-                    if ("content-type".equalsIgnoreCase(name) && value.contains("multipart/form-data")) {
-                        break;
+        if (null != requestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+            Enumeration<String> headerNames = request.getHeaderNames();
+            if (headerNames != null) {
+                while (headerNames.hasMoreElements()) {
+                    String name = headerNames.nextElement();
+                    Enumeration<String> values = request.getHeaders(name);
+                    while (values.hasMoreElements()) {
+                        String value = values.nextElement();
+                        if ("content-type".equalsIgnoreCase(name) && value.contains("multipart/form-data")) {
+                            break;
+                        }
+                        template.header(name, value);
                     }
-                    template.header(name, value);
                 }
             }
         }

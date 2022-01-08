@@ -42,4 +42,12 @@ public interface UserService extends IService<User> {
      * @return UserDto
      */
     IPage<UserDto> pageList(UserQueryDto queryDto);
+
+    /**
+     * 根据code查询名称
+     *
+     * @param code code
+     * @return String
+     */
+    String getNameByCode(String code);
 }

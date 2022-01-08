@@ -12,4 +12,20 @@ public interface JsonIntensifyConvert {
      * @return String
      */
     String convert(String value);
+
+    public static class OriginalJsonIntensifyConvert implements JsonIntensifyConvert {
+
+        @Override
+        public String convert(String value) {
+            return value;
+        }
+    }
+
+    public static class WrapJsonIntensifyConvert implements JsonIntensifyConvert {
+
+        @Override
+        public String convert(String value) {
+            return "[" + value + "]";
+        }
+    }
 }

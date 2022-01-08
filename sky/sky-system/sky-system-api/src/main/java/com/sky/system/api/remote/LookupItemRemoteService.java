@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.system.api.dto.LookupItemDto;
 import com.sky.system.api.dto.LookupItemQueryDto;
+import com.sky.system.api.dto.LookupItemSaveDto;
 import com.sky.system.api.model.LookupItem;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,4 +33,6 @@ public interface LookupItemRemoteService {
     @PostMapping(value = "/lookup-item/list")
     ResponseDto<List<LookupItem>> list(@RequestBody LookupItemDto dto);
 
+    @PostMapping(value = "/lookup-item/save")
+    ResponseDto<Boolean> save(@RequestBody LookupItemSaveDto dto);
 }

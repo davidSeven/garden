@@ -2,6 +2,8 @@ package com.sky.framework.json.spring;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sky.framework.json.config.JsonContextConfiguration;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -22,6 +24,8 @@ public class JsonViewSupportFactoryBean implements InitializingBean {
     protected final DefaultView defaultView;
     @Autowired
     protected RequestMappingHandlerAdapter adapter;
+    @Autowired(required = false)
+    private JsonContextConfiguration jsonContextConfiguration;
 
     public JsonViewSupportFactoryBean() {
         this(new ObjectMapper());
@@ -46,7 +50,11 @@ public class JsonViewSupportFactoryBean implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<HandlerMethodReturnValueHandler> handlers = new ArrayList<>(adapter.getReturnValueHandlers());
+        List<HandlerMethodReturnValueHandler> handlerMethodReturnValueHandlerList = adapter.getReturnValueHandlers();
+        if (CollectionUtils.isEmpty(handlerMethodReturnValueHandlerList)) {
+            return;
+        }
+        List<HandlerMethodReturnValueHandler> handlers = new ArrayList<>(handlerMethodReturnValueHandlerList);
 
         List<HttpMessageConverter<?>> converters = removeJacksonConverters(adapter.getMessageConverters());
         converters.add(converter);
@@ -77,7 +85,8 @@ public class JsonViewSupportFactoryBean implements InitializingBean {
             if (handler instanceof HttpEntityMethodProcessor) {
                 handlers.set(index, new JsonViewHttpEntityMethodProcessor(converters));
             } else if (handler instanceof RequestResponseBodyMethodProcessor) {
-                handlers.set(index, new JsonViewReturnValueHandler(converters, defaultView));
+                JsonViewResponseProcessor jsonViewResponseProcessor = new JsonViewResponseProcessor(converters);
+                handlers.set(index, new JsonViewReturnValueHandler(jsonViewResponseProcessor, defaultView, jsonContextConfiguration));
                 break;
             }
         }

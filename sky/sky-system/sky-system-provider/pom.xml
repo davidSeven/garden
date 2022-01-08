@@ -30,6 +30,11 @@
 
         <dependency>
             <groupId>com.sky</groupId>
+            <artifactId>sky-system-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
             <artifactId>sky-framework-dao</artifactId>
         </dependency>
 

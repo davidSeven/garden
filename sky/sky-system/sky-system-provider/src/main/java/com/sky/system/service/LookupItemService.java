@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sky.system.api.dto.LookupItemDto;
 import com.sky.system.api.dto.LookupItemQueryDto;
+import com.sky.system.api.dto.LookupItemSaveDto;
 import com.sky.system.api.model.LookupItem;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface LookupItemService extends IService<LookupItem> {
     IPage<LookupItem> page(LookupItemQueryDto dto);
 
     List<LookupItem> list(LookupItemDto dto);
+
+    boolean save(LookupItemSaveDto dto);
 }

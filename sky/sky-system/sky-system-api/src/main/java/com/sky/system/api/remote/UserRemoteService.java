@@ -26,4 +26,7 @@ public interface UserRemoteService {
 
     @PostMapping(value = "/user/pageList")
     ResponseDto<IPage<UserDto>> pageList(@RequestBody UserQueryDto queryDto);
+
+    @PostMapping(value = "/user/getNameByCode")
+    ResponseDto<String> getNameByCode(@RequestBody String code);
 }

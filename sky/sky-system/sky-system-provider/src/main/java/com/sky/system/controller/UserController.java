@@ -57,4 +57,11 @@ public class UserController implements UserRemoteService {
     public ResponseDto<IPage<UserDto>> pageList(@RequestBody UserQueryDto queryDto) {
         return new ResponseDto<IPage<UserDto>>().ok().setData(this.userService.pageList(queryDto));
     }
+
+    @ApiOperation(value = "根据用户编码查询名称")
+    @ApiImplicitParam(name = "code", value = "用户编码", required = true, dataType = "String")
+    @Override
+    public ResponseDto<String> getNameByCode(@RequestBody String code) {
+        return new ResponseDto<>(this.userService.getNameByCode(code)).ok();
+    }
 }

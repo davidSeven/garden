@@ -39,4 +39,9 @@ public class UserClientServiceImpl implements UserClientService {
     public IPage<UserDto> pageList(UserQueryDto queryDto) {
         return ResponseDto.getData(this.userClientFeign.pageList(queryDto));
     }
+
+    @Override
+    public String getNameByCode(String code) {
+        return ResponseDto.getData(this.userClientFeign.getNameByCode(code));
+    }
 }

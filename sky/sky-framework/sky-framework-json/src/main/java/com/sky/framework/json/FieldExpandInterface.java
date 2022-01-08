@@ -15,8 +15,9 @@ public interface FieldExpandInterface {
      * @param currentPath currentPath
      * @param path        path
      * @param jgen        jgen
+     * @param object      object
      */
-    default void append(String currentPath, Stack<String> path, JsonGenerator jgen) {
+    default void append(String currentPath, Stack<String> path, JsonGenerator jgen, Object object) {
     }
 
     /**

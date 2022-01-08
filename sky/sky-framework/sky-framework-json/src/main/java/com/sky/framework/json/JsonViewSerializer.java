@@ -434,7 +434,7 @@ public class JsonViewSerializer extends JsonSerializer<JsonView> {
 
             // 扩展
             if (null != fieldExpandInterface) {
-                fieldExpandInterface.append(currentPath, path, jgen);
+                fieldExpandInterface.append(currentPath, path, jgen, obj);
             }
 
             jgen.writeEndObject();

@@ -19,6 +19,7 @@
         <module>sky-system-api</module>
         <module>sky-system-client</module>
         <module>sky-system-provider</module>
+        <module>sky-system-util</module>
     </modules>
 
     <dependencyManagement>
@@ -44,6 +45,11 @@
             <dependency>
                 <groupId>com.sky</groupId>
                 <artifactId>sky-system-provider</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-system-util</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>

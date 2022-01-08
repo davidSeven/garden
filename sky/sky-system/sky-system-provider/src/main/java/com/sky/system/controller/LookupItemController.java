@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sky.framework.api.dto.ResponseDto;
 import com.sky.system.api.dto.LookupItemDto;
 import com.sky.system.api.dto.LookupItemQueryDto;
+import com.sky.system.api.dto.LookupItemSaveDto;
 import com.sky.system.api.model.LookupItem;
 import com.sky.system.api.remote.LookupItemRemoteService;
 import com.sky.system.service.LookupItemService;
@@ -64,5 +65,12 @@ public class LookupItemController implements LookupItemRemoteService {
     @Override
     public ResponseDto<List<LookupItem>> list(LookupItemDto dto) {
         return new ResponseDto<>(this.lookupItemService.list(dto));
+    }
+
+    @ApiOperation(value = "保存", position = 7)
+    @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "LookupItemSaveDto")
+    @Override
+    public ResponseDto<Boolean> save(LookupItemSaveDto dto) {
+        return new ResponseDto<>(this.lookupItemService.save(dto)).ok();
     }
 }

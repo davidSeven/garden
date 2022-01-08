@@ -31,7 +31,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     password: 123456
-    timeout: 5000
+    timeout: 10000
     database: 0
 #    jedis:
 #      pool:
@@ -105,4 +105,5 @@ hystrix:
             timeoutInMilliseconds: 60000 #断路器超时时间，
 ribbon:
   ReadTimeout: 60000
+  SocketTimeout: 60000
   ConnectTimeout: 60000

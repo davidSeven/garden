@@ -1,5 +1,6 @@
 package com.sky.framework.json;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +54,9 @@ public class JsonViewSerializerTest {
         user.setInfo(info);
 
         JsonView<User> jsonView = JsonView.with(user).onClass(User.class, Match.match()
+                // exclude和include存在冲突时，优先include
                 .exclude("age", "info.document")
+                // .include("age")
                 .transform("name", (User x, String y) -> {
                     HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
                     format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
@@ -68,9 +71,10 @@ public class JsonViewSerializerTest {
                 })
                 .fieldExpandInterface(new FieldExpandInterface() {
                     @Override
-                    public void append(String currentPath, Stack<String> path, JsonGenerator jgen) {
+                    public void append(String currentPath, Stack<String> path, JsonGenerator jgen, Object object) {
                         System.out.println(currentPath);
                         System.out.println(path);
+                        System.out.println(JSON.toJSONString(object));
                         try {
                             jgen.writeFieldName("expandField");
                             jgen.writeString("测试追加字段");

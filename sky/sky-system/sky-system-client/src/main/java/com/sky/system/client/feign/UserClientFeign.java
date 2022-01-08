@@ -41,6 +41,11 @@ public interface UserClientFeign extends UserRemoteService {
                 public ResponseDto<IPage<UserDto>> pageList(UserQueryDto queryDto) {
                     return null;
                 }
+
+                @Override
+                public ResponseDto<String> getNameByCode(String code) {
+                    return ResponseDto.convertResultJson(throwable);
+                }
             };
         }
     }

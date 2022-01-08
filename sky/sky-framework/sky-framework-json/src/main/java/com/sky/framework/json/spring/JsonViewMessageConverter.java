@@ -8,12 +8,13 @@ import com.sky.framework.json.JsonViewSerializer;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 
 public class JsonViewMessageConverter extends MappingJackson2HttpMessageConverter {
 
-    private JsonViewSerializer serializer = new JsonViewSerializer();
+    private final JsonViewSerializer serializer = new JsonViewSerializer();
 
     public JsonViewMessageConverter() {
         super();
@@ -61,7 +62,7 @@ public class JsonViewMessageConverter extends MappingJackson2HttpMessageConverte
     }
 
     @Override
-    protected void writeInternal(Object object, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+    protected void writeInternal(@NonNull Object object, @NonNull HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         super.writeInternal(object, outputMessage);
     }
 
