@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ import java.sql.Timestamp;
  * ContextInterceptor
  */
 @Component
-public class ContextInterceptor implements HandlerInterceptor {
+public class ContextInterceptor implements HandlerInterceptor, Ordered {
 
     private final Logger logger = LoggerFactory.getLogger(ContextInterceptor.class);
 
@@ -177,5 +178,10 @@ public class ContextInterceptor implements HandlerInterceptor {
             logger.error(e.getMessage(), e);
         }
         return "";
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

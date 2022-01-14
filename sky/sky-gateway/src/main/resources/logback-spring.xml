@@ -30,12 +30,12 @@
 	</appender>
 	<logger name="com.stream" additivity="false">
 		<level value="${loggerLevel}" />
-		<appender-ref ref="ASYNC_APPENDER" />
+		<!--<appender-ref ref="ASYNC_APPENDER" />-->
 		<appender-ref ref="CONSOLE" />
 	</logger>
 	<root>
 		<level value="INFO" />
-		<appender-ref ref="ASYNC_APPENDER" />
+		<!--<appender-ref ref="ASYNC_APPENDER" />-->
 		<appender-ref ref="CONSOLE" />
 	</root>
 </configuration>

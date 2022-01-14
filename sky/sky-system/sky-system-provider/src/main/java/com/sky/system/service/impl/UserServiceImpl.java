@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sky.framework.api.exception.CommonException;
 import com.sky.framework.dao.utils.PageHelpUtil;
 import com.sky.framework.dao.utils.WrappersUtil;
 import com.sky.framework.utils.BeanHelpUtil;
@@ -32,6 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public boolean save(UserDto dto) {
         User user = BeanHelpUtil.convertDto(dto, User.class);
+        this.exists(user);
         return super.save(user);
     }
 
@@ -39,7 +41,19 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public boolean update(UserDto dto) {
         User user = BeanHelpUtil.convertDto(dto, User.class);
+        this.exists(user);
         return super.updateById(user);
+    }
+
+    private void exists(User user) {
+        LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(User::getCode, user.getCode());
+        if (null != user.getId()) {
+            queryWrapper.ne(User::getId, user.getId());
+        }
+        if (super.count(queryWrapper) > 0) {
+            throw new CommonException(500, "system.user.codeExists", user.getCode());
+        }
     }
 
     @Override

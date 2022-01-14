@@ -19,11 +19,11 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
         RequestContext currentContext = RequestContext.getCurrentContext();
         String userCode = currentContext.getUserCode();
         String requestId = currentContext.getRequestId();
-        this.setFieldValByName("createBy", userCode, metaObject);
-        this.setFieldValByName("createDate", now, metaObject);
-        this.setFieldValByName("updateBy", userCode, metaObject);
-        this.setFieldValByName("updateDate", now, metaObject);
-        this.setFieldValByName("traceId", requestId, metaObject);
+        this.compareAndSetter("createBy", userCode, metaObject);
+        this.compareAndSetter("createDate", now, metaObject);
+        this.compareAndSetter("updateBy", userCode, metaObject);
+        this.compareAndSetter("updateDate", now, metaObject);
+        this.compareAndSetter("traceId", requestId, metaObject);
     }
 
     @Override
@@ -32,8 +32,15 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
         RequestContext currentContext = RequestContext.getCurrentContext();
         String userCode = currentContext.getUserCode();
         String requestId = currentContext.getRequestId();
-        this.setFieldValByName("updateBy", userCode, metaObject);
-        this.setFieldValByName("updateDate", now, metaObject);
-        this.setFieldValByName("traceId", requestId, metaObject);
+        this.compareAndSetter("updateBy", userCode, metaObject);
+        this.compareAndSetter("updateDate", now, metaObject);
+        this.compareAndSetter("traceId", requestId, metaObject);
+    }
+
+    private void compareAndSetter(String fieldName, Object fieldVal, MetaObject metaObject) {
+        // 如果值是空的就赋值
+        if (metaObject.hasGetter(fieldName) && this.getFieldValByName(fieldName, metaObject) == null) {
+            this.setFieldValByName(fieldName, fieldVal, metaObject);
+        }
     }
 }

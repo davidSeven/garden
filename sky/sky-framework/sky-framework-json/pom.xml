@@ -61,6 +61,10 @@
             <groupId>com.sky</groupId>
             <artifactId>sky-framework-interceptor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-framework-json-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sky</groupId>
+    <artifactId>sky-framework-json-api</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>com.sky</groupId>
+        <artifactId>sky-framework</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <!--
+            compile：默认的scope，运行期有效，需要打入包中
+            provided：编译期有效，运行期不需要提供，不会打入包中
+            runtime：编译不需要，在运行期有效，需要导入包中。（接口与实现分离）
+            test：测试需要，不会打入包中
+            system：非本地仓库引入、存在系统的某个路径下的jar。（一般不使用）
+            -->
+            <!--
+            方式1.dependency 本地jar包，如果没有建私服，可以在pom.xml中通过文件方式引
+            <dependency>
+                自定义
+                <groupId>com.im</groupId>
+                自定义
+                <artifactId>sdk</artifactId>
+                自定义
+                <version>1.0</version>
+                system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它
+                <scope>system</scope>
+                项目根目录下的lib文件夹下
+                <systemPath>${basedir}/lib/sdk-1.0.jar</systemPath>
+            </dependency>
+            方式2.编译阶段指定外部lib
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                    指定外部lib
+                        <extdirs>lib</extdirs>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+            方式3.0 将外部jar打入本地maven仓库
+            mvn install:install-file -Dfile=sdk-1.0.jar -DgroupId=com.im -DartifactId=sdk -Dversion=1.0 -Dpackaging=jar
+            方式3.1 引入jar包
+            <dependency>
+                <groupId>com.im</groupId>
+                <artifactId>sdk</artifactId>
+                <version>1.0</version>
+            </dependency>
+            maven预定义内置属性
+            ${basedir}表示项目根目录,即包含pom.xml文件的目录;
+            ${version}表示项目版本;
+            ${project.basedir}同${basedir};
+            ${project.baseUri}表示项目文件地址;
+            ${maven.build.timestamp}表示项目构件开始时间;
+            ${maven.build.timestamp.format}表示属性${maven.build.timestamp}的展示格式,默认值为yyyyMMdd-HHmm,可自定义其格式
+            -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

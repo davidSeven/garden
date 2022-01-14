@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>com.sky</groupId>
-            <artifactId>sky-framework-json</artifactId>
+            <artifactId>sky-framework-json-api</artifactId>
         </dependency>
 
         <dependency>

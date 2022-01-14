@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sky.framework.api.exception.CommonException;
 import com.sky.framework.utils.BeanHelpUtil;
 import com.sky.system.api.dto.LookupDto;
 import com.sky.system.api.dto.LookupQueryDto;
@@ -22,13 +23,26 @@ public class LookupServiceImpl extends ServiceImpl<LookupDao, Lookup> implements
     @Override
     public boolean create(LookupDto dto) {
         Lookup lookup = BeanHelpUtil.convertDto(dto, Lookup.class);
+        this.exists(lookup);
         return super.save(lookup);
     }
 
     @Override
     public boolean update(LookupDto dto) {
         Lookup lookup = BeanHelpUtil.convertDto(dto, Lookup.class);
+        this.exists(lookup);
         return super.save(lookup);
+    }
+
+    private void exists(Lookup lookup) {
+        LambdaQueryWrapper<Lookup> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Lookup::getCode, lookup.getCode());
+        if (null != lookup.getId()) {
+            queryWrapper.ne(Lookup::getId, lookup.getId());
+        }
+        if (super.count(queryWrapper) > 0) {
+            throw new CommonException(500, "system.lookup.codeExists", lookup.getCode());
+        }
     }
 
     @Override
