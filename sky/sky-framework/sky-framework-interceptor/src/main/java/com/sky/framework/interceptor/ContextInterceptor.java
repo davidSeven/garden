@@ -74,11 +74,11 @@ public class ContextInterceptor implements HandlerInterceptor, Ordered {
         String token = request.getHeader(RequestContext.TOKEN);
         String userId = request.getHeader(RequestContext.USER_ID);
         if (StringUtils.isBlank(userId)) {
-            userId = "0";
+            userId = "1";
         }
         String userCode = request.getHeader(RequestContext.USER_CODE);
         if (StringUtils.isBlank(userCode)) {
-            userCode = "0";
+            userCode = "admin";
         }
         String userName = request.getHeader(RequestContext.USER_NAME);
         // originApp，先从threadLocal，再从referer中
