@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sky.system.api.constant.I18nConstant;
 import com.sky.system.api.model.I18n;
+import com.sky.system.events.I18nMissEvent;
 import com.sky.system.service.I18nService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.LocaleUtils;
@@ -60,6 +61,7 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
     }
 
     public void refresh(String code, Locale locale) {
+        clear(code);
         if (null != locale) {
             List<I18n> i18nList = this.i18nService.getList(code);
             if (CollectionUtils.isNotEmpty(i18nList)) {
@@ -68,8 +70,14 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
                 }
             }
         } else {
-            I18n i18n = this.i18nService.get(code, locale);
+            I18n i18n = this.i18nService.get(code, null);
             this.refresh(i18n);
+        }
+    }
+
+    private void clear(String code) {
+        for (Locale cacheLocale : this.cacheMap.keySet()) {
+            this.cacheMap.get(cacheLocale).remove(code);
         }
     }
 
@@ -118,7 +126,8 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
                     value = this.getParentMessageSource().getMessage(code, args, locale);
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
+                // ignore exception
+                // logger.error(ex.getMessage(), ex);
             }
             if (StringUtils.isEmpty(value)) {
                 I18n i18n = i18nService.get(code, locale);
@@ -128,6 +137,7 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
                 } else {
                     logger.info("miss code:" + code);
                     value = code;
+                    I18nMissEvent.publishEvent(code, locale.toString());
                 }
             }
             return value;

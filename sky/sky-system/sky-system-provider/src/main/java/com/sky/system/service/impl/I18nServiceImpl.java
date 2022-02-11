@@ -12,6 +12,7 @@ import com.sky.system.api.dto.I18nDto;
 import com.sky.system.api.dto.I18nQueryDto;
 import com.sky.system.api.model.I18n;
 import com.sky.system.dao.I18nDao;
+import com.sky.system.events.MessageSourceEvent;
 import com.sky.system.service.DictionaryService;
 import com.sky.system.service.I18nService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +37,11 @@ public class I18nServiceImpl extends ServiceImpl<I18nDao, I18n> implements I18nS
     public boolean create(I18nDto dto) {
         I18n i18n = BeanHelpUtil.convertDto(dto, I18n.class);
         try {
-            return super.save(i18n);
+            boolean save = super.save(i18n);
+            if (save) {
+                MessageSourceEvent.publishEvent(i18n.getCode());
+            }
+            return save;
         } catch (DuplicateKeyException e) {
             throw new CommonException(500, "system.i18n.codeExists", i18n.getCode());
         }
@@ -58,7 +65,11 @@ public class I18nServiceImpl extends ServiceImpl<I18nDao, I18n> implements I18nS
     public boolean update(I18nDto dto) {
         I18n i18n = BeanHelpUtil.convertDto(dto, I18n.class);
         try {
-            return super.updateById(i18n);
+            boolean update = super.updateById(i18n);
+            if (update) {
+                MessageSourceEvent.publishEvent(i18n.getCode());
+            }
+            return update;
         } catch (DuplicateKeyException e) {
             throw new CommonException(500, "system.i18n.codeExists", i18n.getCode());
         }
@@ -67,6 +78,24 @@ public class I18nServiceImpl extends ServiceImpl<I18nDao, I18n> implements I18nS
     @Override
     public boolean update(List<I18nDto> list) {
         return this.create(list);
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        I18n i18n = super.getById(id);
+        if (null == i18n) {
+            return false;
+        }
+        boolean remove = super.removeById(id);
+        if (remove) {
+            MessageSourceEvent.publishEvent(i18n.getCode());
+        }
+        return remove;
+    }
+
+    @Override
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        return false;
     }
 
     @Override

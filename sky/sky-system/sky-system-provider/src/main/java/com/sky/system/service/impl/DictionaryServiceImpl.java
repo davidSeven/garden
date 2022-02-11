@@ -10,6 +10,7 @@ import com.sky.system.api.model.Dictionary;
 import com.sky.system.api.vo.DictionaryVO;
 import com.sky.system.dao.DictionaryDao;
 import com.sky.system.service.DictionaryService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,8 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
         Dictionary dictionary = BeanHelpUtil.convertDto(dto, Dictionary.class);
         // 验证编码是否唯一
         this.exists(dictionary);
+        // 处理路由
+        this.buildRoute(dictionary);
         boolean b = super.save(dictionary);
         Long parentId = dictionary.getParentId();
         if (b && (null != parentId && parentId > 0)) {
@@ -41,7 +44,25 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
     public boolean update(DictionaryDto dto) {
         Dictionary dictionary = BeanHelpUtil.convertDto(dto, Dictionary.class);
         this.exists(dictionary);
+        // 处理路由
+        this.buildRoute(dictionary);
         return super.updateById(dictionary);
+    }
+
+    private void buildRoute(Dictionary dictionary) {
+        String parentRoute = "";
+        Long parentId = dictionary.getParentId();
+        if (null != parentId) {
+            Dictionary parentDictionary = super.getById(parentId);
+            if (null != parentDictionary) {
+                parentRoute = parentDictionary.getRoute();
+            }
+        }
+        if (StringUtils.isNotEmpty(parentRoute)) {
+            dictionary.setRoute(parentRoute + "." + dictionary.getCode());
+        } else {
+            dictionary.setRoute(dictionary.getCode());
+        }
     }
 
     private void exists(Dictionary dictionary) {
@@ -49,6 +70,8 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
         queryWrapper.eq(Dictionary::getCode, dictionary.getCode());
         if (null != dictionary.getParentId() && dictionary.getParentId() > 0) {
             queryWrapper.eq(Dictionary::getParentId, dictionary.getParentId());
+        } else {
+            queryWrapper.eq(Dictionary::getParentId, 0);
         }
         if (null != dictionary.getId()) {
             queryWrapper.ne(Dictionary::getId, dictionary.getId());

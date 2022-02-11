@@ -2,6 +2,7 @@ package com.sky.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sky.framework.api.dto.ResponseDto;
+import com.sky.framework.api.exception.CommonException;
 import com.sky.system.api.dto.I18nDto;
 import com.sky.system.api.dto.I18nQueryDto;
 import com.sky.system.api.model.I18n;
@@ -12,6 +13,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiSort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -85,5 +88,17 @@ public class I18nController implements I18nRemoteService {
     @Override
     public ResponseDto<List<I18n>> list(I18nDto dto) {
         return new ResponseDto<>(this.i18nService.list(dto));
+    }
+
+    @ApiOperation(value = "测试国际化资源", position = 60)
+    @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
+    @PostMapping(value = "/i18n/testI18n")
+    public ResponseDto<String> testI18n(@RequestBody I18nDto dto) {
+        if (null == dto.getId()) {
+            throw new CommonException(500, "system.i18n.testI18n_idIsNull", "system.i18n.testI18n_idIsNull");
+        } else if (1 == dto.getId()) {
+            throw new CommonException(500, "system.i18n.testI18n_idEqualsOne", "system.i18n.testI18n_idEqualsOne");
+        }
+        return new ResponseDto<String>().ok();
     }
 }

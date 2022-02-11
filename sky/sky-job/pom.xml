@@ -23,6 +23,7 @@
     <properties>
         <framework.version>1.0-SNAPSHOT</framework.version>
         <sky.job.version>1.0-SNAPSHOT</sky.job.version>
+        <sky.system.version>1.0-SNAPSHOT</sky.system.version>
     </properties>
 
     <dependencyManagement>
@@ -44,6 +45,12 @@
                 <groupId>com.sky</groupId>
                 <artifactId>sky-job-provider</artifactId>
                 <version>${sky.job.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sky</groupId>
+                <artifactId>sky-system-client</artifactId>
+                <version>${sky.system.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

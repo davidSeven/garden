@@ -1,51 +1,17 @@
-package com.sky.gateway.filter;
+package com.sky.gateway.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
-/**
- * @date 2020-12-15 015 12:12
- */
-@Component
-public class IPCheckFilter implements GlobalFilter, Ordered {
+public final class IpUtil {
     private static final String UNKNOWN = "unknown";
-    private final Logger logger = LoggerFactory.getLogger(IPCheckFilter.class);
-
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerHttpRequest request = exchange.getRequest();
-        String ipAddress = getIpAddress(request);
-        long startTime = System.currentTimeMillis();
-        // logger.info("当前请求的ip:{}", ipAddress);
-        ServerHttpRequest host = exchange.getRequest().mutate()
-                .header("Gateway-X-Access-IP", ipAddress)
-                .build();
-        ServerWebExchange build = exchange.mutate().request(host).build();
-        return chain.filter(build).then(Mono.fromRunnable(new Runnable() {
-            @Override
-            public void run() {
-                long endTime = System.currentTimeMillis();
-                long times = endTime - startTime;
-                String uri = request.getURI().getPath();
-                String method = request.getMethodValue();
-                // nginx配置的ip
-                String ip = request.getHeaders().getFirst("Gateway-X-Access-IP");
-                logger.info(">>>请求路径：{}[{}]，IP：{}，开始时间：{}，结束时间：{}，总耗时：{}", uri, method, ip, startTime, endTime, times);
-            }
-        }));
-    }
+    private static final Logger logger = LoggerFactory.getLogger(IpUtil.class);
 
     /**
      * 获取IP地址
@@ -53,7 +19,7 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
      * @param request request
      * @return ip
      */
-    private String getIpAddress(ServerHttpRequest request) {
+    public static String getIpAddress(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
         logger.debug("--- get ip address");
         String ip = headers.getFirst("x-forwarded-for");
@@ -89,7 +55,7 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
      * @param ip ip
      * @return ip
      */
-    private String getLocalHost(String ip) {
+    public static String getLocalHost(String ip) {
         if (ip.equals("127.0.0.1") || ip.equals("0:0:0:0:0:0:0:1")) {
             //根据网卡取本机配置的IP
             InetAddress inetAddress = null;
@@ -103,10 +69,5 @@ public class IPCheckFilter implements GlobalFilter, Ordered {
             }
         }
         return ip;
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
     }
 }

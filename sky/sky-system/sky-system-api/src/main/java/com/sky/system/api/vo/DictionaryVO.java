@@ -32,10 +32,13 @@ public class DictionaryVO {
     private String state;
 
     @ApiModelProperty(value = "顺序")
-    private Long sort;
+    private Integer sort;
 
     @ApiModelProperty(value = "值")
     private String value;
+
+    @ApiModelProperty(value = "路由")
+    private String route;
 
     @ApiModelProperty(value = "备注")
     private String remark;

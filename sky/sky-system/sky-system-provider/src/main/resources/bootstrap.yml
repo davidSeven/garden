@@ -231,3 +231,14 @@ json-context:
           fieldIntensifyName: _append
           loadClassType: class
           loadClassPath: com.sky.framework.json.JsonIntensifyAppend$OriginalJsonIntensifyAppend
+
+com:
+  sky:
+    system:
+      resource:
+        application:
+          ignore:
+            - gateway
+          values:
+            - test1
+          discovery: true

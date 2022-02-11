@@ -1,6 +1,6 @@
 package com.sky.gateway.filter;
 
-import com.sky.system.api.dto.AccessDto;
+import com.sky.gateway.events.AccessEvent;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.api.dto.VerificationDto;
 import com.sky.system.client.service.AuthenticationClientService;
@@ -61,9 +61,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
                 }
             }
             // access
-            AccessDto accessDto = new AccessDto();
-            accessDto.setAuthorization(authorization);
-            this.authenticationClientService.access(accessDto);
+            // AccessDto accessDto = new AccessDto();
+            // accessDto.setAuthorization(authorization);
+            // this.authenticationClientService.access(accessDto);
+            AccessEvent.publishEvent(authorization);
         }
         if (null == build) {
             build = exchange;

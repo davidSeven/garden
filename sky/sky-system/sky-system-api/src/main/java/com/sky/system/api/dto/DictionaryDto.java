@@ -36,7 +36,7 @@ public class DictionaryDto {
     private String state;
 
     @ApiModelProperty(value = "顺序")
-    private Long sort;
+    private Integer sort;
 
     @ApiModelProperty(value = "值")
     private String value;

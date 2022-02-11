@@ -18,7 +18,13 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
         Date now = new Date();
         RequestContext currentContext = RequestContext.getCurrentContext();
         String userCode = currentContext.getUserCode();
+        if (null == userCode) {
+            userCode = "";
+        }
         String requestId = currentContext.getRequestId();
+        if (null == requestId) {
+            requestId = "";
+        }
         this.compareAndSetter("createBy", userCode, metaObject);
         this.compareAndSetter("createDate", now, metaObject);
         this.compareAndSetter("updateBy", userCode, metaObject);
@@ -31,13 +37,22 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
         Date now = new Date();
         RequestContext currentContext = RequestContext.getCurrentContext();
         String userCode = currentContext.getUserCode();
+        if (null == userCode) {
+            userCode = "";
+        }
         String requestId = currentContext.getRequestId();
+        if (null == requestId) {
+            requestId = "";
+        }
         this.compareAndSetter("updateBy", userCode, metaObject);
         this.compareAndSetter("updateDate", now, metaObject);
         this.compareAndSetter("traceId", requestId, metaObject);
     }
 
     private void compareAndSetter(String fieldName, Object fieldVal, MetaObject metaObject) {
+        if (null == fieldVal) {
+            return;
+        }
         // 如果值是空的就赋值
         if (metaObject.hasGetter(fieldName) && this.getFieldValByName(fieldName, metaObject) == null) {
             this.setFieldValByName(fieldName, fieldVal, metaObject);

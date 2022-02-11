@@ -59,6 +59,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.sky</groupId>
+            <artifactId>sky-system-client</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

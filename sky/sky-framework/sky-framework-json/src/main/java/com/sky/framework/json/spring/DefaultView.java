@@ -42,14 +42,22 @@ public class DefaultView {
         } else if (obj instanceof Map) {
             Map<Object, Object> map = (Map<Object, Object>) obj;
             for (Entry<Object, Object> e : map.entrySet()) {
-                Match k = contains(e.getKey().getClass());
-                Match v = contains(e.getValue().getClass());
+                Object key = e.getKey();
+                Match k = null;
+                if (null != key) {
+                    k = contains(key.getClass());
+                }
+                Object value = e.getValue();
+                Match v = null;
+                if (null != value) {
+                    v = contains(value.getClass());
+                }
                 if (k != null) {
-                    view = view.onClass(e.getKey().getClass(), k);
+                    view = view.onClass(key.getClass(), k);
                     found = true;
                 }
                 if (v != null) {
-                    view = view.onClass(e.getValue().getClass(), v);
+                    view = view.onClass(value.getClass(), v);
                     found = true;
                 }
             }
