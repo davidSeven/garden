@@ -1,6 +1,6 @@
 package com.sky.system.config;
 
-import com.sky.system.api.service.DictionaryProperty;
+import com.sky.system.api.service.DictionaryAware;
 import com.sky.system.api.service.DictionaryPropertyConfiguration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,7 +13,7 @@ import java.util.Set;
 @Component
 @ConfigurationProperties(prefix = ResourceApplicationConfig.CONFIG_PREFIX)
 @DictionaryPropertyConfiguration
-public class ResourceApplicationConfig implements DictionaryProperty {
+public class ResourceApplicationConfig implements DictionaryAware {
 
     static final String CONFIG_PREFIX = "com.sky.system.resource.application";
 

@@ -1,6 +1,6 @@
 package com.sky.system.events;
 
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import org.springframework.context.ApplicationEvent;
 
 public class I18nMissEvent extends ApplicationEvent {

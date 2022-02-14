@@ -2,12 +2,8 @@ package com.sky.system.config;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.impl.LRUCache;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.sky.system.api.constant.I18nConstant;
 import com.sky.system.api.model.I18n;
-import com.sky.system.events.I18nMissEvent;
-import com.sky.system.service.I18nService;
+import com.sky.system.api.service.I18nProperty;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,22 +14,34 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class I18nMessageSource extends AbstractMessageSource implements ResourceLoaderAware {
     private final int cacheSize = 1000;
     private final Map<Locale, Cache<String, String>> cacheMap = new HashMap<>(8);
-    private final I18nService i18nService;
+    private final I18nConfiguration i18nConfiguration;
+    private final I18nProperty i18nProperty;
+    private List<String> prefixList;
 
-    public I18nMessageSource(I18nService i18nService) {
-        this.i18nService = i18nService;
+    public I18nMessageSource(I18nConfiguration i18nConfiguration, I18nProperty i18nProperty) {
+        this.i18nConfiguration = i18nConfiguration;
+        this.i18nProperty = i18nProperty;
+    }
+
+    public void init() {
+        this.prefixList = new ArrayList<>();
+        List<String> rootValues = this.i18nConfiguration.getRootValues();
+        if (CollectionUtils.isNotEmpty(rootValues)) {
+            this.prefixList.addAll(rootValues);
+        }
+        List<String> values = this.i18nConfiguration.getValues();
+        if (CollectionUtils.isNotEmpty(values)) {
+            this.prefixList.addAll(values);
+        }
     }
 
     public void refreshAll() {
-        List<Locale> localeList = this.i18nService.getLocaleList();
+        List<Locale> localeList = this.i18nProperty.getLocaleList();
         for (Locale locale : localeList) {
             this.refreshAll(locale);
         }
@@ -41,12 +49,7 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
 
     public void refreshAll(Locale locale) {
         this.cacheMap.remove(locale);
-        LambdaQueryWrapper<I18n> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.select(I18n::getCode, I18n::getValue);
-        queryWrapper.eq(I18n::getLanguageType, locale.toString());
-        queryWrapper.eq(I18n::getState, I18nConstant.State.$1.getCode());
-        queryWrapper.last("limit " + this.cacheSize);
-        List<I18n> i18nList = this.i18nService.list(queryWrapper);
+        List<I18n> i18nList = this.i18nProperty.list(this.prefixList, locale, this.cacheSize);
         Cache<String, String> cache = new LRUCache<>(this.cacheSize);
         if (CollectionUtils.isNotEmpty(i18nList)) {
             for (I18n i18n : i18nList) {
@@ -62,16 +65,11 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
 
     public void refresh(String code, Locale locale) {
         clear(code);
-        if (null != locale) {
-            List<I18n> i18nList = this.i18nService.getList(code);
-            if (CollectionUtils.isNotEmpty(i18nList)) {
-                for (I18n i18n : i18nList) {
-                    this.refresh(i18n);
-                }
+        List<I18n> i18nList = this.i18nProperty.list(code, locale);
+        if (CollectionUtils.isNotEmpty(i18nList)) {
+            for (I18n i18n : i18nList) {
+                this.refresh(i18n);
             }
-        } else {
-            I18n i18n = this.i18nService.get(code, null);
-            this.refresh(i18n);
         }
     }
 
@@ -130,14 +128,14 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
                 // logger.error(ex.getMessage(), ex);
             }
             if (StringUtils.isEmpty(value)) {
-                I18n i18n = i18nService.get(code, locale);
+                I18n i18n = i18nProperty.get(code, locale);
                 this.refresh(i18n);
                 if (null != i18n) {
                     value = i18n.getValue();
                 } else {
                     logger.info("miss code:" + code);
                     value = code;
-                    I18nMissEvent.publishEvent(code, locale.toString());
+                    i18nProperty.miss(code, locale);
                 }
             }
             return value;
@@ -151,7 +149,5 @@ public class I18nMessageSource extends AbstractMessageSource implements Resource
         resourceBundleMessageSource.setDefaultEncoding("utf-8");
         resourceBundleMessageSource.setFallbackToSystemLocale(true);
         super.setParentMessageSource(resourceBundleMessageSource);
-        // String message = resourceBundleMessageSource.getMessage("common.message", null, Locale.SIMPLIFIED_CHINESE);
-        // logger.info("common.message:" + message);
     }
 }

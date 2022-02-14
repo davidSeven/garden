@@ -3,43 +3,28 @@ package com.sky.system.config;
 import cn.hutool.cache.impl.LRUCache;
 import com.alibaba.fastjson.JSON;
 import com.sky.framework.utils.AnnotationUtil;
-import com.sky.system.api.service.DictionaryProperty;
-import com.sky.system.api.service.DictionaryPropertyConfiguration;
-import com.sky.system.service.DictionaryService;
+import com.sky.system.api.service.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Component
 public class DictionaryBeanPostProcessor implements BeanPostProcessor {
 
-    private final DictionaryService dictionaryService;
-
-    public DictionaryBeanPostProcessor(DictionaryService dictionaryService) {
-        this.dictionaryService = dictionaryService;
-        String strCapacity = this.dictionaryService.getValue("com.sky.system.dictionary.cache.capacity");
-        String strTimeout = this.dictionaryService.getValue("com.sky.system.dictionary.cache.timeout");
-        if (StringUtils.isNotEmpty(strCapacity)) {
-            DictionaryCache.capacity = Integer.parseInt(strCapacity);
-        }
-        if (StringUtils.isNotEmpty(strTimeout)) {
-            DictionaryCache.timeout = Long.parseLong(strTimeout);
-        }
-        DictionaryCache.init();
-    }
+    @SuppressWarnings({"all"})
+    @Autowired
+    private DictionaryProperty dictionaryProperty;
 
     /**
      * Spring IOC容器实例化Bean
@@ -50,7 +35,7 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
      * @throws BeansException bean异常
      */
     @Override
-    public Object postProcessBeforeInitialization(@NonNull Object bean, @Nonnull String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         return bean;
     }
 
@@ -66,14 +51,17 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         boolean accept = false;
         String prefix = "";
-        if (bean instanceof DictionaryProperty) {
+        Map<String, DictionaryPropertyAnnotation> propertyAnnotationMap = null;
+        Class<?> beanClass = bean.getClass();
+        if (bean instanceof DictionaryAware) {
             accept = true;
-            prefix = ((DictionaryProperty) bean).prefix();
+            prefix = ((DictionaryAware) bean).prefix();
+            propertyAnnotationMap = this.buildPropertyAnnotation(beanClass);
         } else {
-            Class<?> beanClass = bean.getClass();
             DictionaryPropertyConfiguration dictionaryPropertyConfiguration = (DictionaryPropertyConfiguration) AnnotationUtil.getAnnotation(beanClass, DictionaryPropertyConfiguration.class);
             if (null != dictionaryPropertyConfiguration) {
                 prefix = dictionaryPropertyConfiguration.prefix();
+                propertyAnnotationMap = this.buildPropertyAnnotation(beanClass);
                 if (StringUtils.isNotEmpty(prefix)) {
                     accept = true;
                 } else {
@@ -90,12 +78,66 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
         }
         if (accept) {
             Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(bean.getClass());
-            enhancer.setCallback(new DictionaryMethodInterceptor(bean, prefix, dictionaryService));
+            enhancer.setSuperclass(beanClass);
+            enhancer.setCallback(new DictionaryMethodInterceptor(bean, prefix, dictionaryProperty, propertyAnnotationMap));
             // 返回代理bean
             return enhancer.create();
         }
         return bean;
+    }
+
+    private Map<String, DictionaryPropertyAnnotation> buildPropertyAnnotation(Class<?> beanClass) {
+        Map<String, DictionaryPropertyAnnotation> fieldAnnotationMap = new HashMap<>();
+        // 处理类字段上的注解
+        Field[] declaredFields = beanClass.getDeclaredFields();
+        if (ArrayUtils.isNotEmpty(declaredFields)) {
+            for (Field declaredField : declaredFields) {
+                DictionaryPropertyIgnore dictionaryPropertyIgnore = declaredField.getAnnotation(DictionaryPropertyIgnore.class);
+                DictionaryPropertyPrefix dictionaryPropertyPrefix = declaredField.getAnnotation(DictionaryPropertyPrefix.class);
+                DictionaryPropertyName dictionaryPropertyName = declaredField.getAnnotation(DictionaryPropertyName.class);
+                fieldAnnotationMap.put(declaredField.getName(), new DictionaryPropertyAnnotation(dictionaryPropertyIgnore, dictionaryPropertyPrefix, dictionaryPropertyName));
+            }
+        }
+        return fieldAnnotationMap;
+    }
+
+    static class DictionaryPropertyAnnotation {
+        private DictionaryPropertyIgnore dictionaryPropertyIgnore;
+        private DictionaryPropertyPrefix dictionaryPropertyPrefix;
+        private DictionaryPropertyName dictionaryPropertyName;
+
+        public DictionaryPropertyAnnotation() {
+        }
+
+        public DictionaryPropertyAnnotation(DictionaryPropertyIgnore dictionaryPropertyIgnore, DictionaryPropertyPrefix dictionaryPropertyPrefix, DictionaryPropertyName dictionaryPropertyName) {
+            this.dictionaryPropertyIgnore = dictionaryPropertyIgnore;
+            this.dictionaryPropertyPrefix = dictionaryPropertyPrefix;
+            this.dictionaryPropertyName = dictionaryPropertyName;
+        }
+
+        public DictionaryPropertyIgnore getDictionaryPropertyIgnore() {
+            return dictionaryPropertyIgnore;
+        }
+
+        public void setDictionaryPropertyIgnore(DictionaryPropertyIgnore dictionaryPropertyIgnore) {
+            this.dictionaryPropertyIgnore = dictionaryPropertyIgnore;
+        }
+
+        public DictionaryPropertyPrefix getDictionaryPropertyPrefix() {
+            return dictionaryPropertyPrefix;
+        }
+
+        public void setDictionaryPropertyPrefix(DictionaryPropertyPrefix dictionaryPropertyPrefix) {
+            this.dictionaryPropertyPrefix = dictionaryPropertyPrefix;
+        }
+
+        public DictionaryPropertyName getDictionaryPropertyName() {
+            return dictionaryPropertyName;
+        }
+
+        public void setDictionaryPropertyName(DictionaryPropertyName dictionaryPropertyName) {
+            this.dictionaryPropertyName = dictionaryPropertyName;
+        }
     }
 
     /**
@@ -105,16 +147,16 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
 
         private final Object target;
         private final String prefix;
-        private final DictionaryService dictionaryService;
+        private final DictionaryProperty dictionaryProperty;
+        private final Map<String, DictionaryPropertyAnnotation> propertyAnnotationMap;
         private final boolean cacheEnabled;
 
-        public DictionaryMethodInterceptor(Object target, String prefix, DictionaryService dictionaryService) {
+        public DictionaryMethodInterceptor(Object target, String prefix, DictionaryProperty dictionaryProperty, Map<String, DictionaryPropertyAnnotation> propertyAnnotationMap) {
             this.target = target;
             this.prefix = prefix;
-            this.dictionaryService = dictionaryService;
-            String cacheEnabled = this.dictionaryService.getValue("com.sky.system.dictionary.cache.enabled");
-            // true and false , on and off
-            this.cacheEnabled = "true".equalsIgnoreCase(cacheEnabled) || "on".equalsIgnoreCase(cacheEnabled);
+            this.dictionaryProperty = dictionaryProperty;
+            this.propertyAnnotationMap = propertyAnnotationMap;
+            this.cacheEnabled = true;
         }
 
         @Override
@@ -133,12 +175,36 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
                     propertyName = methodName;
                 }
             }
+            DictionaryPropertyAnnotation propertyAnnotation = propertyAnnotationMap.get(propertyName);
+            if (null != propertyAnnotation.getDictionaryPropertyIgnore()) {
+                // 如果配置了@DictionaryPropertyIgnore注解，这个字段不去数据字典查询
+                return method.invoke(target, args);
+            }
             String propertyValue = null;
             if (cacheEnabled) {
                 propertyValue = DictionaryCache.getCacheValue(obj.getClass().getName(), methodName);
             }
             if (null == propertyValue) {
-                propertyValue = dictionaryService.getValue(prefix + "." + propertyName);
+                String propertyPrefix;
+                DictionaryPropertyPrefix dictionaryPropertyPrefix = propertyAnnotation.getDictionaryPropertyPrefix();
+                if (null != dictionaryPropertyPrefix) {
+                    Object _value = MethodUtils.invokeMethod(this.target, dictionaryPropertyPrefix.value());
+                    if (null != _value) {
+                        propertyPrefix = (String) _value;
+                    } else {
+                        propertyPrefix = "";
+                    }
+                } else {
+                    propertyPrefix = prefix;
+                }
+                String _propertyName;
+                DictionaryPropertyName dictionaryPropertyName = propertyAnnotation.getDictionaryPropertyName();
+                if (null != dictionaryPropertyName) {
+                    _propertyName = dictionaryPropertyName.value();
+                } else {
+                    _propertyName = propertyName;
+                }
+                propertyValue = dictionaryProperty.getValue(propertyPrefix + "." + _propertyName);
             }
             if (StringUtils.isNotEmpty(propertyValue)) {
                 if (cacheEnabled) {
@@ -220,12 +286,12 @@ public class DictionaryBeanPostProcessor implements BeanPostProcessor {
      * 缓存对象
      */
     static class DictionaryCache {
-        private static LRUCache<String, LRUCache<String, String>> cache;
+        private static final LRUCache<String, LRUCache<String, String>> cache;
         // default value
         static int capacity = 100;
         static long timeout = 3600000;
 
-        public static void init() {
+        static {
             cache = new LRUCache<>(capacity, timeout);
         }
 

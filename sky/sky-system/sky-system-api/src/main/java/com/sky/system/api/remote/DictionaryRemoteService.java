@@ -29,4 +29,7 @@ public interface DictionaryRemoteService {
 
     @DeleteMapping(value = "/dictionary")
     ResponseDto<Integer> delete(@RequestBody DictionaryDto dto);
+
+    @PostMapping(value = "/dictionary/value")
+    ResponseDto<String> getValue(@RequestBody String code);
 }

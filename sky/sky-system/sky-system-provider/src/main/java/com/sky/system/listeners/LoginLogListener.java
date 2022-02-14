@@ -1,6 +1,6 @@
 package com.sky.system.listeners;
 
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.model.LoginLog;
 import com.sky.system.api.model.OnlineUser;
@@ -57,7 +57,7 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         LoginLogEvent loginLogEvent = new LoginLogEvent(loginLog);
         loginLogEvent.setUserId(userId);
         loginLogEvent.setLeaseTime(leaseTime);
-        ApplicationUtil.publishEvent(loginLogEvent);
+        ApplicationUtil.getApplicationContext().publishEvent(loginLogEvent);
     }
 
     @Async

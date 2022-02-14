@@ -2,7 +2,7 @@ package com.sky.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.framework.api.dto.ResponseDto;
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import com.sky.system.api.model.ResourceApplication;
 import com.sky.system.api.model.ResourceDetail;
 import com.sky.system.config.ResourceApplicationConfig;

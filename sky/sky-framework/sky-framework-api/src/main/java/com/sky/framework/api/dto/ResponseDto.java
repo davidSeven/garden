@@ -210,6 +210,18 @@ public class ResponseDto<T> implements Serializable {
         return this;
     }
 
+    /**
+     * ok
+     *
+     * @param data data
+     * @return ResponseDto
+     */
+    public ResponseDto<T> ok(T data) {
+        this.setAppCode(ExceptionCode.SUCCESS);
+        this.setData(data);
+        return this;
+    }
+
     public int getCode() {
         return code;
     }

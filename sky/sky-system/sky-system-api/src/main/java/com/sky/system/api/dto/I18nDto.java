@@ -31,4 +31,10 @@ public class I18nDto {
     @ApiModelProperty(value = "IDS")
     private List<Long> ids;
 
+    @ApiModelProperty(value = "数量")
+    private int size;
+
+    @ApiModelProperty(value = "国际化前缀")
+    private List<String> prefixList;
+
 }

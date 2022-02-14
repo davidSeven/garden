@@ -2,7 +2,7 @@ package com.sky.job.util;
 
 import com.alibaba.fastjson.JSON;
 import com.sky.framework.api.dto.ResponseDto;
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import com.sky.job.api.JobInterface;
 import com.sky.job.api.model.JobLog;
 import com.sky.job.service.JobLogService;

@@ -59,4 +59,11 @@ public class DictionaryController implements DictionaryRemoteService {
     public ResponseDto<Integer> delete(@RequestBody DictionaryDto dto) {
         return new ResponseDto<Integer>().ok().setData(this.dictionaryService.physicalDeleteById(dto.getId()));
     }
+
+    @ApiOperation(value = "获取数据字典值")
+    @ApiImplicitParam(name = "code", value = "编码", required = true, dataType = "String")
+    @Override
+    public ResponseDto<String> getValue(@RequestBody String code) {
+        return new ResponseDto<>(this.dictionaryService.getValue(code)).ok();
+    }
 }

@@ -116,6 +116,17 @@ public class I18nServiceImpl extends ServiceImpl<I18nDao, I18n> implements I18nS
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getLanguageType()), I18n::getLanguageType, dto.getLanguageType());
         queryWrapper.like(StringUtils.isNotEmpty(dto.getCode()), I18n::getCode, dto.getCode());
         queryWrapper.like(StringUtils.isNotEmpty(dto.getValue()), I18n::getValue, dto.getValue());
+        if (dto.getSize() > 0) {
+            queryWrapper.last("limit " + dto.getSize());
+        }
+        List<String> prefixList = dto.getPrefixList();
+        if (CollectionUtils.isNotEmpty(prefixList)) {
+            queryWrapper.and(consumer -> {
+                for (String prefix : prefixList) {
+                    consumer.likeRight(I18n::getCode, prefix).or();
+                }
+            });
+        }
         return super.list(queryWrapper);
     }
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "国际化缺失信息")
 @ApiSort(value = 510)
-@RestController
+@RestController(value = "/i18n-miss")
 public class I18nMissController {
 
     @Autowired

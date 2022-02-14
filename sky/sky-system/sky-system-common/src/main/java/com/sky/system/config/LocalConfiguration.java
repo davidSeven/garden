@@ -1,6 +1,6 @@
 package com.sky.system.config;
 
-import com.sky.system.service.I18nService;
+import com.sky.system.api.service.I18nProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +16,14 @@ import java.util.Locale;
 public class LocalConfiguration {
 
     @Autowired
-    private I18nService i18nService;
+    private I18nConfiguration i18nConfiguration;
+    @SuppressWarnings({"all"})
+    @Autowired
+    private I18nProperty i18nProperty;
 
     @Bean
     public MessageSource messageSource() {
-        return new I18nMessageSource(this.i18nService);
+        return new I18nMessageSource(this.i18nConfiguration, this.i18nProperty);
     }
 
     @Bean

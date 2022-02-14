@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface I18nRemoteService {
 
@@ -41,4 +42,6 @@ public interface I18nRemoteService {
     @PostMapping(value = "/i18n/list")
     ResponseDto<List<I18n>> list(@RequestBody I18nDto dto);
 
+    @PostMapping(value = "/i18n/getLocaleList")
+    ResponseDto<List<Locale>> getLocaleList();
 }

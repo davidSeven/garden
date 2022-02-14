@@ -12,12 +12,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiSort;
+import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 @Api(tags = "国际化信息")
 @ApiSort(value = 500)
@@ -31,66 +33,77 @@ public class I18nController implements I18nRemoteService {
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<I18n> get(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.getById(dto.getId())).ok();
+        if (null != dto.getId()) {
+            return new ResponseDto<>(this.i18nService.getById(dto.getId())).ok();
+        } else {
+            Locale locale = LocaleUtils.toLocale(dto.getLanguageType());
+            return new ResponseDto<>(this.i18nService.get(dto.getCode(), locale)).ok();
+        }
     }
 
     @ApiOperation(value = "保存", position = 20)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> save(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.create(dto));
+        return new ResponseDto<>(this.i18nService.create(dto)).ok();
     }
 
     @ApiOperation(value = "批量保存", position = 21)
     @ApiImplicitParam(name = "dto", value = "list", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> saveBatch(List<I18nDto> list) {
-        return new ResponseDto<>(this.i18nService.create(list));
+        return new ResponseDto<>(this.i18nService.create(list)).ok();
     }
 
     @ApiOperation(value = "修改", position = 30)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> update(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.update(dto));
+        return new ResponseDto<>(this.i18nService.update(dto)).ok();
     }
 
     @ApiOperation(value = "批量修改", position = 31)
     @ApiImplicitParam(name = "dto", value = "list", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> updateBatch(List<I18nDto> list) {
-        return new ResponseDto<>(this.i18nService.update(list));
+        return new ResponseDto<>(this.i18nService.update(list)).ok();
     }
 
     @ApiOperation(value = "删除", position = 40)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> delete(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.removeById(dto.getId()));
+        return new ResponseDto<>(this.i18nService.removeById(dto.getId())).ok();
     }
 
     @ApiOperation(value = "批量删除", position = 41)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<Boolean> deleteBatch(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.removeByIds(dto.getIds()));
+        return new ResponseDto<>(this.i18nService.removeByIds(dto.getIds())).ok();
     }
 
     @ApiOperation(value = "分页列表", position = 50)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nQueryDto")
     @Override
     public ResponseDto<IPage<I18n>> page(I18nQueryDto dto) {
-        return new ResponseDto<>(this.i18nService.page(dto));
+        return new ResponseDto<>(this.i18nService.page(dto)).ok();
     }
 
     @ApiOperation(value = "列表", position = 60)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @Override
     public ResponseDto<List<I18n>> list(I18nDto dto) {
-        return new ResponseDto<>(this.i18nService.list(dto));
+        return new ResponseDto<>(this.i18nService.list(dto)).ok();
     }
 
-    @ApiOperation(value = "测试国际化资源", position = 60)
+    @ApiOperation(value = "语言列表", position = 70)
+    @Override
+    public ResponseDto<List<Locale>> getLocaleList() {
+        return new ResponseDto<List<Locale>>().ok(this.i18nService.getLocaleList());
+    }
+
+    @ApiOperation(value = "测试国际化资源", position = 80)
     @ApiImplicitParam(name = "dto", value = "dto", required = true, dataType = "I18nDto")
     @PostMapping(value = "/i18n/testI18n")
     public ResponseDto<String> testI18n(@RequestBody I18nDto dto) {

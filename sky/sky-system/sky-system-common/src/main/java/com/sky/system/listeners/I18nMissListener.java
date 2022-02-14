@@ -1,8 +1,8 @@
 package com.sky.system.listeners;
 
 import com.sky.system.api.model.I18nMiss;
+import com.sky.system.api.service.I18nMissProperty;
 import com.sky.system.events.I18nMissEvent;
-import com.sky.system.service.I18nMissService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class I18nMissListener {
 
     @Autowired
-    private I18nMissService i18nMissService;
+    private I18nMissProperty i18nMissProperty;
 
     @Async
     @EventListener
@@ -23,6 +23,6 @@ public class I18nMissListener {
         I18nMiss i18nMiss = new I18nMiss();
         i18nMiss.setCode(code);
         i18nMiss.setLanguageType(languageType);
-        this.i18nMissService.save(i18nMiss);
+        this.i18nMissProperty.save(i18nMiss);
     }
 }

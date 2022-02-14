@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobService {
-    private Logger logger = LoggerFactory.getLogger(JobServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(JobServiceImpl.class);
 
     @Override
     public void initJob() throws SchedulerException {
@@ -40,9 +40,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
             }
         }
         logger.info("---------------------------------------------------");
-        logger.info("---------------------------------------------------");
         logger.info("任务调度完成初始化");
-        logger.info("---------------------------------------------------");
         logger.info("---------------------------------------------------");
     }
 
@@ -94,7 +92,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
         }
         Job Job = super.getById(id);
         if (null == Job) {
-            throw new CommonException(999, "任务信息不存在");
+            throw new CommonException(999, "job.job.noExists");
         }
         if (JobConstant.JOB_TASK_STATE_ENABLED == Job.getEnable()) {
             return true;
@@ -122,7 +120,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
         }
         Job Job = super.getById(id);
         if (null == Job) {
-            throw new CommonException(999, "任务信息不存在");
+            throw new CommonException(999, "job.job.noExists");
         }
         if (JobConstant.JOB_TASK_STATE_DISABLED == Job.getEnable()) {
             return true;
@@ -145,7 +143,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, Job> implements JobServi
         }
         Job Job = super.getById(id);
         if (null == Job) {
-            throw new CommonException(999, "任务信息不存在");
+            throw new CommonException(999, "job.job.noExists");
         }
         return JobScheduler.triggerJob(String.valueOf(Job.getId()), Job.getTaskGroup());
     }

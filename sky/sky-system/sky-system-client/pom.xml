@@ -28,6 +28,11 @@
 
         <dependency>
             <groupId>com.sky</groupId>
+            <artifactId>sky-system-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sky</groupId>
             <artifactId>sky-framework-utils</artifactId>
         </dependency>
 

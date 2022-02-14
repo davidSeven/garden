@@ -27,9 +27,9 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        logger.info(template.bodyTemplate());
-        logger.info(template.method());
-        logger.info(template.url());
+        // logger.info(template.bodyTemplate());
+        // logger.info(template.method());
+        // logger.info(template.url());
         // 这里不能强制设置Accept和Content-Type，不然通过feign的方式调附件上传接口会丢失file
         // template.header("Accept", MediaType.ALL_VALUE);
         // template.header("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE);
