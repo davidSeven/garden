@@ -15,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
 @Configuration
 @EnableFeignClients(basePackages = "com.sky")
@@ -41,14 +43,19 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                     String name = headerNames.nextElement();
-                    Enumeration<String> values = request.getHeaders(name);
-                    while (values.hasMoreElements()) {
-                        String value = values.nextElement();
-                        if ("content-type".equalsIgnoreCase(name) && value.contains("multipart/form-data")) {
-                            break;
-                        }
-                        template.header(name, value);
+                    if ("content-type".equalsIgnoreCase(name)) {
+                        break;
                     }
+                    if ("content-length".equalsIgnoreCase(name)) {
+                        break;
+                    }
+                    // template.header(name, request.getHeader(name));
+                    Enumeration<String> enumeration = request.getHeaders(name);
+                    List<String> iterable = new LinkedList<>();
+                    while (enumeration.hasMoreElements()) {
+                        iterable.add(enumeration.nextElement());
+                    }
+                    template.header(name, iterable);
                 }
             }
         }
