@@ -41,6 +41,7 @@
     <!-- 配置映射文件：用来配置sql语句和结果集类型等 -->
     <mappers>
         <mapper resource="com/example/dao/UserDao.xml"/>
+        <mapper resource="com/example/dao/TestDao.xml"/>
     </mappers>
 
 </configuration>
