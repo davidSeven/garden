@@ -36,4 +36,19 @@ public class UserDto {
 
     @ApiModelProperty(value = "登录时间")
     private Date loginDate;
+
+    @ApiModelProperty(value = "版本号")
+    private int version;
+
+    @ApiModelProperty(value = "创建人")
+    private String createBy;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date createDate;
+
+    @ApiModelProperty(value = "修改人")
+    private String updateBy;
+
+    @ApiModelProperty(value = "修改时间")
+    private Date updateDate;
 }

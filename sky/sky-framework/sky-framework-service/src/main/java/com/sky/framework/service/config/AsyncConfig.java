@@ -24,17 +24,19 @@ public class AsyncConfig implements AsyncConfigurer {
     public Executor getAsyncExecutor() {
         logger.info("start asyncServiceExecutor");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        Runtime runtime = Runtime.getRuntime();
+        int availableProcessors = runtime.availableProcessors();
         // 配置核心线程数
-        executor.setCorePoolSize(5);
+        executor.setCorePoolSize(availableProcessors + 1);
         // 配置最大线程数
-        executor.setMaxPoolSize(5);
+        executor.setMaxPoolSize(availableProcessors * 4);
         // 配置队列大小
-        executor.setQueueCapacity(99999);
+        executor.setQueueCapacity(10240);
         // 配置线程池中的线程的名称前缀
         executor.setThreadNamePrefix("async-service-");
         // 设置拒绝策略：当pool已经达到max size的时候，如何处理新任务
-        // CALLER_RUNS：不在新线程中执行任务，而是有调用者所在的线程来执行
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 抛异常不执行新任务
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         //执行初始化
         executor.initialize();
         return executor;

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 在结果集对象中添加requestId
  */
-@Configuration
+// @Configuration
 public class ResponseHandlerConfig implements InitializingBean {
 
     @Autowired

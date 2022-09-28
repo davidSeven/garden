@@ -16,11 +16,11 @@
     <property name="MAX_FILE_SIZE" value="100MB"/>
 
     <!-- 彩色日志格式 -->
-    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%X{X-requestId}]){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
     <!-- 彩色日志格式 -->
     <!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS}{faint}${LOG_LEVEL_PATTERN:-%5p} ${PID:- }{magenta} -&#45;&#45;{faint} [%15.15t]{faint} %-40.40logger{39}{cyan} :{faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
-    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5.5level --- [%15.15thread] %-40.40logger{40} : %msg%n"/>
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5.5level [%X{X-requestId}] [%15.15thread] %-40.40logger{40} : %msg%n"/>
 
     <!--输出到控制台-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -83,6 +83,7 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
         </rollingPolicy>
         <!-- 此日志文件只记录info级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -164,14 +165,21 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="local">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
-            <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="SQL"/>
-        </logger>
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false"/>
+        <logger name="com.netflix" level="ERROR"/>
+        <logger name="com.zaxxer" level="ERROR"/>
+        <logger name="io.lettuce" level="ERROR"/>
+        <logger name="io.netty" level="ERROR"/>
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="org.mybatis" level="ERROR"/>
+        <logger name="org.hibernate" level="ERROR"/>
+        <logger name="org.apache" level="ERROR"/>
+        <logger name="org.redisson" level="ERROR"/>
+        <logger name="org.mongodb" level="ERROR"/>
 
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>
             <appender-ref ref="INFO_FILE"/>
@@ -181,12 +189,14 @@
     </springProfile>
 
     <springProfile name="dev">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
+
+        <logger name="com.netflix" level="ERROR"/>
 
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
@@ -199,14 +209,14 @@
 
     <!--生产环境:输出到文件-->
     <springProfile name="prod">
-        <logger name="springfox" level="WARN"/>
+        <logger name="springfox" level="ERROR"/>
 
-        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+        <logger name="com.baomidou.mybatisplus" level="ERROR" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SQL"/>
         </logger>
 
-        <root level="INFO">
+        <root level="ERROR">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>
             <appender-ref ref="INFO_FILE"/>

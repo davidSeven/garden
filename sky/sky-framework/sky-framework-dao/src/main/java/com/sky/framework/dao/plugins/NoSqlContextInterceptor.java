@@ -48,7 +48,7 @@ public class NoSqlContextInterceptor implements Interceptor {
 
         Object parameter = invocationArgs[1];
         RowBounds rowBounds = (RowBounds) invocationArgs[2];
-        ResultHandler resultHandler = (ResultHandler) invocationArgs[3];
+        ResultHandler<?> resultHandler = (ResultHandler<?>) invocationArgs[3];
 
         CacheKey cacheKey;
         BoundSql boundSql;

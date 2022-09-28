@@ -1,6 +1,6 @@
 package com.sky.system.listeners;
 
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import com.sky.system.api.dto.LoginDto;
 import com.sky.system.api.model.LoginLog;
 import com.sky.system.api.model.OnlineUser;
@@ -10,6 +10,7 @@ import com.sky.system.service.LoginLogService;
 import com.sky.system.service.OnlineUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,8 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
     private LoginLogService loginLogService;
     @Autowired
     private OnlineUserService onlineUserService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public static void login(LoginDto dto, String token, Long userId, Long leaseTime) {
         LoginLog loginLog = new LoginLog();
@@ -54,7 +57,7 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
         LoginLogEvent loginLogEvent = new LoginLogEvent(loginLog);
         loginLogEvent.setUserId(userId);
         loginLogEvent.setLeaseTime(leaseTime);
-        ApplicationUtil.publishEvent(loginLogEvent);
+        ApplicationUtil.getApplicationContext().publishEvent(loginLogEvent);
     }
 
     @Async
@@ -65,6 +68,7 @@ public class LoginLogListener implements ApplicationListener<LoginLogEvent> {
             return;
         }
         LoginLog loginLog = (LoginLog) source;
+        this.mongoTemplate.save(loginLog, "login_log");
         this.loginLogService.login(loginLog);
         if (LoginLogConstant.STATE_SUCCESS.equals(loginLog.getState())) {
             OnlineUser onlineUser = new OnlineUser();

@@ -55,6 +55,20 @@ spring:
             - Path=/file/**
           filters:
             - StripPrefix=1
+        # sky-base
+        - id: sky-base
+          uri: lb://sky-base
+          predicates:
+            - Path=/base/**
+          filters:
+            - StripPrefix=1
+        # sky-inventory
+        - id: sky-inventory
+          uri: lb://sky-inventory
+          predicates:
+            - Path=/inventory/**
+          filters:
+            - StripPrefix=1
     loadbalancer:
       retry:
         enabled: true
@@ -89,9 +103,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 ribbon:
-  ReadTimeout: 20000
-  SocketTimeout: 50000
-  ConnectTimeout: 50000
+  ReadTimeout: 60000
+  SocketTimeout: 60000
+  ConnectTimeout: 60000
 hystrix:
   command:
     default:

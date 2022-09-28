@@ -1,6 +1,6 @@
 package com.sky.gateway.filter;
 
-import com.sky.system.api.dto.AccessDto;
+import com.sky.gateway.events.AccessEvent;
 import com.sky.system.api.dto.UserLoginDto;
 import com.sky.system.api.dto.VerificationDto;
 import com.sky.system.client.service.AuthenticationClientService;
@@ -37,9 +37,9 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         // 1. 获取token
         String authorization = request.getHeaders().getFirst("Authorization");
-        String ip = request.getHeaders().getFirst("X-Access-IP");
+        String ip = request.getHeaders().getFirst("Gateway-X-Access-IP");
 
-        logger.info("当前请求的url:{}, method:{}, token:{}, ip:{}", request.getURI().getPath(), request.getMethodValue(), authorization, ip);
+        // logger.info("当前请求的url:{}, method:{}, token:{}, ip:{}", request.getURI().getPath(), request.getMethodValue(), authorization, ip);
 
         ServerWebExchange build = null;
         if (Strings.isNotEmpty(authorization)) {
@@ -61,9 +61,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
                 }
             }
             // access
-            AccessDto accessDto = new AccessDto();
-            accessDto.setAuthorization(authorization);
-            this.authenticationClientService.access(accessDto);
+            // AccessDto accessDto = new AccessDto();
+            // accessDto.setAuthorization(authorization);
+            // this.authenticationClientService.access(accessDto);
+            AccessEvent.publishEvent(authorization);
         }
         if (null == build) {
             build = exchange;

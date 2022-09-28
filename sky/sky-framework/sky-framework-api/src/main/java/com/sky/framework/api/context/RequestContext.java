@@ -62,6 +62,19 @@ public class RequestContext {
     }
 
     /**
+     * setCurrentContext
+     *
+     * @param requestContext requestContext
+     */
+    public static void setCurrentContext(RequestContext requestContext) {
+        if (null == requestContext) {
+            contextHolder.remove();
+        } else {
+            contextHolder.set(requestContext);
+        }
+    }
+
+    /**
      * close
      */
     public void close() {

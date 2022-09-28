@@ -13,4 +13,8 @@ public interface AppCode {
     default boolean isSuccess() {
         return this.getCode() == 0;
     }
+
+    default void refreshFormat(Object[] arguments) {
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.sky.framework.api.dto;
 
+import com.netflix.client.ClientException;
 import com.sky.framework.api.enums.AppCode;
 import com.sky.framework.api.enums.ExceptionCode;
 import com.sky.framework.api.exception.CommonException;
@@ -41,6 +42,15 @@ public class ResponseDto<T> implements Serializable {
      * 构造器
      */
     public ResponseDto() {
+    }
+
+    /**
+     * 构造器
+     *
+     * @param data 业务数据
+     */
+    public ResponseDto(T data) {
+        this.data = data;
     }
 
     /**
@@ -163,7 +173,19 @@ public class ResponseDto<T> implements Serializable {
             responseDto.setCode(commonException.getCode());
             responseDto.setMessage(commonException.getMessage());
         } else {
-            responseDto.setAppCode(ExceptionCode.UNKNOWN_EXCEPTION);
+            ExceptionCode exceptionCode;
+            Throwable cause = throwable.getCause();
+            if (cause instanceof ClientException) {
+                exceptionCode = ExceptionCode.SERVICE_EXCEPTION;
+                String causeMessage = cause.getMessage();
+                if (causeMessage.startsWith("Load balancer does not have available server for client")) {
+                    causeMessage = causeMessage.substring("Load balancer does not have available server for client: ".length());
+                }
+                exceptionCode.refreshFormat(new Object[]{causeMessage});
+            } else {
+                exceptionCode = ExceptionCode.UNKNOWN_EXCEPTION;
+            }
+            responseDto.setAppCode(exceptionCode);
         }
         return responseDto;
     }
@@ -185,6 +207,18 @@ public class ResponseDto<T> implements Serializable {
      */
     public ResponseDto<T> ok() {
         this.setAppCode(ExceptionCode.SUCCESS);
+        return this;
+    }
+
+    /**
+     * ok
+     *
+     * @param data data
+     * @return ResponseDto
+     */
+    public ResponseDto<T> ok(T data) {
+        this.setAppCode(ExceptionCode.SUCCESS);
+        this.setData(data);
         return this;
     }
 

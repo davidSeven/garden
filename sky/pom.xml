@@ -10,13 +10,21 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
+        <module>sky-account</module>
+        <module>sky-base</module>
+        <module>sky-delivery</module>
         <module>sky-eureka</module>
         <module>sky-file</module>
         <module>sky-framework</module>
         <module>sky-gateway</module>
         <module>sky-generator</module>
+        <module>sky-inventory</module>
         <module>sky-job</module>
+        <module>sky-receiver</module>
         <module>sky-system</module>
+
+        <module>sky-oauth</module>
+        <module>sky-oauth-resource</module>
     </modules>
 
     <parent>
@@ -32,8 +40,9 @@
         <java.version>1.8</java.version>
         <encoding>UTF-8</encoding>
 
-        <spring-boot-starter.version>2.3.4.RELEASE</spring-boot-starter.version>
+        <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <spring-boot-starter.version>2.3.4.RELEASE</spring-boot-starter.version>
         <spring-cloud-starter.version>2.2.5.RELEASE</spring-cloud-starter.version>
 
         <mybatis-spring-boot-starter.version>2.1.3</mybatis-spring-boot-starter.version>
@@ -45,13 +54,14 @@
         <mybatis-spring-boot-starter.version>2.1.3</mybatis-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.4.0</mybatis-plus-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.3.0</pagehelper-spring-boot-starter.version>
-        <mysql-connector-java.version>5.1.49</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.19</mysql-connector-java.version>
 
         <hibernate.validator.version>6.0.9.Final</hibernate.validator.version>
         <javaee.api.version>7.0</javaee.api.version>
-        <swagger-annotations.version>1.5.20</swagger-annotations.version>
+        <swagger.version>1.6.3</swagger.version>
         <swagger2.version>2.9.2</swagger2.version>
         <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
+        <knife4j.spring.ui.version>2.0.9</knife4j.spring.ui.version>
         <commons-io.version>2.6</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
@@ -70,6 +80,10 @@
 
         <druid.version>1.2.3</druid.version>
         <hutool-all.version>5.5.7</hutool-all.version>
+        <sharding-jdbc.version>4.1.1</sharding-jdbc.version>
+
+        <jsoup.version>1.13.1</jsoup.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +93,15 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -140,7 +163,12 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-annotations.version}</version>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -157,6 +185,11 @@
                 <artifactId>swagger-bootstrap-ui</artifactId>
                 <version>${swagger.bootstrap.ui.version}</version>
             </dependency>
+            <!--<dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-ui</artifactId>
+                <version>${knife4j.spring.ui.version}</version>
+            </dependency>-->
 
             <!-- commons -->
             <dependency>
@@ -271,6 +304,26 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+                <version>${sharding-jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

@@ -2,7 +2,7 @@ package com.sky.job.util;
 
 import com.alibaba.fastjson.JSON;
 import com.sky.framework.api.dto.ResponseDto;
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import com.sky.job.api.JobInterface;
 import com.sky.job.api.model.JobLog;
 import com.sky.job.service.JobLogService;
@@ -32,13 +32,13 @@ public class CallJob implements Job {
     private final JobService jobService;
     private final JobLogService jobLogService;
     private final RedissonClient redissonClient;
-    private final RestTemplate restTemplate;
+    private final RestTemplate jobRestTemplate;
 
     public CallJob() {
         this.jobService = ApplicationUtil.getBeans(JobService.class);
         this.jobLogService = ApplicationUtil.getBeans(JobLogService.class);
         this.redissonClient = ApplicationUtil.getBeans(RedissonClient.class);
-        this.restTemplate = ApplicationUtil.getBean("JobRestTemplate", RestTemplate.class);
+        this.jobRestTemplate = ApplicationUtil.getBean("jobRestTemplate", RestTemplate.class);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class CallJob implements Job {
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.set("Content-Type", "application/json;charset=utf-8");
         HttpEntity<?> httpEntity = new HttpEntity<>("{}", headers);
-        ResponseEntity<ResponseDto<?>> responseEntity = this.restTemplate.exchange(callUrl, hm, httpEntity, new DefaultTargetType<ResponseDto<?>>() {
+        ResponseEntity<ResponseDto<?>> responseEntity = this.jobRestTemplate.exchange(callUrl, hm, httpEntity, new DefaultTargetType<ResponseDto<?>>() {
         }.getClassType());
         ResponseDto<?> resultJson = responseEntity.getBody();
         if (null != resultJson) {

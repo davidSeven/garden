@@ -1,20 +1,20 @@
 spring:
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/sky?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
     username: sky
     password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      # 连接池中允许的最大连接数
-      maximum-pool-size: 20
+      # 连接池中允许的最大连接数，默认-1，默认值10，推荐的公式：((core_count * 2) + effective_spindle_count)
+      maximum-pool-size: 200
       # 连接池中允许的最小连接数
-      minimum-idle: 3
-      # 一个连接idle状态的最大时长（毫秒），超时则被释放（retired）
+      minimum-idle: 10
+      # 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），默认10分钟
       idle-timeout: 600000
-      # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired）
+      # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认30分钟，建议设置比数据库超时时长少30秒，参考MySQL wait_timeout参数（show variables like '%timeout%';）
       max-lifetime: 1800000
-      # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException
+      # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException，默认30秒
       connection-timeout: 30000
       # 数据库连接测试语句
       connection-test-query: SELECT 1
@@ -30,27 +30,31 @@ spring:
     host: 127.0.0.1
     port: 6379
     password: 123456
-    timeout: 5000
+    timeout: 10000
     database: 0
-    jedis:
-      pool:
-        min-idle: 0
-        max-idle: 8
-        max-active: 8
-        max-wait: -1
-#    lettuce:
+#    jedis:
 #      pool:
-#        # 连接池中的最小空闲连接
 #        min-idle: 0
-#        # 连接池中的最大空闲连接
 #        max-idle: 8
-#        # 连接池最大连接数（使用负值表示没有限制）
 #        max-active: 8
-#        # 连接池最大阻塞等待时间（使用负值表示没有限制）
-#        max-wait: 10000ms
-#        time-between-eviction-runs: 5000ms
-#      # 关闭超时时间
-#      shutdown-timeout: 15000ms
+#        max-wait: -1
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 16
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 10000ms
+        time-between-eviction-runs: 5000ms
+      # 关闭超时时间
+      shutdown-timeout: 15000ms
+  data:
+    # mongodb
+    mongodb:
+      uri: mongodb://localhost:27017/sky
   zipkin:
     base-url: http://localhost:40175
     enabled: true
@@ -83,21 +87,55 @@ management:
     shutdown:
       enabled: true
 hystrix:
+  metrics:
+    enabled: true
+    polling-interval-ms: 10000
   threadpool:
     api-rfc:
+      # 并发执行的最大线程数，默认10
       coreSize: 20
       maximumSize: 50
+      # 线程存活时间，单位是分钟。默认值为1。
       keepAliveTimeMinutes: 3
       allowMaximumSizeToDivergeFromCoreSize: true
+      # BlockingQueue的最大队列数，当设为-1，会使用SynchronousQueue，值为正时使用LinkedBlcokingQueue。
+      # 该设置只会在初始化时有效，之后不能修改threadpool的queue size，除非reinitialising thread executor。默认-1。
+      maxQueueSize: -1
+      # 即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝。
+      queueSizeRejectionThreshold: 1000
   command:
-    api-rfc:  #default全局有效，service id指定应用有效
+    # default全局有效，service id指定应用有效
+    api-rfc:
       execution:
         timeout:
-          #是否开启超时熔断
+          # 是否开启超时熔断，执行是否启用超时，默认启用true，只在线程池隔离中有效。
           enabled: false
         isolation:
+          # 隔离策略，默认是Thread, 可选Thread｜Semaphore
+          strategy: THREAD
           thread:
+            # 命令执行超时时间，默认1000ms，只在线程池隔离中有效。
             timeoutInMilliseconds: 36000000 #断路器超时时间，
+            # 发生超时是是否中断，默认true，只在线程池隔离中有效。
+            interruptOnTimeout: true
+      fallback:
+        # 当执行失败或者请求被拒绝，是否会尝试调用fallback方法 。默认true
+        enabled: true
+      circuitBreaker:
+        # 是否开启熔断器。默认true
+        enabled: true
+        # 一个rolling window内最小的请求数。如果设为20，那么当一个rolling window的时间内（比如说1个rolling window是10毫秒）收到19个请求
+        # 即使19个请求都失败，也不会触发circuit break。默认20
+        requestVolumeThreshold: 1000
+        # 触发短路的时间值，当该值设为5000时，则当触发circuit break后的5000毫秒内都会拒绝远程服务调用，也就是5000毫秒后才会重试远程服务调用。默认5000
+        sleepWindowInMilliseconds: 5000
+        # 错误比率阀值，如果错误率>=该值，circuit会被打开，并短路所有请求触发fallback。默认50
+        errorThresholdPercentage: 50
+        # 强制打开熔断器
+        forceOpen: false
+        # 强制关闭熔断器
+        forceClosed: false
 ribbon:
-  ReadTimeout: 36000000
-  ConnectTimeout: 36000000
+  ReadTimeout: 3600000
+  SocketTimeout: 3600000
+  ConnectTimeout: 3600000

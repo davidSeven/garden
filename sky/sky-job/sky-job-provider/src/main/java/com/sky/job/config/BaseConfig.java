@@ -30,17 +30,17 @@ public class BaseConfig {
     public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         // 单位为ms
-        // 3分钟的超时
-        factory.setReadTimeout(3 * 60 * 1000);
+        // 10分钟的超时
+        factory.setReadTimeout(10 * 60 * 1000);
         // 单位为ms
-        // 3分钟的超时
-        factory.setConnectTimeout(3 * 60 * 1000);
+        // 10分钟的超时
+        factory.setConnectTimeout(10 * 60 * 1000);
         return factory;
     }
 
-    @Bean("JobRestTemplate")
+    @Bean("jobRestTemplate")
     @LoadBalanced
-    public RestTemplate restTemplate(@Qualifier("JobClientHttpRequestFactory") ClientHttpRequestFactory factory) {
+    public RestTemplate jobRestTemplate(@Qualifier("JobClientHttpRequestFactory") ClientHttpRequestFactory factory) {
         RestTemplate restTemplate = new RestTemplate(factory);
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         return restTemplate;

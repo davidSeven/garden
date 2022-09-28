@@ -18,6 +18,10 @@ public class JsonContext {
     private Set<String> encrypts = new HashSet<>();
     // 增强字段
     private Map<String, JsonIntensify> jsonIntensifyMap = new HashMap<>();
+    // 字段值转换
+    private Map<String, JsonIntensify> transformMap = new HashMap<>();
+    // 添加字段
+    private Map<String, JsonIntensify> appendMap = new HashMap<>();
 
     public JsonContext() {
     }
@@ -73,5 +77,21 @@ public class JsonContext {
 
     public void setJsonIntensifyMap(Map<String, JsonIntensify> jsonIntensifyMap) {
         this.jsonIntensifyMap = jsonIntensifyMap;
+    }
+
+    public Map<String, JsonIntensify> getTransformMap() {
+        return transformMap;
+    }
+
+    public void setTransformMap(Map<String, JsonIntensify> transformMap) {
+        this.transformMap = transformMap;
+    }
+
+    public Map<String, JsonIntensify> getAppendMap() {
+        return appendMap;
+    }
+
+    public void setAppendMap(Map<String, JsonIntensify> appendMap) {
+        this.appendMap = appendMap;
     }
 }

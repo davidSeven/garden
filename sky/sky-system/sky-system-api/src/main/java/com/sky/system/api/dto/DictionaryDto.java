@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @date 2020-11-03 003 9:59
  */
@@ -14,6 +16,7 @@ public class DictionaryDto {
     @ApiModelProperty(value = "ID")
     private Long id;
 
+    @NotBlank(message = "{common.notBlank}")
     @ApiModelProperty(value = "编码")
     private String code;
 
@@ -33,7 +36,7 @@ public class DictionaryDto {
     private String state;
 
     @ApiModelProperty(value = "顺序")
-    private Long sort;
+    private Integer sort;
 
     @ApiModelProperty(value = "值")
     private String value;

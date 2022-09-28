@@ -3,6 +3,7 @@ package com.sky.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sky.system.api.dto.DictionaryDto;
 import com.sky.system.api.model.Dictionary;
+import com.sky.system.api.vo.DictionaryVO;
 
 import java.util.List;
 
@@ -30,9 +31,18 @@ public interface DictionaryService extends IService<Dictionary> {
     /**
      * 查询
      *
-     * @return DictionaryDto
+     * @param dto dto
+     * @return DictionaryVO
      */
-    List<DictionaryDto> listDictionary();
+    List<DictionaryVO> listDictionary(DictionaryDto dto);
+
+    /**
+     * 查询
+     *
+     * @param dto dto
+     * @return DictionaryVO
+     */
+    List<DictionaryVO> tree(DictionaryDto dto);
 
     /**
      * 物理删除
@@ -41,4 +51,12 @@ public interface DictionaryService extends IService<Dictionary> {
      * @return int
      */
     int physicalDeleteById(Long id);
+
+    /**
+     * 获取数据字典的值
+     *
+     * @param code code
+     * @return String
+     */
+    String getValue(String code);
 }

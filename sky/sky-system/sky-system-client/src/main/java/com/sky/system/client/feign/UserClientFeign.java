@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * @date 2020-10-28 028 14:53
  */
-@FeignClient(contextId = "FeignClient.UserClientFeign", name = SystemInterface.SERVICE, fallback = UserClientFeign.HystrixClientFallback.class)
+@FeignClient(contextId = "FeignClient.UserClientFeign", name = SystemInterface.SERVICE, fallbackFactory = UserClientFeign.HystrixClientFallback.class)
 public interface UserClientFeign extends UserRemoteService {
 
     @Component
@@ -23,7 +23,7 @@ public interface UserClientFeign extends UserRemoteService {
         public UserClientFeign create(Throwable throwable) {
             return new UserClientFeign() {
                 @Override
-                public ResponseDto<UserDto> get(UserDto dto) {
+                public ResponseDto<UserDto> get(UserDto dto, String code, Long id) {
                     return null;
                 }
 
@@ -40,6 +40,11 @@ public interface UserClientFeign extends UserRemoteService {
                 @Override
                 public ResponseDto<IPage<UserDto>> pageList(UserQueryDto queryDto) {
                     return null;
+                }
+
+                @Override
+                public ResponseDto<String> getNameByCode(String code) {
+                    return ResponseDto.convertResultJson(throwable);
                 }
             };
         }

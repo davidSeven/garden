@@ -8,8 +8,8 @@ public class JsonResultRetriever {
         return JsonResult.get() != null;
     }
 
-    static JsonView retrieve() {
-        JsonView val = JsonResult.get();
+    static JsonView<?> retrieve() {
+        JsonView<?> val = JsonResult.get();
         JsonResult.unset();
         return val;
     }

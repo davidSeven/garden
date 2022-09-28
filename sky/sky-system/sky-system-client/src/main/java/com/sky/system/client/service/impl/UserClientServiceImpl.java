@@ -22,7 +22,7 @@ public class UserClientServiceImpl implements UserClientService {
     public UserDto get(Long id) {
         UserDto dto = new UserDto();
         dto.setId(id);
-        return ResponseDto.getData(this.userClientFeign.get(dto));
+        return ResponseDto.getData(this.userClientFeign.get(dto, null, null));
     }
 
     @Override
@@ -38,5 +38,10 @@ public class UserClientServiceImpl implements UserClientService {
     @Override
     public IPage<UserDto> pageList(UserQueryDto queryDto) {
         return ResponseDto.getData(this.userClientFeign.pageList(queryDto));
+    }
+
+    @Override
+    public String getNameByCode(String code) {
+        return ResponseDto.getData(this.userClientFeign.getNameByCode(code));
     }
 }

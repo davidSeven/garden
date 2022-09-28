@@ -33,8 +33,14 @@ public class Dictionary extends BaseModel<Dictionary> {
     private String state;
 
     @ApiModelProperty(value = "顺序")
-    private Long sort;
+    private Integer sort;
 
     @ApiModelProperty(value = "值")
     private String value;
+
+    @ApiModelProperty(value = "路由")
+    private String route;
+
+    @ApiModelProperty(value = "子级数量")
+    private Integer childrenSize;
 }

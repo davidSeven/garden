@@ -7,9 +7,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @date 2020-12-14 014 19:57
- */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_file_info")
@@ -42,10 +39,7 @@ public class FileInfo extends BaseModel<FileInfo> {
     @ApiModelProperty(value = "文件头类型")
     private String contentType;
 
-    /**
-     * 文件流
-     */
-    @ApiModelProperty(value = "文件流")
     @TableField(exist = false)
+    @ApiModelProperty(value = "文件流")
     private byte[] bytes;
 }

@@ -51,7 +51,7 @@ public abstract class ConfigTest {
 
     @Test
     public void testSimple() throws IOException {
-        String asString = Request.Get("http://localhost:" + port + "/bean").execute().returnContent().asString();
+        String asString = Request.Get("http://localhost:" + port + "/bean").execute().returnContent().asString(Charset.defaultCharset());
         System.out.println(asString);
     }
 

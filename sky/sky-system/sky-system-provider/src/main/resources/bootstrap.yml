@@ -2,10 +2,10 @@ server:
   port: 18080
   tomcat:
     basedir: /info/tmp
-    max-threads: 2000
+    max-threads: 500
     accept-count: 10000
     max-connections: 10000
-    min-spare-threads: 100
+    min-spare-threads: 8
   servlet:
     context-path: /
 spring:
@@ -52,6 +52,67 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  shardingsphere:
+    sharding:
+      # 未配置分片规则的表将通过默认数据源定位
+      default-data-source-name: ds0
+      # 默认数据库分库策略
+      default-database-strategy:
+        inline:
+          # 分片列名称
+          sharding-column: id
+          # 分片算法行表达式，需符合groovy语法
+          algorithm-expression: ds0
+      tables:
+        # 用户表分片策略
+        sys_user:
+          # 基于ds0数据源分表策略
+          actual-data-nodes: ds0.sys_user$->{0..1}
+          # 分表策略
+          table-strategy:
+            standard:
+              sharding-column: id
+              # 精确分片算法类名称，用于=和IN。该类需实现PreciseShardingAlgorithm接口并提供无参数的构造器
+              precise-algorithm-class-name: com.sky.system.config.PreciseModuloTableShardingAlgorithm
+              # 范围分片算法类名称，用于BETWEEN，可选。该类需实现RangeShardingAlgorithm接口并提供无参数的构造器
+              range-algorithm-class-name: com.sky.system.config.RangeModuloTableShardingAlgorithm
+          # 分库策略
+          database-strategy:
+            inline:
+              sharding-column: id
+              # 默认使用ds0数据源
+              algorithm-expression: ds0
+      props:
+        sql.show: true
+    datasource:
+      names: ds0
+      ds0:
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/sky?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+        username: sky
+        password: 123456
+        # 数据库连接池
+        type: com.zaxxer.hikari.HikariDataSource
+        # hikari:
+        # 连接池中允许的最大连接数
+        maximum-pool-size: 20
+        # 连接池中允许的最小连接数
+        minimum-idle: 3
+        # 一个连接idle状态的最大时长（毫秒），超时则被释放（retired）
+        idle-timeout: 600000
+        # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired）
+        max-lifetime: 1800000
+        # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException
+        connection-timeout: 30000
+        # 数据库连接测试语句
+        connection-test-query: SELECT 1
+        # 连接池名字
+        pool-name: ${spring.application.name}-sharding-dp
+        leakDetectionThreshold: 2000
+  # 国际化静态资源文件
+  messages:
+    basename: i18n/messages
+
 management:
   endpoints:
     web:
@@ -62,7 +123,8 @@ management:
       show-details: always
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   mapper-locations:
     - classpath*:/mappers/*.xml
   type-aliases-package: com.sky.**.model
@@ -74,10 +136,44 @@ hystrix:
     default:
       execution:
         timeout:
+          # 执行是否启用超时，默认启用true，只在线程池隔离中有效。
           enabled: true
         isolation:
+          # 隔离策略，默认是Thread, 可选Thread｜Semaphore
+          strategy: THREAD
           thread:
+            # 命令执行超时时间，默认1000ms，只在线程池隔离中有效。
             timeoutInMilliseconds: 10000
+            # 发生超时是是否中断，默认true，只在线程池隔离中有效。
+            interruptOnTimeout: true
+      fallback:
+        # 当执行失败或者请求被拒绝，是否会尝试调用fallback方法 。默认true
+        enabled: true
+      circuitBreaker:
+        # 是否开启熔断器。默认true
+        enabled: true
+        # 一个rolling window内最小的请求数。如果设为20，那么当一个rolling window的时间内（比如说1个rolling window是10毫秒）收到19个请求
+        # 即使19个请求都失败，也不会触发circuit break。默认20
+        requestVolumeThreshold: 100
+        # 触发短路的时间值，当该值设为5000时，则当触发circuit break后的5000毫秒内都会拒绝远程服务调用，也就是5000毫秒后才会重试远程服务调用。默认5000
+        sleepWindowInMilliseconds: 5000
+        # 错误比率阀值，如果错误率>=该值，circuit会被打开，并短路所有请求触发fallback。默认50
+        errorThresholdPercentage: 50
+        # 强制打开熔断器
+        forceOpen: false
+        # 强制关闭熔断器
+        forceClosed: false
+  threadpool:
+    default:
+      # 并发执行的最大线程数，默认10
+      coreSize: 30
+      # BlockingQueue的最大队列数，当设为-1，会使用SynchronousQueue，值为正时使用LinkedBlcokingQueue。
+      # 该设置只会在初始化时有效，之后不能修改threadpool的queue size，除非reinitialising thread executor。默认-1。
+      maxQueueSize: -1
+      # 即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝。
+      queueSizeRejectionThreshold: 100
+      # 线程存活时间，单位是分钟。默认值为1。
+      keepAliveTimeMinutes: 1
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
@@ -85,3 +181,64 @@ app:
   version: '@project.version@'
   build: '@build.timestamp@'
 
+json-context:
+  values:
+    # 接口uri
+    "[/user/pageList]":
+      # 排除的字段，响应的数据对象中，不会包含此字段，如果此字段配置在include中，则优先include
+      excludes:
+        - data.records.password
+      # 包含的字段
+      includes:
+        - code
+      # 敏感字段，原字段的值会变成***，但是提供了解密的密文（原字段+Sensitive，如果是字段是code密文字段就是codeSensitive），可以通过密文请求后端接口返回明文信息
+      # 如果在加密字段中也配置了此字段，优先敏感字段
+      sensitives:
+        - data.records.loginIp
+      # 加密字段，原字段的值会变成***，以达到加密的特性
+      encrypts:
+        - data.records.version
+      # 字段增强，配置了敏感字段和加密字段之后不会执行字段增强
+      jsonIntensifyMap:
+        "[data.records.code]":
+          # 需要增强的字段名称，这里名称要和key一样，名称可以不写。默认就是key
+          fieldName: data.records.code
+          # 增强之后字段的名称
+          fieldIntensifyName: codeName
+          # 增强的实现方式，class普通类，spring类
+          loadClassType: class
+          # 如果是class就需要类的全路径，如果是spring类就是springBean的名称
+          loadClassPath: com.sky.framework.json.JsonIntensifyConvert$OriginalJsonIntensifyConvert
+        "[data.records.createBy]":
+          fieldIntensifyName: createByName
+          loadClassType: spring
+          loadClassPath: InternalUserNameJsonIntensifyConvert
+        "[data.records.updateBy]":
+          fieldIntensifyName: updateByName
+          loadClassType: spring
+          loadClassPath: InternalUserNameJsonIntensifyConvert
+      # 值转换
+      transformMap:
+        # 将这个字段的值换成另外一个值
+        "[data.records.id]":
+          loadClassType: class
+          loadClassPath: com.sky.framework.json.JsonIntensifyConvert$WrapJsonIntensifyConvert
+      # 添加字段
+      appendMap:
+        # 在data.records这个对象里面添加字段。如果配置了，但是没写字段名称，字段默认_append
+        "[data.records]":
+          # 添加的字段名称，不写默认_append
+          fieldIntensifyName: _append
+          loadClassType: class
+          loadClassPath: com.sky.framework.json.JsonIntensifyAppend$OriginalJsonIntensifyAppend
+
+com:
+  sky:
+    system:
+      resource:
+        application:
+          ignore:
+            - gateway
+          values:
+            - test1
+          discovery: true

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ import java.sql.Timestamp;
  * ContextInterceptor
  */
 @Component
-public class ContextInterceptor implements HandlerInterceptor {
+public class ContextInterceptor implements HandlerInterceptor, Ordered {
 
     private final Logger logger = LoggerFactory.getLogger(ContextInterceptor.class);
 
@@ -43,19 +44,19 @@ public class ContextInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         String uri = request.getRequestURI();
-        logger.info(uri + " Start");
+        // logger.info(uri + " Start");
         // Reset pre-context
         RequestContext context = RequestContext.getCurrentContext();
         context.reset();
         // requestId
-        String requestId = MDC.get("traceId");
+        String requestId = MDC.get("X-requestId");
         if (StringUtils.isBlank(requestId)) {
             requestId = request.getHeader(RequestContext.REQUEST_ID);
         }
         if (StringUtils.isBlank(requestId)) {
             requestId = UUIDUtil.uuid();
         }
-        MDC.put("TID", requestId);
+        MDC.put("X-requestId", requestId);
         // requestStartTime
         Timestamp requestStartTime;
         String startTime = request.getHeader(RequestContext.REQUEST_START_TIME);
@@ -73,11 +74,11 @@ public class ContextInterceptor implements HandlerInterceptor {
         String token = request.getHeader(RequestContext.TOKEN);
         String userId = request.getHeader(RequestContext.USER_ID);
         if (StringUtils.isBlank(userId)) {
-            userId = "0";
+            userId = "1";
         }
         String userCode = request.getHeader(RequestContext.USER_CODE);
         if (StringUtils.isBlank(userCode)) {
-            userCode = "0";
+            userCode = "admin";
         }
         String userName = request.getHeader(RequestContext.USER_NAME);
         // originApp，先从threadLocal，再从referer中
@@ -95,7 +96,7 @@ public class ContextInterceptor implements HandlerInterceptor {
         context.setToken(token);
         context.setClientIpAddress(clientIpAddress);
         context.setOriginApp(originApp);
-        logger.info("IP:{},UserCode:{}", context.getClientIpAddress(), context.getUserCode());
+        // logger.info("IP:{},UserCode:{}", context.getClientIpAddress(), context.getUserCode());
 
         // 禁用生产的swagger
         if (profile.equalsIgnoreCase("production")) {
@@ -129,7 +130,7 @@ public class ContextInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
         RequestContext.getCurrentContext().close();
-        logger.info(request.getRequestURI() + " End");
+        // logger.info(request.getRequestURI() + " End");
     }
 
     /**
@@ -177,5 +178,10 @@ public class ContextInterceptor implements HandlerInterceptor {
             logger.error(e.getMessage(), e);
         }
         return "";
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

@@ -14,6 +14,9 @@ import java.util.List;
 @ApiModel(value = "MenuVO", description = "MenuVO信息")
 public class MenuVO implements Serializable {
 
+    @ApiModelProperty(value = "ID")
+    private Long id;
+
     @ApiModelProperty(value = "名字")
     private String name;
 

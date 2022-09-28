@@ -1,6 +1,6 @@
 package com.sky.framework.interceptor;
 
-import com.sky.framework.interceptor.util.ApplicationUtil;
+import com.sky.framework.utils.ApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;

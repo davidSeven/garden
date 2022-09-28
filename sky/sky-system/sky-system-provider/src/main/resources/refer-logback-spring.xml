@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+    <springProperty scope="context" name="configLoggerPath" source="info.config.loggerPath" defaultValue="data"/>
+    <springProperty scope="context" name="configLoggerLevel" source="info.config.loggerLevel" defaultValue="INFO"/>
+    <springProperty scope="context" name="configLogstashHost" source="info.config.logstashHost"
+                    defaultValue="localhost"/>
+    <springProperty scope="context" name="configLogstashPort" source="info.config.logstashPort" defaultValue="4567"/>
+    <springProperty scope="context" name="configRabbitHost" source="spring.rabbitmq.host" defaultValue="localhost"/>
+    <springProperty scope="context" name="configRabbitPort" source="spring.rabbitmq.port" defaultValue="5672"/>
+    <springProperty scope="context" name="configRabbitUsername" source="spring.rabbitmq.username" defaultValue="guest"/>
+    <springProperty scope="context" name="configRabbitPassword" source="spring.rabbitmq.password" defaultValue="guest"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%relative] [%level] [%thread] [%X{TID}] %40.40logger %L --> %msg\r\n</pattern>
+        </encoder>
+    </appender>
+    <appender name="APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${configLoggerPath}/${hostname}-${springAppName}-service-%d{yyyy-MM-dd}-%i.log
+            </fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <maxFileSize>20MB</maxFileSize>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d [%relative] [%level] [%thread] [%X{TID}] %logger %L --> %msg\r\n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <appender-ref ref="APPENDER"/>
+    </appender>
+    <if condition='!property("configLogstashHost").equals("localhost")'>
+        <then>
+            <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+                <destination>${configLogstashHost}:${configLogstashPort}</destination>
+                <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
+            </appender>
+        </then>
+    </if>
+    <if condition='!property("configRabbitHost").equals("localhost")'>
+        <then>
+            <appender name="AMQP" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+                <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
+                <host>${configRabbitHost}</host>
+                <port>${configRabbitPort}</port>
+                <username>${configRabbitUsername}</username>
+                <password>${configRabbitPassword}</password>
+                <declareExchange>false</declareExchange>
+                <exchangeType>direct</exchangeType>
+                <exchangeName>amq_exchange_logstash</exchangeName>
+                <routingKeyPattern>logstash.LOG</routingKeyPattern>
+                <generateId>true</generateId>
+                <charset>UTF-8</charset>
+                <durable>true</durable>
+                <deliveryMode>NON_PERSISTENT</deliveryMode>
+            </appender>
+        </then>
+    </if>
+    <!-- 根据profile不同打印不同的日志级别 -->
+    <springProfile name="local">
+        <logger name="com.chinamobile" additivity="false">
+            <level value="${configLoggerLevel}"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="com.chinamobile.framework.dao.intercepter.SqlStatementInterceptor" additivity="false">
+            <level value="INFO"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="com.chinamobile.scm.logistics.common.config.locker.interceptor.OptimisticLocker"
+                additivity="false">
+            <level value="ERROR"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <root>
+            <level value="WARN"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev,test,sit,bug,it,master,pre">
+        <logger name="com.chinamobile" additivity="false">
+            <level value="${configLoggerLevel}"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="production">
+        <logger name="com.chinamobile" additivity="false">
+            <level value="${configLoggerLevel}"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <if condition='!property("configRabbitHost").equals("localhost")'>
+                <then>
+                    <appender-ref ref="AMQP"/>
+                </then>
+            </if>
+        </logger>
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="ASYNC_APPENDER"/>
+            <if condition='!property("configRabbitHost").equals("localhost")'>
+                <then>
+                    <appender-ref ref="AMQP"/>
+                </then>
+            </if>
+        </root>
+    </springProfile>
+</configuration>

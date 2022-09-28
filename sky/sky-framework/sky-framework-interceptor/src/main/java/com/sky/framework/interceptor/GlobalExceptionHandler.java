@@ -9,12 +9,17 @@ import feign.RetryableException;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -37,6 +42,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * render
@@ -77,7 +85,18 @@ public class GlobalExceptionHandler {
         } else if (exception instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException manv = (MethodArgumentNotValidException) exception;
             code = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            message = "参数[" + manv.getParameter().getParameterName() + "]校验不通过";
+            BindingResult bindingResult = manv.getBindingResult();
+            StringBuilder stringBuilder = new StringBuilder(bindingResult.getFieldErrors().size() * 16);
+            for (int i = 0; i < bindingResult.getFieldErrors().size(); i++) {
+                if (i != 0) {
+                    stringBuilder.append(",");
+                }
+                FieldError error = bindingResult.getFieldErrors().get(i);
+                stringBuilder.append(error.getField());
+                stringBuilder.append(":");
+                stringBuilder.append(error.getDefaultMessage());
+            }
+            message = stringBuilder.toString();
         } else if (exception instanceof IllegalArgumentException) {
             code = HttpStatus.INTERNAL_SERVER_ERROR.value();
             message = exception.getMessage();
@@ -145,12 +164,17 @@ public class GlobalExceptionHandler {
         if (StringUtils.isEmpty(message)) {
             message = defaultMessage;
         } else {
-            if (message.contains("{}") && args != null && args.length > 0) {
-                for (Object arg : args) {
-                    if (message.contains("{}")) {
-                        message = message.replaceFirst("\\{}", String.valueOf(arg));
+            String sourceMessage = this.messageSource.getMessage(message, args, LocaleContextHolder.getLocale());
+            if (message.equals(sourceMessage)) {
+                if (message.contains("{}") && args != null && args.length > 0) {
+                    for (Object arg : args) {
+                        if (message.contains("{}")) {
+                            message = message.replaceFirst("\\{}", String.valueOf(arg));
+                        }
                     }
                 }
+            } else {
+                return sourceMessage;
             }
         }
         if (StringUtils.isEmpty(message) && !StringUtils.isEmpty(code)) {
@@ -181,7 +205,20 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     @ExceptionHandler(Throwable.class)
-    public ResponseDto<Map<String, Object>> handleException(Throwable cause) {
+    public ResponseDto<Map<String, Object>> handleThrowable(Throwable cause) {
+        return render(HttpStatus.INTERNAL_SERVER_ERROR, cause);
+    }
+
+    /**
+     * Default Exception
+     *
+     * @param cause Throwable
+     * @return ResponseDto
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseDto<Map<String, Object>> handleException(Exception cause) {
         return render(HttpStatus.INTERNAL_SERVER_ERROR, cause);
     }
 
